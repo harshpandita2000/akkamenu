@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akka's Food Centre Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <style>
+        /* Prevent iOS zoom on input focus */
+        input[type="number"]:focus {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Logo Section -->
+        <div class="flex flex-col items-center mb-8">
+            <img src="https://img.freepik.com/premium-photo/cartoon-woman-with-red-hair-wearing-chef-hat-stands-front-pot-with-red-sauce-it_81048-16328.jpg" 
+     alt="Akka's Menu Logo" class="w-20 h-20 rounded-full shadow-lg">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 mt-4">
+                AKKA'S FOOD CENTRE MENU
+            </h1>
+        </div>
+        
+        <!-- Mobile Cart Toggle Button -->
+        <div class="lg:hidden fixed bottom-4 right-4 z-40">
+            <button id="mobileCartToggle" class="bg-blue-500 text-white p-4 rounded-full shadow-lg relative">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span id="mobileBadge" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs">0</span>
+            </button>
+        </div>
+
+        <!-- Search box -->
+        <div class="flex items-center justify-center mb-6">
+            <div class="relative w-full max-w-md">
+                <input type="text" id="searchInput" placeholder="Search menu categories..." 
+                    class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md">
+                <span class="absolute top-2 right-4 text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a6 6 0 100 12A6 6 0 008 4zm8.707 11.293a1 1 0 01-1.414 1.414l-3.621-3.621a8 8 0 111.414-1.414l3.621 3.621z" clip-rule="evenodd" />
+                    </svg>
+                </span>
+            </div>
+        </div>
+
+        <!-- Main Content Container -->
+        <div class="flex flex-col lg:flex-row gap-6 relative">
+            <!-- Menu Categories and Items Container -->
+            <div class="flex-grow">
+                <!-- Menu categories -->
+                <div id="menuCategories" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <!-- JavaScript will dynamically populate this -->
+                </div>
+
+                <!-- Items container -->
+                <div id="menuItems" class="mt-8 hidden">
+                    <button id="backButton" 
+                        class="mb-6 px-4 py-2 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                        </svg>
+                        Back to Categories
+                    </button>
+                    <div id="itemsList" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                        <!-- JavaScript will dynamically populate this -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Container - Responsive Design -->
+            <div id="cartContainer" class="fixed inset-0 z-50 bg-white bg-opacity-95 hidden lg:block lg:w-96 lg:bg-transparent lg:bg-opacity-100 lg:static">
+                <div class="h-full lg:sticky lg:top-4 bg-white shadow-lg rounded-lg p-6 max-h-[80vh] overflow-y-auto relative">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            Your Cart
+                            <span id="cartItemCount" class="bg-blue-500 text-white text-sm rounded-full px-2 py-1">0</span>
+                        </div>
+                        <button id="mobileCartClose" class="lg:hidden text-gray-600 hover:text-gray-900 z-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </h2>
+                    <ul id="cartItems" class="space-y-2">
+                        <!-- Cart items will be dynamically added here -->
+                    </ul>
+                    <div id="cartSummary" class="mt-4 pt-4 border-t">
+                        <div class="flex justify-between font-semibold">
+                            <span>Total Items:</span>
+                            <span id="totalItemCount">0</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg mt-2">
+                            <span>Total Amount:</span>
+                            <span id="totalAmount">₹0</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <button id="checkoutButton" 
+                                class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                </svg>
+                                Checkout
+                            </button>
+                            <button id="clearCartButton" 
+                                class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const menuData = [
+            {
+                category: "Whole Wheat Tawa roti & Paratha",
+                image: "https://parafit.in/wp-content/uploads/2019/03/Tawa-Roti-600x500.jpg",
+                items: [
+                { name: "Chapathi", price: 10 },
+                { name: "Pulka", price: 10 },
+                { name: "Paneer Onion Parata", price: 60 },
+                { name: "Tawa Butter Roti", price: 15 },
+                { name: "Aloo Onion Methi Parata", price: 40 },
+                { name: "Aloo Onion Pudina Parata", price: 40 },
+                { name: "Tawa Ghee Roti", price: 15 },
+                { name: "Plain Parata", price: 15 },
+                { name: "Aloo Parata", price: 40 },
+                { name: "Plain Ajwain Parata", price: 20 },
+                { name: "Aloo Onion Parata", price: 45 },
+                { name: "Lacha Parata", price: 20 },
+                { name: "Aloo Methi Parata", price: 40 },
+                { name: "Lacha Ajwain Parata", price: 25 },
+                { name: "Aloo Gobi Parata", price: 40 },
+                { name: "Cheese Parata", price: 60 },
+                { name: "Gobi Parata", price: 40 },
+                { name: "Aloo Cheese Parata", price: 50 },
+                { name: "Gobi Onion Parata", price: 40 },
+                { name: "Gobi Cheese Parata", price: 50 },
+                { name: "Gobi Onion Methi Parata", price: 50 },
+                { name: "Onion Cheese Parata", price: 50 },
+                { name: "Methi Parata", price: 40 },
+                { name: "Paneer Cheese Parata", price: 60 },
+                { name: "Methi Onion Parata", price: 40 },
+                { name: "Mix Cheese Parata", price: 50 },
+                { name: "Pudina Onion Parata", price: 40 },
+                { name: "Mix Veg Parata", price: 40 },
+                { name: "Onion Parata", price: 40 },
+                { name: "Paneer Parata", price: 60 },
+                { name: "Mushroom Parata", price: 60 },
+                { name: "Chicken Parata", price: 60 },
+                { name: "Egg Parata (2 Eggs)", price: 50 },
+                { name: "Sweet Parata (Sugar)", price: 40 },
+                { name: "Sweet Parata (Jaggery)", price: 40 }
+                    
+                ],
+            },
+            {
+                category: "Rice Item",
+                image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/07/basmati-rice-recipe.jpg",
+                items: [
+                { name: "White Rice", price: 30 },
+                { name: "Jeera Rice", price: 50 },
+                { name: "Chole Chawal", price: 90 },
+                { name: "Daal Chawal", price: 60 },
+                { name: "Razma Chawal", price: 100 },
+                { name: "Kadi Chawal", price: 100 },
+                { name: "Daal Makhni Chawal", price: 110 }
+                ],
+            },
+            {
+                category: "Curd",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzCZCNl6tCPVGf1J3a2X-DtmkLM8eJcvClwQ&s",
+                items: [
+                { name: "Plain Curd", price: 10 },
+                { name: "Curd with Sugar", price: 15 },
+                { name: "Plain Raita", price: 20 },
+                { name: "Onion Raita", price: 20 },
+                { name: "Boondi Raita", price: 20 },
+                { name: "Aloo Raita", price: 20 },
+                { name: "Mix Raita", price: 25 }
+            
+                ],
+            },
+            {
+                category: "Special Thali",
+                image: "https://5.imimg.com/data5/HU/PG/OE/SELLER-9770898/special-veg-thali.jpg",
+                items: [
+                { name: "Daal+Sabji+Rice+3 Roti", price: 110 },
+                { name: "Daal+Paneer+Rice+3 Roti", price: 150 },
+                { name: "Daal Makhni+Paneer+Rice+3 Roti", price: 200 },
+                { name: "Daal Makhni+Sabji+Rice+3 Roti", price: 130 },
+                { name: "Daal Makhni+Sabji+Rice+2 Plain Parata", price: 130 },
+                { name: "Daal Makhni+Paneer+Rice+2 Plain Parata", price: 150 }
+                ],
+            },
+            {
+                category: "Tiffins",
+                image: "https://t4.ftcdn.net/jpg/04/65/28/87/360_F_465288715_F3uc0aZMhzSbNbftEzHSb6RfUVQfCHeU.jpg",
+                items: [
+                { name: "Idly", price: 40 },
+                { name: "Wada", price: 40 },
+                { name: "Upma", price: 40 },
+                { name: "Poha", price: 40 },
+                { name: "Plain Dosa", price: 35 },
+                { name: "Ghee Roast", price: 35 },
+                { name: "Onion Dosa", price: 30 },
+                { name: "Egg Dosa", price: 50 },
+                { name: "Masala Dosa", price: 50 },
+                { name: "Carrot Dosa", price: 50 },
+                { name: "Beetroot Dosa", price: 50 },
+                { name: "Chicken Dosa", price: 90 },
+                { name: "Paneer Dosa", price: 90 },
+                { name: "Mushroom Dosa", price: 90 },
+                { name: "Spanish Veg Dosa", price: 70 },
+                { name: "Spanish Chicken Dosa", price: 110 },
+                { name: "Spanish Paneer Dosa", price: 110 },
+                { name: "Spanish Mushroom Dosa", price: 110 },
+                { name: "Spanish Onion Dosa", price: 30 },
+                { name: "Chicken Spanish Dosa", price: 110 },
+                { name: "Fish Dosa", price: 90 },
+                { name: "Fish Spanish Dosa", price: 110 },
+                { name: "Spanish Egg Dosa", price: 90 }
+                ],
+            },
+
+            {
+                category: "Veg Curry",
+                image: "https://www.sharmispassions.com/wp-content/uploads/2021/07/MixedVegetableGravy2-500x375.jpg",
+                items: [
+                { name: "Aloo Fry", price: 30 },
+                { name: "Daal", price: 30 },
+                { name: "Chole", price: 40 },
+                { name: "Razma", price: 40 },
+                { name: "Bhendi", price: 30 },
+                { name: "Loukhi", price: 30 },
+                { name: "Cabbage", price: 30 },
+                { name: "Sprouts", price: 40 },
+                { name: "Mix Veg", price: 30 },
+                { name: "Gobi Aloo", price: 30 },
+                { name: "Baigan ka Bharta", price: 40 },
+                { name: "Daal Tadka", price: 50 }
+                ],
+            },
+
+            {
+                category: "Non Veg Curry",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR26EQZRZi8mlYkvClOismpXhzX0XgA_GRlnQ&s",
+                items: [
+                { name: "Egg Curry", price: 50 },
+                { name: "Egg Bhurji", price: 50 },
+                { name: "Omlet", price: 30 },
+                { name: "Chicken Roast", price: 80 },
+                { name: "Chicken Curry", price: 80 },
+                { name: "Liver Roast", price: 60 },
+                { name: "Prawn Curry", price: 120 },
+                { name: "Prawn Fry", price: 200 },
+                { name: "Fish Curry", price: 70 },
+                { name: "Leg Piece", price: 50 },
+                { name: "Chicken Biryani", price: 100 },
+                { name: "Fish Fry", price: 60 }
+                ],
+            },
+           
+            {
+                category: "Special Veg Menu",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhFmMGJlfxGvp0zGmsGjUijCWxynckzwvYfQ&s",
+                items: [
+                { name: "Methi Chaman", price: 120 },
+                { name: "Corn Palak", price: 50 },
+                { name: "Corn Masala", price: 60 },
+                { name: "Paneer Tikka Masala", price: 120 },
+                { name: "Paneer Masala", price: 80 },
+                { name: "Paneer Bhurji", price: 80 },
+                { name: "Palak Paneer", price: 60 },
+                { name: "Kaju Masala", price: 80 },
+                { name: "Mushroom Masala", price: 80 },
+                { name: "Green Piece Masala", price: 80 },
+                { name: "Butter Paneer Masala", price: 120 },
+                { name: "Daal Makhni", price: 50 }
+                ],
+            },
+
+            {
+                category: "Extra",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR651XQV65abHGAG_JEyPGjVi4CLvZMvaKTEw&s",
+                items: [
+                { name: "Upma", price: 50 },
+                { name: "Poha", price: 60 },
+                { name: "Sabudana Kichidi", price: 50 },
+                { name: "Semiya Upma", price: 50 },
+                { name: "Semiya", price: 20 },
+                { name: "Gulab Jamun", price: 25 },
+                { name: "Rice Kheer", price: 20 }
+                ],
+            },
+
+            {
+                category: "All Stuffing Paratha",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB1zmCSrQVNvFqhlhDZulTEQmVX8GYYJObRQ&s",
+                items: [
+                { name: "Aloo Parota", price: 80 },
+                { name: "Onion Parota", price: 80 },
+                { name: "Methi Parota", price: 120 },
+                { name: "Gobi Parota", price: 50 },
+                { name: "Mix Veg Parota", price: 50 },
+                { name: "Paneer Parota", price: 50 },
+                { name: "Cheese Parota", price: 50 },
+                { name: "Egg Parota (2 Eggs)", price: 60 },
+                { name: "Chicken Parota", price: 50 }
+                ],
+            },
+
+            {
+                category: "Soups",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp8Kv-G872qLWTI662Cl_B9r9FtaA4DguMiA&s",
+                items: [
+                { name: "Veg Manchow Soup", price: 70 },
+                { name: "Chicken Manchow Soup", price: 90 },
+                { name: "Veg Hot Sour Soup", price: 60 },
+                { name: "Veg Corn Soup", price: 60 },
+                { name: "Tomato Soup", price: 60 },
+                { name: "Veg Mushroom Soup", price: 80 },
+                { name: "Veg Coriander Soup", price: 60 }
+                ],
+            },
+
+            {
+                category: "Starters",
+                image: "https://www.freshtohome.com/blog/wp-content/uploads/2024/08/ChickenStarter1.png",
+                items: [
+                { name: "Veg Crispy", price: 80 },
+                { name: "Veg Crispy/Schezwan", price: 90 },
+                { name: "Paneer Chilli", price: 120 },
+                { name: "Paneer Crispy", price: 100 },
+                { name: "Chicken Crispy", price: 120 },
+                { name: "Mushroom Chilli", price: 100 },
+                { name: "Chicken Chilli", price: 110 },
+                { name: "Veg Manchurian", price: 70 },
+                { name: "Chicken Manchurian", price: 120 },
+                { name: "Gobi Chilli", price: 80 }
+                ],
+            },
+
+            {
+                category: "Fried Rice",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSvJ-4KVdyGWaeCdR6w1vhY653Xyk9g2Y0lQ&s",
+                items: [
+                { name: "Veg Fried Rice", price: 60 },
+                { name: "Veg Manchurian Fried Rice", price: 80 },
+                { name: "Veg Schezwan Fried Rice", price: 80 },
+                { name: "Mushroom Fried Rice", price: 100 },
+                { name: "Egg Fried Rice", price: 70 },
+                { name: "Egg Manchurian Fried Rice", price: 90 },
+                { name: "Egg Schezwan Fried Rice", price: 90 },
+                { name: "Egg Mushroom Fried Rice", price: 110 },
+                { name: "Chicken Fried Rice", price: 80 },
+                { name: "Chicken Manchurian Fried Rice", price: 100 },
+                { name: "Chicken Schezwan Fried Rice", price: 100 },
+                { name: "Chicken Mushroom Fried Rice", price: 120 },
+                { name: "Paneer Fried Rice", price: 100 },
+                { name: "Jeera Rice", price: 60 },
+                { name: "Lemon Rice", price: 60 },
+                { name: "Tomato Rice", price: 60 },
+                { name: "Curd Rice", price: 60 }
+                ],
+            },
+
+            {
+                category: "Noodles",
+                image: "https://t3.ftcdn.net/jpg/06/10/03/82/360_F_610038219_jVhQanmTK0WUw2NO0lPhQBUqdQiLzTOs.jpg",
+                items: [
+                { name: "Veg Noodles", price: 60 },
+                { name: "Veg Manchurian Noodles", price: 80 },
+                { name: "Veg Schezwan Noodles", price: 80 },
+                { name: "Mushroom Noodles", price: 100 },
+                { name: "Paneer Noodles", price: 100 },
+                { name: "Egg Noodles", price: 70 },
+                { name: "Egg Manchurian Noodles", price: 90 },
+                { name: "Egg Schezwan Noodles", price: 90 },
+                { name: "Egg Mushroom Noodles", price: 110 },
+                { name: "Chicken Noodles", price: 80 },
+                { name: "Chicken Manchurian Noodles", price: 100 },
+                { name: "Chicken Schezwan Noodles", price: 100 },
+                { name: "Chicken Mushroom Noodles", price: 120 }
+                ],
+            },
+
+            {
+                category: "Fruit Shake",
+                image: "https://static.toiimg.com/thumb/msid-113025116,width-1280,height-720,imgsize-78566,resizemode-6,overlay-toi_sw,pt-32,y_pad-40/photo.jpg",
+                items: [
+                { name: "Papaya", price: 60 },
+                { name: "Pineapple", price: 60 },
+                { name: "Butter Fruit", price: 60 },
+                { name: "Apple", price: 60 },
+                { name: "Pomegranate", price: 60 },
+                { name: "Dragon Fruit", price: 60 }
+                ],
+            },
+
+            {
+                category: "Mojito",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf_5NZ5NEY5CWQKkW5lWgkw6Ki0TE-IMDTmA&s",
+                items: [
+                { name: "Blueberry", price: 70 },
+                { name: "Pineapple", price: 60 },
+                { name: "Butterscotch", price: 60 },
+                { name: "Black Currant", price: 70 },
+                { name: "Green Apple", price: 60 },
+                { name: "Strawberry", price: 60 },
+                { name: "Pista", price: 60 },
+                { name: "Fresh Fruit", price: 60 }
+                ],
+            },
+
+            {
+                category: "Special Ice Cream",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMr-b-WYbfTErmQRRXfnwxfn72mLJCk-xlMg&s",
+                items: [
+                { name: "Dairy Milk", price: 100 },
+                { name: "Oreo", price: 90 },
+                { name: "Kit Kat", price: 100 },
+                { name: "Dry Fruit", price: 100 },
+                { name: "Fresh Fruit", price: 90 }
+                ],
+            },
+
+            {
+                category: "Fruit Salad",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo1bEkPE7L-IiLAJN9tCD1ZUBPsEkqSwgwvg&s",
+                items: [
+                { name: "Akka Fruit Salad", price: 90 },
+                { name: "Special Fruit Salad", price: 80 },
+                { name: "Fruit Salad", price: 60 },
+                { name: "Dry Fruit Salad", price: 90 },
+                { name: "Dry Fresh Fruit Salad", price: 70 },
+                { name: "Malabar Food Salad", price: 70 }
+                ],
+            },
+
+            {
+                category: "Ice Cream Shake",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0vZsB7k9mSOpMwh4wV2vNHe-2-vjFh_n2EQ&s",
+                items: [
+                { name: "Vanilla", price: 60 },
+                { name: "Strawberry", price: 60 },
+                { name: "Spanish Delete", price: 70 },
+                { name: "Butterscotch", price: 70 },
+                { name: "Pista", price: 60 },
+                { name: "Tender Coconut", price: 80 },
+                { name: "Afghani", price: 80 },
+                { name: "Red Velvet", price: 80 },
+                { name: "Black Currant", price: 80 },
+                { name: "Blueberry", price: 80 },
+                { name: "Custard Apple", price: 70 },
+                { name: "Honey Nut Crunchi", price: 90 },
+                { name: "Cocktail", price: 70 }
+                ],
+            },
+
+            {
+                category: "Health Tropical Juice",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK9YF_ZL5lpuEYufkm_JXtjlZ8d3oNO528lQ&s",
+                items: [
+                { name: "Amla Kukumar", price: 40 },
+                { name: "Miracle", price: 70 },
+                { name: "ABC (Apple Beetroot Carrot)", price: 70 },
+                { name: "Carrot+Palak+Yogurt", price: 80 },
+                { name: "Carrot+Palak+Yogurt+Honey", price: 90 },
+                { name: "Carrot Pineapple", price: 60 },
+                { name: "Carrot Beetroot", price: 40 },
+                { name: "Amla", price: 30 },
+                { name: "Cucumber", price: 40 },
+                { name: "Carrot", price: 40 }
+                ],
+            },
+
+            {
+                category: "Beverages",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtaK-nast8Vi4FqrkBKu5NkxZQ9aVWGn0u_A&s",
+                items: [
+                { name: "Pineapple", price: 40 },
+                { name: "Apple", price: 50 },
+                { name: "Papaya", price: 40 },
+                { name: "Orange", price: 30 },
+                { name: "Watermelon", price: 40 },
+                { name: "Muskmelon", price: 40 },
+                { name: "Anar", price: "N/A" },
+                { name: "Dragon", price: "N/A" },
+                { name: "Cold Boost", price: 40 },
+                { name: "Cold Coffee", price: 40 },
+                { name: "Cold Horlicks", price: 40 }
+                ],
+            },
+        ];
+
+        const cart = [];
+
+        // Event delegation for mobile and desktop compatibility
+        document.addEventListener('click', function(event) {
+            // Quantity decrease
+            if (event.target.classList.contains('quantity-decrease')) {
+                const quantityInput = event.target.nextElementSibling;
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 0) {
+                    quantityInput.value = currentValue - 1;
+                }
+            }
+
+            // Quantity increase
+            if (event.target.classList.contains('quantity-increase')) {
+                const quantityInput = event.target.previousElementSibling;
+                let currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            }
+
+            // Add to Cart
+            if (event.target.classList.contains('add-to-cart')) {
+                const itemCard = event.target.closest('.bg-white');
+                const itemName = itemCard.querySelector('h3').textContent;
+                const itemPrice = parseFloat(itemCard.querySelector('.text-green-600').textContent.replace('₹', ''));
+                const quantityInput = itemCard.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+
+                if (quantity > 0) {
+                    addToCart({ name: itemName, price: itemPrice, quantity });
+                    quantityInput.value = 0;
+                }
+            }
+
+            // Mobile cart toggle
+            if (event.target.id === 'mobileCartToggle' || event.target.closest('#mobileCartToggle')) {
+                const cartContainer = document.getElementById('cartContainer');
+                cartContainer.classList.remove('hidden');
+            }
+
+            // Mobile cart close
+            if (event.target.id === 'mobileCartClose' || event.target.closest('#mobileCartClose')) {
+                const cartContainer = document.getElementById('cartContainer');
+                cartContainer.classList.add('hidden');
+            }
+
+            // Back to categories
+            if (event.target.id === 'backButton' || event.target.closest('#backButton')) {
+                document.getElementById('menuItems').classList.add('hidden');
+                document.getElementById('menuCategories').classList.remove('hidden');
+            }
+
+            // Clear cart
+            if (event.target.id === 'clearCartButton') {
+                cart.length = 0;
+                updateCart();
+            }
+
+            // Checkout
+            if (event.target.id === 'checkoutButton') {
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                alert(`Total amount: ₹${total}`);
+            }
+        });
+
+        function addToCart(item) {
+            const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += item.quantity;
+            } else {
+                cart.push(item);
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartItemCount = document.getElementById('cartItemCount');
+            const mobileBadge = document.getElementById('mobileBadge');
+            const totalItemCount = document.getElementById('totalItemCount');
+            const totalAmount = document.getElementById('totalAmount');
+
+            cartItemsContainer.innerHTML = '';
+            
+            let totalItems = 0;
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement('li');
+                cartItem.className = 'flex justify-between items-center';
+                cartItem.innerHTML = `
+                    <div>
+                        <span>${item.name} x ${item.quantity}</span>
+                        <span class="text-gray-500 ml-2">₹${item.price * item.quantity}</span>
+                    </div>
+                    <button class="remove-item text-red-500 hover:underline" data-index="${index}">Remove</button>
+                `;
+
+                cartItemsContainer.appendChild(cartItem);
+
+                totalItems += item.quantity;
+                total += item.price * item.quantity;
+            });
+
+            cartItemCount.textContent = cart.length;
+            mobileBadge.textContent = cart.length;
+            totalItemCount.textContent = totalItems;
+            totalAmount.textContent = `₹${total}`;
+        }
+
+        // Search functionality for both categories and items
+document.getElementById('searchInput').addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+
+    // Filter the categories and their items based on the search term
+    const filteredData = menuData.filter(category => {
+        // Check if category name matches
+        const categoryMatches = category.category.toLowerCase().includes(searchTerm);
+
+        // Check if any item name matches
+        const itemsMatch = category.items.some(item =>
+            item.name.toLowerCase().includes(searchTerm)
+        );
+
+        return categoryMatches || itemsMatch;
+    });
+
+    // Render the filtered categories and items
+    renderCategories(filteredData);
+});
+
+// Function to render categories
+function renderCategories(data) {
+    const container = document.getElementById('menuCategories');
+    container.innerHTML = '';
+
+    data.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.className = 'bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:scale-105 cursor-pointer';
+        categoryCard.innerHTML = `
+            <img src="${category.image}" alt="${category.category}" class="w-full rounded-md mb-4">
+            <h2 class="text-xl font-semibold text-gray-700">${category.category}</h2>
+        `;
+
+        categoryCard.addEventListener('click', () => {
+            renderItems(category);
+        });
+
+        container.appendChild(categoryCard);
+    });
+}
+
+// Function to render items for a selected category
+function renderItems(category) {
+    document.getElementById('menuCategories').classList.add('hidden');
+    document.getElementById('menuItems').classList.remove('hidden');
+
+    const itemsContainer = document.getElementById('itemsList');
+    itemsContainer.innerHTML = '';
+
+    category.items.forEach(item => {
+        const itemCard = document.createElement('div');
+        itemCard.className = 'bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:scale-105';
+        itemCard.innerHTML = `
+            <h3 class="text-lg font-medium text-gray-800">${item.name}</h3>
+            <p class="text-green-600 font-bold">₹${item.price}</p>
+            <div class="flex items-center mt-4">
+                <button class="quantity-decrease px-2 py-1 bg-gray-200 rounded-l">-</button>
+                <input type="number" min="0" value="0" class="quantity-input w-12 text-center border" readonly>
+                <button class="quantity-increase px-2 py-1 bg-gray-200 rounded-r">+</button>
+                <button class="add-to-cart ml-4 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">Add to Cart</button>
+            </div>
+        `;
+
+        itemsContainer.appendChild(itemCard);
+    });
+}
+
+// Initial render
+    renderCategories(menuData);
+
+    </script>
+</body>
+</html>
