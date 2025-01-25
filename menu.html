@@ -647,34 +647,65 @@
             const mobileBadge = document.getElementById('mobileBadge');
             const totalItemCount = document.getElementById('totalItemCount');
             const totalAmount = document.getElementById('totalAmount');
-
+        
             cartItemsContainer.innerHTML = '';
             
             let totalItems = 0;
             let total = 0;
-
+        
             cart.forEach((item, index) => {
                 const cartItem = document.createElement('li');
                 cartItem.className = 'flex justify-between items-center';
                 cartItem.innerHTML = `
-                    <div>
-                        <span>${item.name} x ${item.quantity}</span>
-                        <span class="text-gray-500 ml-2">₹${item.price * item.quantity}</span>
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex-1">
+                            <span class="mr-2">${item.name} x ${item.quantity}</span>
+                            <span class="text-gray-500">₹${item.price * item.quantity}</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-4 w-24">
+                            <button class="quantity-btn minus text-gray-500 w-10 h-10 flex items-center justify-center border rounded-lg" data-index="${index}">-</button>
+                            <span class="mx-2">${item.quantity}</span>
+                            <button class="quantity-btn plus text-gray-500 w-10 h-10 flex items-center justify-center border rounded-lg" data-index="${index}">+</button>
+                        </div>
                     </div>
-                    <button class="remove-item text-red-500 hover:underline" data-index="${index}">Remove</button>
+                    <button class="remove-item text-red-500 hover:underline mt-2" data-index="${index}">Remove</button>
                 `;
-
+        
                 cartItemsContainer.appendChild(cartItem);
-
+        
                 totalItems += item.quantity;
                 total += item.price * item.quantity;
+        
+                
+                const removeButton = cartItem.querySelector('.remove-item');
+                removeButton.addEventListener('click', function() {
+                    cart.splice(index, 1);
+                    updateCart(); 
+                });
+        
+                
+                const minusButton = cartItem.querySelector('.quantity-btn.minus');
+                minusButton.addEventListener('click', function() {
+                    if (item.quantity > 1) { 
+                        item.quantity--;
+                        updateCart(); 
+                    }
+                });
+        
+               
+                const plusButton = cartItem.querySelector('.quantity-btn.plus');
+                plusButton.addEventListener('click', function() {
+                    item.quantity++;
+                    updateCart(); 
+                });
             });
-
+        
             cartItemCount.textContent = cart.length;
             mobileBadge.textContent = cart.length;
             totalItemCount.textContent = totalItems;
             totalAmount.textContent = `₹${total}`;
         }
+        
 
         document.getElementById('searchInput').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
