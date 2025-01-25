@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <style>
-        /* Prevent iOS zoom on input focus */
+        
         input[type="number"]:focus {
             font-size: 16px;
         }
@@ -15,7 +15,7 @@
 </head>
 <body class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <!-- Logo Section -->
+     
         <div class="flex flex-col items-center mb-8">
             <img src="https://img.freepik.com/premium-photo/cartoon-woman-with-red-hair-wearing-chef-hat-stands-front-pot-with-red-sauce-it_81048-16328.jpg" 
      alt="Akka's Menu Logo" class="w-20 h-20 rounded-full shadow-lg">
@@ -24,7 +24,7 @@
             </h1>
         </div>
         
-        <!-- Mobile Cart Toggle Button -->
+        
         <div class="lg:hidden fixed bottom-4 right-4 z-40">
             <button id="mobileCartToggle" class="bg-blue-500 text-white p-4 rounded-full shadow-lg relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,16 +47,16 @@
             </div>
         </div>
 
-        <!-- Main Content Container -->
+        
         <div class="flex flex-col lg:flex-row gap-6 relative">
-            <!-- Menu Categories and Items Container -->
+           
             <div class="flex-grow">
-                <!-- Menu categories -->
+                
                 <div id="menuCategories" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    <!-- JavaScript will dynamically populate this -->
+                    
                 </div>
 
-                <!-- Items container -->
+                
                 <div id="menuItems" class="mt-8 hidden">
                     <button id="backButton" 
                         class="mb-6 px-4 py-2 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 flex items-center">
@@ -66,12 +66,12 @@
                         Back to Categories
                     </button>
                     <div id="itemsList" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                        <!-- JavaScript will dynamically populate this -->
+                        
                     </div>
                 </div>
             </div>
 
-            <!-- Cart Container - Responsive Design -->
+            
             <div id="cartContainer" class="fixed inset-0 z-50 bg-white bg-opacity-95 hidden lg:block lg:w-96 lg:bg-transparent lg:bg-opacity-100 lg:static">
                 <div class="h-full lg:sticky lg:top-4 bg-white shadow-lg rounded-lg p-6 max-h-[80vh] overflow-y-auto relative">
                     <h2 class="text-2xl font-bold mb-4 flex items-center justify-between">
@@ -118,6 +118,23 @@
             </div>
         </div>
     </div>
+    <footer class="bg-gray-100 p-4 text-center">
+        <p class="text-sm">
+            Developed by 
+            <a 
+                href="https://www.linkedin.com/in/harsh-pandita-dev/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="text-blue-600 hover:underline inline-flex items-center ml-1"
+            >
+                Harsh Pandita
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#0A66C2" class="ml-2">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+            </a>
+        </p>
+    </footer>
+
     <script>
         const menuData = [
             {
@@ -504,9 +521,9 @@
 
         const cart = [];
 
-        // Event delegation for mobile and desktop compatibility
+        
         document.addEventListener('click', function(event) {
-            // Quantity decrease
+           
             if (event.target.classList.contains('quantity-decrease')) {
                 const quantityInput = event.target.nextElementSibling;
                 let currentValue = parseInt(quantityInput.value);
@@ -515,14 +532,14 @@
                 }
             }
 
-            // Quantity increase
+            
             if (event.target.classList.contains('quantity-increase')) {
                 const quantityInput = event.target.previousElementSibling;
                 let currentValue = parseInt(quantityInput.value);
                 quantityInput.value = currentValue + 1;
             }
 
-            // Add to Cart
+            
             if (event.target.classList.contains('add-to-cart')) {
                 const itemCard = event.target.closest('.bg-white');
                 const itemName = itemCard.querySelector('h3').textContent;
@@ -536,36 +553,81 @@
                 }
             }
 
-            // Mobile cart toggle
+           
             if (event.target.id === 'mobileCartToggle' || event.target.closest('#mobileCartToggle')) {
                 const cartContainer = document.getElementById('cartContainer');
                 cartContainer.classList.remove('hidden');
             }
 
-            // Mobile cart close
+        
             if (event.target.id === 'mobileCartClose' || event.target.closest('#mobileCartClose')) {
                 const cartContainer = document.getElementById('cartContainer');
                 cartContainer.classList.add('hidden');
             }
 
-            // Back to categories
+            
             if (event.target.id === 'backButton' || event.target.closest('#backButton')) {
                 document.getElementById('menuItems').classList.add('hidden');
                 document.getElementById('menuCategories').classList.remove('hidden');
             }
 
-            // Clear cart
+            
             if (event.target.id === 'clearCartButton') {
                 cart.length = 0;
                 updateCart();
             }
 
-            // Checkout
+            
             if (event.target.id === 'checkoutButton') {
                 const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 alert(`Total amount: ₹${total}`);
             }
         });
+
+        function renderCategories(data) {
+            const container = document.getElementById('menuCategories');
+            container.innerHTML = '';
+
+            data.forEach(category => {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:scale-105 cursor-pointer';
+                categoryCard.innerHTML = `
+                    <img src="${category.image}" alt="${category.category}" class="w-full rounded-md mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">${category.category}</h2>
+                `;
+
+                categoryCard.addEventListener('click', () => {
+                    renderItems(category);
+                });
+
+                container.appendChild(categoryCard);
+            });
+        }
+
+        function renderItems(category) {
+            document.getElementById('menuCategories').classList.add('hidden');
+            document.getElementById('menuItems').classList.remove('hidden');
+
+            const itemsContainer = document.getElementById('itemsList');
+            itemsContainer.innerHTML = '';
+
+            category.items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:scale-105';
+                itemCard.innerHTML = `
+                    <h3 class="text-lg font-medium text-gray-800">${item.name}</h3>
+                    <p class="text-green-600 font-bold">₹${item.price}</p>
+                    <div class="flex items-center mt-4">
+                        <button class="quantity-decrease px-2 py-1 bg-gray-200 rounded-l">-</button>
+                        <input type="number" min="0" value="0" class="quantity-input w-12 text-center border" readonly>
+                        <button class="quantity-increase px-2 py-1 bg-gray-200 rounded-r">+</button>
+                        <button class="add-to-cart ml-4 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">Add to Cart</button>
+                    </div>
+                `;
+
+                itemsContainer.appendChild(itemCard);
+            });
+        }
 
         function addToCart(item) {
             const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
@@ -614,76 +676,24 @@
             totalAmount.textContent = `₹${total}`;
         }
 
-        // Search functionality for both categories and items
-document.getElementById('searchInput').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
 
-    // Filter the categories and their items based on the search term
-    const filteredData = menuData.filter(category => {
-        // Check if category name matches
-        const categoryMatches = category.category.toLowerCase().includes(searchTerm);
+            const filteredData = menuData.filter(category => {
+               
+                const categoryMatches = category.category.toLowerCase().includes(searchTerm);
+                const itemsMatch = category.items.some(item =>
+                    item.name.toLowerCase().includes(searchTerm)
+                );
 
-        // Check if any item name matches
-        const itemsMatch = category.items.some(item =>
-            item.name.toLowerCase().includes(searchTerm)
-        );
+                return categoryMatches || itemsMatch;
+            });
 
-        return categoryMatches || itemsMatch;
-    });
-
-    // Render the filtered categories and items
-    renderCategories(filteredData);
-});
-
-// Function to render categories
-function renderCategories(data) {
-    const container = document.getElementById('menuCategories');
-    container.innerHTML = '';
-
-    data.forEach(category => {
-        const categoryCard = document.createElement('div');
-        categoryCard.className = 'bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:scale-105 cursor-pointer';
-        categoryCard.innerHTML = `
-            <img src="${category.image}" alt="${category.category}" class="w-full rounded-md mb-4">
-            <h2 class="text-xl font-semibold text-gray-700">${category.category}</h2>
-        `;
-
-        categoryCard.addEventListener('click', () => {
-            renderItems(category);
+            renderCategories(filteredData);
         });
 
-        container.appendChild(categoryCard);
-    });
-}
-
-// Function to render items for a selected category
-function renderItems(category) {
-    document.getElementById('menuCategories').classList.add('hidden');
-    document.getElementById('menuItems').classList.remove('hidden');
-
-    const itemsContainer = document.getElementById('itemsList');
-    itemsContainer.innerHTML = '';
-
-    category.items.forEach(item => {
-        const itemCard = document.createElement('div');
-        itemCard.className = 'bg-white shadow-lg rounded-lg p-6 transform transition duration-300 hover:scale-105';
-        itemCard.innerHTML = `
-            <h3 class="text-lg font-medium text-gray-800">${item.name}</h3>
-            <p class="text-green-600 font-bold">₹${item.price}</p>
-            <div class="flex items-center mt-4">
-                <button class="quantity-decrease px-2 py-1 bg-gray-200 rounded-l">-</button>
-                <input type="number" min="0" value="0" class="quantity-input w-12 text-center border" readonly>
-                <button class="quantity-increase px-2 py-1 bg-gray-200 rounded-r">+</button>
-                <button class="add-to-cart ml-4 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">Add to Cart</button>
-            </div>
-        `;
-
-        itemsContainer.appendChild(itemCard);
-    });
-}
-
-// Initial render
-    renderCategories(menuData);
+       
+            renderCategories(menuData);
 
     </script>
 </body>
