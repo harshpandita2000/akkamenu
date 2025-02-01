@@ -13,9 +13,11 @@
         input[type="number"]:focus {
             font-size: 16px;
         }
+        
     </style>
     </head>
     <body
+    
         class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 min-h-screen">
         <div class="container mx-auto px-4 py-8">
 
@@ -148,9 +150,28 @@
                                     Clear
                                 </button>
                             </div>
+
                         </div>
                     </div>
                 </div>
+                <!-- Rating Section -->
+        <div class="mt-4 pt-4 border-t">
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="https://zomato.onelink.me/xqzv/luq0zr6h" target="_blank" rel="noopener noreferrer" title="Rate us on Zomato">
+                    <img src="https://cdn.iconscout.com/icon/free/png-512/free-zomato-logo-icon-download-in-svg-png-gif-file-formats--food-company-brand-delivery-brans-logos-icons-1637644.png?f=webp&w=256" alt="Zomato" class="h-8 w-8">
+                </a>
+                <a href="https://www.swiggy.com/menu/1031731?source=sharing" target="_blank" rel="noopener noreferrer" title="Rate us on Swiggy">
+                    <img src="https://cdn.iconscout.com/icon/free/png-512/free-swiggy-logo-icon-download-in-svg-png-gif-file-formats--food-delivery-package-pack-logos-icons-1369418.png?f=webp&w=256" alt="Swiggy" class="h-8 w-8">
+                </a>
+                <a href="https://magicpin.in/walletRecharge?merchantId=52083382" target="_blank" rel="noopener noreferrer" title="Rate us on MagicPin">
+                    <img src="https://images.yourstory.com/cs/images/companies/6723190122636619372819335513378071094231040o-1590990173281.png?fm=png&auto=formatar=1:1&mode=fill&fill=solid" alt="MagicPin" class="h-8 w-8">
+                </a>
+                <a href="https://g.co/kgs/JNGPftN" target="_blank" rel="noopener noreferrer" title="Rate us on Google">
+                    <img src="https://cdn.iconscout.com/icon/free/png-512/free-google-logo-icon-download-in-svg-png-gif-file-formats--brands-pack-logos-icons-189824.png?f=webp&w=256" alt="Google" class="h-8 w-8">
+                </a>
+            </div>
+            <p class="text-center text-sm mt-2">Help us improve by rating us on Zomato, Swiggy, MagicPin, and Google!</p>
+        </div>
             </div>
         </div>
         
@@ -176,23 +197,63 @@
         </div>
 
         <footer class="bg-gray-100 p-4 text-center">
-            <p class="text-sm">
+            <p class="text-sm flex justify-center items-center">
                 Developed by
-                <a
-                    href="https://www.linkedin.com/in/harsh-pandita-dev/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-blue-600 hover:underline inline-flex items-center ml-1">
+                <a href="https://www.linkedin.com/in/harsh-pandita-dev/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="text-blue-600 hover:underline inline-flex items-center ml-2">
                     Harsh Pandita
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                        height="24" viewBox="0 0 24 24" fill="#0A66C2"
-                        class="ml-2">
-                        <path
-                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                    </svg>
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" 
+                         alt="LinkedIn Badge" height="30" width="40" class="ml-2" />
+                </a>
+                <a href="https://www.instagram.com/harsh_.pandita/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="text-blue-600 hover:underline inline-flex items-center ml-2">
+                    <img src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Instagram-256.png" 
+                         alt="Instagram Badge" height="30" width="40" class="ml-2" />
                 </a>
             </p>
         </footer>
+        
+        
+        
+        <style>
+        
+        #orderModal {
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100; 
+            opacity: 0;
+            visibility: hidden; 
+            transition: opacity 0.3s ease, visibility 0.3s ease; 
+        }
+    
+        #orderModal.active {
+            opacity: 1;
+            visibility: visible; 
+        }
+    
+        
+        @media (max-width: 640px) {
+            #orderModal .modal-content {
+                width: 90%;
+                max-height: 80vh; 
+                overflow-y: auto;
+            }
+        }
+
+    </style>
+    
+    
 
         <script>
         const menuData = [
@@ -378,21 +439,7 @@
                 ],
             },
 
-            {
-                category: "All Stuffing Paratha",
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB1zmCSrQVNvFqhlhDZulTEQmVX8GYYJObRQ&s",
-                items: [
-                { name: "Aloo Parota", price: 80 },
-                { name: "Onion Parota", price: 80 },
-                { name: "Methi Parota", price: 120 },
-                { name: "Gobi Parota", price: 50 },
-                { name: "Mix Veg Parota", price: 50 },
-                { name: "Paneer Parota", price: 50 },
-                { name: "Cheese Parota", price: 50 },
-                { name: "Egg Parota (2 Eggs)", price: 60 },
-                { name: "Chicken Parota", price: 50 }
-                ],
-            },
+            
 
             {
                 category: "Soups",
@@ -577,6 +624,7 @@
                 ],
             },
         ];
+      
 
         const cart = [];
 
@@ -780,33 +828,34 @@
         });
              renderCategories(menuData);
 
-document.getElementById('checkoutButton').addEventListener('click', () => {
-    const orderDetailsContainer = document.getElementById('orderDetails');
-    const modalTotalAmount = document.getElementById('modalTotalAmount');
-    const modal = document.getElementById('orderModal');
-
-    orderDetailsContainer.innerHTML = '';
-    let totalAmount = 0;
-
-    cart.forEach(item => {
-        const orderItem = document.createElement('li');
-        orderItem.className = 'flex justify-between mb-2';
-        orderItem.innerHTML = `
-            <span>${item.name} x ${item.quantity}</span>
-            <span>₹${item.price * item.quantity}</span>
-        `;
-        orderDetailsContainer.appendChild(orderItem);
-        totalAmount += item.price * item.quantity;
-    });
-
-    modalTotalAmount.textContent = `₹${totalAmount}`;
-    modal.classList.remove('hidden');
-});
-
-document.getElementById('closeModalButton').addEventListener('click', () => {
-    // Hide the modal
-    document.getElementById('orderModal').classList.add('hidden');
-});
+             document.getElementById('checkoutButton').addEventListener('click', () => {
+                const orderDetailsContainer = document.getElementById('orderDetails');
+                const modalTotalAmount = document.getElementById('modalTotalAmount');
+                const modal = document.getElementById('orderModal'); 
+            
+                orderDetailsContainer.innerHTML = '';
+                let totalAmount = 0;
+            
+                cart.forEach(item => {
+                    const orderItem = document.createElement('li');
+                    orderItem.className = 'flex justify-between mb-2';
+                    orderItem.innerHTML = `
+                        <span>${item.name} x ${item.quantity}</span>
+                        <span>₹${item.price * item.quantity}</span>
+                    `;
+                    orderDetailsContainer.appendChild(orderItem);
+                    totalAmount += item.price * item.quantity;
+                });
+            
+                modalTotalAmount.textContent = `₹${totalAmount}`;
+                modal.classList.add('active');
+            });
+            
+            document.getElementById('closeModalButton').addEventListener('click', () => {
+                const modal = document.getElementById('orderModal');
+                modal.classList.remove('active'); 
+            });
+            
     </script>
     </body>
 </html>
