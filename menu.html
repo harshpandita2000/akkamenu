@@ -13,7 +13,18 @@
         input[type="number"]:focus {
             font-size: 16px;
         }
-        
+          @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    
+        .pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
     </style>
     </head>
     <body
@@ -196,23 +207,23 @@
             </div>
         </div>
 
-        <footer class="bg-gray-100 p-4 text-center">
-            <p class="text-sm flex justify-center items-center">
+         <footer class="bg-gray-100 p-4 text-center pb-16 lg:pb-4">
+            <p class="text-sm flex justify-center items-center pulse">
                 Developed by
                 <a href="https://www.linkedin.com/in/harsh-pandita-dev/"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="text-blue-600 hover:underline inline-flex items-center ml-2">
                     Harsh Pandita
-                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png" 
-                         alt="LinkedIn Badge" height="30" width="40" class="ml-2" />
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png"
+                         alt="LinkedIn Badge" height="20" width="20" class="ml-2" />
                 </a>
                 <a href="https://www.instagram.com/harsh_.pandita/"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="text-blue-600 hover:underline inline-flex items-center ml-2">
-                    <img src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Instagram-256.png" 
-                         alt="Instagram Badge" height="30" width="40" class="ml-2" />
+                    <img src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Instagram-256.png"
+                         alt="Instagram Badge" height="20" width="20" class="ml-2" />
                 </a>
             </p>
         </footer>
