@@ -25,6 +25,105 @@
         .pulse {
             animation: pulse 2s infinite ease-in-out;
         }
+    .rating-container {
+            width: 100%;
+            padding: 15px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fff5f5, #fff);
+        }
+        
+        .logo-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-item {
+            position: relative;
+            text-decoration: none;
+        }
+        
+        .rating-logo {
+            width: 45px;
+            height: 45px;
+            padding: 8px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            animation: gentleFloat 3s infinite;
+            animation-delay: calc(var(--delay) * 0.5s);
+        }
+        
+        .logo-item:nth-child(1) { --delay: 0; }
+        .logo-item:nth-child(2) { --delay: 1; }
+        .logo-item:nth-child(3) { --delay: 2; }
+        .logo-item:nth-child(4) { --delay: 3; }
+        
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .logo-item:hover .rating-logo {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .footer-text {
+            color: #666;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            margin: 15px 0 0 0;
+            padding: 0 10px;
+            text-align: center;
+        }
+        
+        .heart-icon {
+            color: #ff6b6b;
+            display: inline-block;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Active state for touch devices */
+        .logo-item:active .rating-logo {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 480px) {
+            .logo-grid {
+                gap: 20px;
+                padding: 10px 15px;
+            }
+            
+            .rating-logo {
+                width: 40px;
+                height: 40px;
+                padding: 6px;
+            }
+        
+            .footer-text {
+                font-size: 14px;
+            }
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+            
     </style>
     </head>
     <body
@@ -166,25 +265,26 @@
                     </div>
                 </div>
                 <!-- Rating Section -->
-        <div class="mt-4 pt-4 border-t">
-            <div class="flex justify-center space-x-4 mt-4">
-                <a href="https://zomato.onelink.me/xqzv/luq0zr6h" target="_blank" rel="noopener noreferrer" title="Rate us on Zomato">
-                    <img src="https://cdn.iconscout.com/icon/free/png-512/free-zomato-logo-icon-download-in-svg-png-gif-file-formats--food-company-brand-delivery-brans-logos-icons-1637644.png?f=webp&w=256" alt="Zomato" class="h-8 w-8">
-                </a>
-                <a href="https://www.swiggy.com/menu/1031731?source=sharing" target="_blank" rel="noopener noreferrer" title="Rate us on Swiggy">
-                    <img src="https://cdn.iconscout.com/icon/free/png-512/free-swiggy-logo-icon-download-in-svg-png-gif-file-formats--food-delivery-package-pack-logos-icons-1369418.png?f=webp&w=256" alt="Swiggy" class="h-8 w-8">
-                </a>
-                <a href="https://magicpin.in/walletRecharge?merchantId=52083382" target="_blank" rel="noopener noreferrer" title="Rate us on MagicPin">
-                    <img src="https://images.yourstory.com/cs/images/companies/6723190122636619372819335513378071094231040o-1590990173281.png?fm=png&auto=formatar=1:1&mode=fill&fill=solid" alt="MagicPin" class="h-8 w-8">
-                </a>
-                <a href="https://g.co/kgs/JNGPftN" target="_blank" rel="noopener noreferrer" title="Rate us on Google">
-                    <img src="https://cdn.iconscout.com/icon/free/png-512/free-google-logo-icon-download-in-svg-png-gif-file-formats--brands-pack-logos-icons-189824.png?f=webp&w=256" alt="Google" class="h-8 w-8">
-                </a>
-            </div>
-            <p class="text-center text-sm mt-2">Help us improve by rating us on Zomato, Swiggy, MagicPin, and Google!</p>
-        </div>
-            </div>
-        </div>
+                <div class="rating-container">
+                    <div class="logo-grid">
+                        <a href="https://zomato.onelink.me/xqzv/luq0zr6h" class="logo-item" target="_blank" rel="noopener noreferrer">
+                            <img src="https://cdn.iconscout.com/icon/free/png-512/free-zomato-logo-icon-download-in-svg-png-gif-file-formats--food-company-brand-delivery-brans-logos-icons-1637644.png?f=webp&w=256" alt="Zomato" class="rating-logo">
+                        </a>
+                        
+                        <a href="https://www.swiggy.com/menu/1031731?source=sharing" class="logo-item" target="_blank" rel="noopener noreferrer">
+                            <img src="https://cdn.iconscout.com/icon/free/png-512/free-swiggy-logo-icon-download-in-svg-png-gif-file-formats--food-delivery-package-pack-logos-icons-1369418.png?f=webp&w=256" alt="Swiggy" class="rating-logo">
+                        </a>
+                        
+                        <a href="https://magicpin.in/walletRecharge?merchantId=52083382" class="logo-item" target="_blank" rel="noopener noreferrer">
+                            <img src="https://images.yourstory.com/cs/images/companies/6723190122636619372819335513378071094231040o-1590990173281.png?fm=png&auto=format" alt="MagicPin" class="rating-logo">
+                        </a>
+                        
+                        <a href="https://g.co/kgs/JNGPftN" class="logo-item" target="_blank" rel="noopener noreferrer">
+                            <img src="https://cdn.iconscout.com/icon/free/png-512/free-google-logo-icon-download-in-svg-png-gif-file-formats--brands-pack-logos-icons-189824.png?f=webp&w=256" alt="Google" class="rating-logo">
+                        </a>
+                    </div>
+                    <p class="footer-text">We'd love to hear from you! <span class="heart-icon">❤️</span></p>
+                </div>
         
         <div id="orderModal"
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
