@@ -286,26 +286,41 @@
                     <p class="footer-text">We'd love to hear from you! <span class="heart-icon">❤️</span></p>
                 </div>
         
-        <div id="orderModal"
-            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-            <div class="bg-white rounded-lg w-3/4 max-w-md p-6">
-                <h2 class="text-lg font-bold mb-4 text-center">Order
-                    Summary</h2>
-                <p class="text-sm text-gray-600 mb-4 text-center">
-                    Please show this order summary to the receptionist or waiter
-                    to proceed.
-                </p>
-                <ul id="orderDetails" class="mb-4 text-sm"></ul>
-                <p class="font-semibold">Total Amount: <span
-                        id="modalTotalAmount" class="text-green-600"></span></p>
-                <div class="flex justify-end mt-4">
-                    <button id="closeModalButton"
-                        class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600">
-                        Close
-                    </button>
+                <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                    <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
+                        <!-- Modal Header -->
+                        <h2 class="text-xl font-bold text-center text-gray-800 mb-4">🛒 Order Summary</h2>
+                        <!-- <p class="text-sm text-gray-600 text-center mb-6">
+                            Please show this order summary to the receptionist or waiter to proceed. 🍽️
+                        </p> -->
+                
+                        <!-- Table Number Input -->
+                        <div class="mb-4">
+                            <label for="tableNumber" class="block text-sm font-medium text-gray-700">Enter Your Table Number:</label>
+                            <input type="text" id="tableNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        </div>
+                
+                        <!-- Order Details -->
+                        <ul id="orderDetails" class="space-y-2 mb-4 text-lg font-bold text-gray-700"></ul>
+                
+                        <!-- Total Amount -->
+                        <p class="font-semibold text-lg text-center">
+                            💰 Total Amount: <span id="modalTotalAmount" class="text-green-600 font-bold"></span>
+                        </p>
+                
+                        <!-- Action Buttons -->
+                        <div class="flex justify-between mt-4">
+                            <button id="closeModalButton"
+                                class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition duration-300">
+                                Close
+                            </button>
+                            <button id="whatsappButton"
+                                class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300">
+                                📲 Send via WhatsApp
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
          <footer class="bg-gray-100 p-4 text-center pb-16 lg:pb-4">
             <p class="text-sm flex justify-center items-center pulse">
@@ -996,31 +1011,95 @@
              document.getElementById('checkoutButton').addEventListener('click', () => {
                 const orderDetailsContainer = document.getElementById('orderDetails');
                 const modalTotalAmount = document.getElementById('modalTotalAmount');
-                const modal = document.getElementById('orderModal'); 
+                const modal = document.getElementById('orderModal');
+                const whatsappButton = document.getElementById('whatsappButton');
+                const tableNumberInput = document.getElementById('tableNumber'); 
             
+             
                 orderDetailsContainer.innerHTML = '';
+                 // Add table number helper text
+                const tableHelperText = document.createElement('p');
+                tableHelperText.className = 'text-sm text-gray-600 mt-1';
+                tableHelperText.innerHTML = 'Please check behind the QR scanner stand on your table for table number (1-8)';
+                tableNumberInput.parentNode.appendChild(tableHelperText);
+                
+                // Add table number validation
+                tableNumberInput.setAttribute('min', '1');
+                tableNumberInput.setAttribute('max', '8');
+                tableNumberInput.addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    if (value < 1 || value > 8) {
+                        this.setCustomValidity('Please enter a table number between 1 and 8');
+                        alert('Please enter a valid table number between 1 and 8');
+                        this.value = '';
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+
                 let totalAmount = 0;
+                let orderSummary = '📝 *Order Summary*\n\n';
             
-                cart.forEach(item => {
+               
+                cart.forEach((item, index) => {
                     const orderItem = document.createElement('li');
-                    orderItem.className = 'flex justify-between mb-2';
+                    orderItem.className = 'flex justify-between mb-2 font-bold text-lg'; 
+                    const itemTotal = item.price * item.quantity;
+            
+                   
                     orderItem.innerHTML = `
-                        <span>${item.name} x ${item.quantity}</span>
-                        <span>₹${item.price * item.quantity}</span>
+                        <span>${index + 1}. 🍽️ ${item.name} x ${item.quantity}</span>
+                        <span>₹${itemTotal.toFixed(2)}</span>
                     `;
                     orderDetailsContainer.appendChild(orderItem);
-                    totalAmount += item.price * item.quantity;
+            
+                  
+                    totalAmount += itemTotal;
+                    orderSummary += `*${index + 1}. 🍽️ ${item.name} x ${item.quantity} - ₹${itemTotal.toFixed(2)}*\n`;
                 });
             
-                modalTotalAmount.textContent = `₹${totalAmount}`;
+            
+                modalTotalAmount.textContent = ` ₹${totalAmount.toFixed(2)}`;
                 modal.classList.add('active');
+            
+               
+                whatsappButton.addEventListener('click', () => {
+                    const tableNumber = tableNumberInput.value.trim(); 
+            
+                    if (!tableNumber) {
+                        alert('Please enter your table number before sending the order.');
+                        return;
+                    }
+            
+                   
+                    let whatsappMessage = `*Table No: ${tableNumber}*\n\n`;
+                    whatsappMessage += orderSummary;
+                    whatsappMessage += `\n*───────────────────────*\n`; 
+                    whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
+                    whatsappMessage += `\n*───────────────────────*\n`;
+                    whatsappMessage += `🌟 *We are also available on:*\n\n`;
+                    whatsappMessage += `🟠 Zomato: https://zomato.onelink.me/xqzv/luq0zr6h\n`;
+                    whatsappMessage += `🟡 Swiggy: https://www.swiggy.com/menu/1031731?source=sharing\n`;
+                    whatsappMessage += `🔵 MagicPin: https://magicpin.in/walletRecharge?merchantId=52083382\n`;
+                    whatsappMessage += `🟢 Google: https://g.co/kgs/JNGPftN\n\n`;
+                    whatsappMessage += `❤️ *Thank you for your order!*`;
+            
+                   
+                    const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+                   
+                    const whatsappUrl = `https://wa.me/919515543873?text=${encodedMessage}`;
+            
+                   
+                    window.open(whatsappUrl, '_blank');
+                });
             });
             
+            // Close modal functionality
             document.getElementById('closeModalButton').addEventListener('click', () => {
                 const modal = document.getElementById('orderModal');
-                modal.classList.remove('active'); 
+                modal.classList.remove('active');
             });
-            
     </script>
     </body>
 </html>
