@@ -1093,8 +1093,27 @@ document.getElementById('checkoutButton').addEventListener('click', () => {
     const orderDetailsContainer = document.getElementById('orderDetails');
     const modalTotalAmount = document.getElementById('modalTotalAmount');
     const modal = document.getElementById('orderModal');
+    const tableNumberInput = document.getElementById('tableNumber'); //
 
     orderDetailsContainer.innerHTML = '';
+    const tableHelperText = document.createElement('p');
+            tableHelperText.className = 'text-sm text-gray-600 mt-1';
+            tableHelperText.innerHTML = 'Please check behind the QR scanner stand on your table for table number (1-8)';
+            tableNumberInput.parentNode.appendChild(tableHelperText);
+            
+            // Add table number validation
+            tableNumberInput.setAttribute('min', '1');
+            tableNumberInput.setAttribute('max', '8');
+            tableNumberInput.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                if (value < 1 || value > 8) {
+                    this.setCustomValidity('Please enter a table number between 1 and 8');
+                    alert('Please enter a valid table number between 1 and 8');
+                    this.value = '';
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
     let totalAmount = 0;
 
     cart.forEach((item, index) => {
