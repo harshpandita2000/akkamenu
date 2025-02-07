@@ -1049,94 +1049,71 @@ if (window.location.hash !== '#cart') {
         });
              renderCategories(menuData);
 
-             document.getElementById('checkoutButton').addEventListener('click', () => {
-                const orderDetailsContainer = document.getElementById('orderDetails');
-                const modalTotalAmount = document.getElementById('modalTotalAmount');
-                const modal = document.getElementById('orderModal');
-                const whatsappButton = document.getElementById('whatsappButton');
-                const tableNumberInput = document.getElementById('tableNumber'); 
-            
              
-                orderDetailsContainer.innerHTML = '';
-                 // Add table number helper text
-                const tableHelperText = document.createElement('p');
-                tableHelperText.className = 'text-sm text-gray-600 mt-1';
-                tableHelperText.innerHTML = 'Please check behind the QR scanner stand on your table for table number (1-8)';
-                tableNumberInput.parentNode.appendChild(tableHelperText);
-                
-                // Add table number validation
-                tableNumberInput.setAttribute('min', '1');
-                tableNumberInput.setAttribute('max', '8');
-                tableNumberInput.addEventListener('input', function() {
-                    const value = parseInt(this.value);
-                    if (value < 1 || value > 8) {
-                        this.setCustomValidity('Please enter a table number between 1 and 8');
-                        alert('Please enter a valid table number between 1 and 8');
-                        this.value = '';
-                    } else {
-                        this.setCustomValidity('');
-                    }
-                });
+document.getElementById('whatsappButton').addEventListener('click', () => {
+    const tableNumberInput = document.getElementById('tableNumber');
+    const tableNumber = tableNumberInput.value.trim();
 
-                let totalAmount = 0;
-                let orderSummary = '📝 *Order Summary*\n\n';
-            
-               
-                cart.forEach((item, index) => {
-                    const orderItem = document.createElement('li');
-                    orderItem.className = 'flex justify-between mb-2 font-bold text-lg'; 
-                    const itemTotal = item.price * item.quantity;
-            
-                   
-                    orderItem.innerHTML = `
-                        <span>${index + 1}. 🍽️ ${item.name} x ${item.quantity}</span>
-                        <span>₹${itemTotal.toFixed(2)}</span>
-                    `;
-                    orderDetailsContainer.appendChild(orderItem);
-            
-                  
-                    totalAmount += itemTotal;
-                    orderSummary += `*${index + 1}. 🍽️ ${item.name} x ${item.quantity} - ₹${itemTotal.toFixed(2)}*\n`;
-                });
-            
-            
-                modalTotalAmount.textContent = ` ₹${totalAmount.toFixed(2)}`;
-                modal.classList.add('active');
-            
-               
-                whatsappButton.addEventListener('click', () => {
-                    const tableNumber = tableNumberInput.value.trim(); 
-            
-                    if (!tableNumber) {
-                        alert('Please enter your table number before sending the order.');
-                        return;
-                    }
-            
-                   
-                    let whatsappMessage = `*🍽️ Table No: ${tableNumber}*\n\n`;
-                    whatsappMessage +=  orderSummary;
-                    whatsappMessage += `\n*───────────────────────*\n`; 
-                    whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
-                    whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
-                    whatsappMessage += `🌟 *We are also available on:*\n\n`;
-                    whatsappMessage += `🟠 *Zomato:* https://zomato.onelink.me/xqzv/luq0zr6h\n`;
-                    whatsappMessage += `🟡 *Swiggy:* https://www.swiggy.com/menu/1031731?source=sharing\n`;
-                    whatsappMessage += `🔵 *MagicPin:* https://magicpin.in/walletRecharge?merchantId=52083382\n`;
-                    whatsappMessage += `🟢 *Google:* https://g.co/kgs/JNGPftN\n\n`;
-                    whatsappMessage += `*💬 Got suggestions or feedback?*\n`;
-                    whatsappMessage += `👉 *Drop me a message on LinkedIn:* https://www.linkedin.com/in/harsh-pandita-dev/\n\n`;
-                    whatsappMessage += `*Made with ❤️ by Harsh*`;
-            
-                   
-                    const encodedMessage = encodeURIComponent(whatsappMessage);
-            
-                   
-                    const whatsappUrl = `https://wa.me/919515543873?text=${encodedMessage}`;
-            
-                   
-                    window.open(whatsappUrl, '_blank');
-                });
-            });
+    if (!tableNumber) {
+        alert('Please enter your table number before sending the order.');
+        return;
+    }
+
+    let whatsappMessage = `*🍽️ Table No: ${tableNumber}*\n\n`;
+    let orderSummary = '📝 *Order Summary*\n\n';
+    let totalAmount = 0;
+
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        totalAmount += itemTotal;
+        orderSummary += `*${index + 1}. 🍽️ ${item.name} x ${item.quantity} - ₹${itemTotal.toFixed(2)}*\n`;
+    });
+
+    whatsappMessage += orderSummary;
+    whatsappMessage += `\n*───────────────────────*\n`;
+    whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
+    whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
+    whatsappMessage += `🌟 *We are also available on:*\n\n`;
+    whatsappMessage += `🟠 *Zomato:* https://zomato.onelink.me/xqzv/luq0zr6h\n`;
+    whatsappMessage += `🟡 *Swiggy:* https://www.swiggy.com/menu/1031731?source=sharing\n`;
+    whatsappMessage += `🔵 *MagicPin:* https://magicpin.in/walletRecharge?merchantId=52083382\n`;
+    whatsappMessage += `🟢 *Google:* https://g.co/kgs/JNGPftN\n\n`;
+    whatsappMessage += `*💬 Got suggestions or feedback?*\n`;
+    whatsappMessage += `👉 *Drop me a message on LinkedIn:* https://www.linkedin.com/in/harsh-pandita-dev/\n\n`;
+    whatsappMessage += `*Made with ❤️ by Harsh*`;
+    
+
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    const whatsappUrl = `https://wa.me/919515543873?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+});
+
+
+document.getElementById('checkoutButton').addEventListener('click', () => {
+    const orderDetailsContainer = document.getElementById('orderDetails');
+    const modalTotalAmount = document.getElementById('modalTotalAmount');
+    const modal = document.getElementById('orderModal');
+
+    orderDetailsContainer.innerHTML = '';
+    let totalAmount = 0;
+
+    cart.forEach((item, index) => {
+        const orderItem = document.createElement('li');
+        orderItem.className = 'flex justify-between mb-2 font-bold text-lg';
+        const itemTotal = item.price * item.quantity;
+        totalAmount += itemTotal;
+
+        orderItem.innerHTML = `
+            <span>${index + 1}. 🍽️ ${item.name} x ${item.quantity}</span>
+            <span>₹${itemTotal.toFixed(2)}</span>
+        `;
+        orderDetailsContainer.appendChild(orderItem);
+    });
+
+    modalTotalAmount.textContent = `₹${totalAmount.toFixed(2)}`;
+    modal.classList.add('active');
+});
+
             
             // Close modal functionality
             document.getElementById('closeModalButton').addEventListener('click', () => {
