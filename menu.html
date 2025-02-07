@@ -844,12 +844,14 @@
             if (event.target.id === 'mobileCartToggle' || event.target.closest('#mobileCartToggle')) {
                 const cartContainer = document.getElementById('cartContainer');
                 cartContainer.classList.remove('hidden');
+                history.pushState({ page: 'cart' }, '', '#cart'); // Add this line
             }
 
         
             if (event.target.id === 'mobileCartClose' || event.target.closest('#mobileCartClose')) {
                 const cartContainer = document.getElementById('cartContainer');
                 cartContainer.classList.add('hidden');
+                history.back(); // Add this line
             }
 
             
@@ -889,6 +891,7 @@
         }
 
         function renderItems(category) {
+            history.pushState({ page: 'items' }, '', '#items');
             document.getElementById('menuCategories').classList.add('hidden');
             document.getElementById('menuItems').classList.remove('hidden');
 
@@ -912,6 +915,44 @@
                 itemsContainer.appendChild(itemCard);
             });
         }
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            history.pushState({ page: 'categories' }, '', '#categories'); // Add this line
+            document.getElementById('menuItems').classList.add('hidden');
+            document.getElementById('menuCategories').classList.remove('hidden');
+        });
+
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.page === 'items') {
+                // Show the items page
+                document.getElementById('menuItems').classList.remove('hidden');
+                document.getElementById('menuCategories').classList.add('hidden');
+            } else {
+                // Show the categories page
+                document.getElementById('menuItems').classList.add('hidden');
+                document.getElementById('menuCategories').classList.remove('hidden');
+            }
+        });
+        
+        // Listen for the popstate event
+window.addEventListener('popstate', function(event) {
+    const cartContainer = document.getElementById('cartContainer');
+    if (event.state && event.state.page === 'cart') {
+        // Show the cart page
+        cartContainer.classList.remove('hidden');
+    } else {
+        // Hide the cart page
+        cartContainer.classList.add('hidden');
+    }
+});
+
+// Call this function on page load to set the initial state if not already set
+if (window.location.hash !== '#cart') {
+    history.replaceState({ page: 'main' }, '', window.location.pathname);
+}
+
+        // Call this function on page load to set the initial state
+        history.replaceState({ page: 'categories' }, '', '#categories');
 
         function addToCart(item) {
             const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
@@ -1072,17 +1113,19 @@
                     }
             
                    
-                    let whatsappMessage = `*Table No: ${tableNumber}*\n\n`;
-                    whatsappMessage += orderSummary;
+                    let whatsappMessage = `*🍽️ Table No: ${tableNumber}*\n\n`;
+                    whatsappMessage +=  orderSummary;
                     whatsappMessage += `\n*───────────────────────*\n`; 
                     whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
-                    whatsappMessage += `\n*───────────────────────*\n`;
+                    whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
                     whatsappMessage += `🌟 *We are also available on:*\n\n`;
-                    whatsappMessage += `🟠 Zomato: https://zomato.onelink.me/xqzv/luq0zr6h\n`;
-                    whatsappMessage += `🟡 Swiggy: https://www.swiggy.com/menu/1031731?source=sharing\n`;
-                    whatsappMessage += `🔵 MagicPin: https://magicpin.in/walletRecharge?merchantId=52083382\n`;
-                    whatsappMessage += `🟢 Google: https://g.co/kgs/JNGPftN\n\n`;
-                    whatsappMessage += `❤️ *Thank you for your order!*`;
+                    whatsappMessage += `🟠 *Zomato:* https://zomato.onelink.me/xqzv/luq0zr6h\n`;
+                    whatsappMessage += `🟡 *Swiggy:* https://www.swiggy.com/menu/1031731?source=sharing\n`;
+                    whatsappMessage += `🔵 *MagicPin:* https://magicpin.in/walletRecharge?merchantId=52083382\n`;
+                    whatsappMessage += `🟢 *Google:* https://g.co/kgs/JNGPftN\n\n`;
+                    whatsappMessage += `*💬 Got suggestions or feedback?*\n`;
+                    whatsappMessage += `👉 *Drop me a message on LinkedIn:* https://www.linkedin.com/in/harsh-pandita-dev/\n\n`;
+                    whatsappMessage += `*Made with ❤️ by Harsh*`;
             
                    
                     const encodedMessage = encodeURIComponent(whatsappMessage);
