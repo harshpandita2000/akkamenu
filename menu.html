@@ -321,6 +321,9 @@
                         <!-- <p class="text-sm text-gray-600 text-center mb-6">
                             Please show this order summary to the receptionist or waiter to proceed. 🍽️
                         </p> -->
+                         <p class="text-sm text-gray-600 text-center mb-6">
+                            👀 Look behind the QR stand for your table number 😉
+                        </p>
                 
                         <!-- Table Number Input -->
                         <div class="mb-4">
@@ -1108,7 +1111,7 @@ document.getElementById('whatsappButton').addEventListener('click', () => {
     whatsappMessage += `🟢 *Google:* https://g.co/kgs/JNGPftN\n\n`;
     whatsappMessage += `*💬 Got suggestions or feedback?*\n`;
     whatsappMessage += `👉 *Drop me a message on LinkedIn:* https://www.linkedin.com/in/harsh-pandita-dev/\n\n`;
-    whatsappMessage += `*Made with ❤️ by Harsh*`;
+    //whatsappMessage += `*Made with ❤️ by Harsh*`;
     
 
     const encodedMessage = encodeURIComponent(whatsappMessage);
@@ -1126,7 +1129,7 @@ document.getElementById('checkoutButton').addEventListener('click', () => {
     orderDetailsContainer.innerHTML = '';
     const tableHelperText = document.createElement('p');
             tableHelperText.className = 'text-sm text-gray-600 mt-1';
-            tableHelperText.innerHTML = 'Please check behind the QR scanner stand on your table for table number (1-8)';
+           // tableHelperText.innerHTML = 'Please check behind the QR scanner stand on your table for table number (1-8)';
             tableNumberInput.parentNode.appendChild(tableHelperText);
             
             // Add table number validation
