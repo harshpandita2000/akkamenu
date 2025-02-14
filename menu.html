@@ -152,6 +152,67 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.8; }
           }
+          
+          @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes bottleTwinkle {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(-10deg); }
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle 1.5s infinite;
+        }
+        
+        .sparkle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 30%; left: 20%; animation-delay: 0.2s; }
+        .sparkle:nth-child(3) { top: 40%; right: 20%; animation-delay: 0.4s; }
+        .sparkle:nth-child(4) { top: 25%; right: 10%; animation-delay: 0.6s; }
+        
+        .bottle-shake {
+            animation: bottleTwinkle 3s infinite ease-in-out;
+            display: inline-block;
+        }
+
+
+
+        @keyframes slidein {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .cart-offer {
+            animation: slidein 0.5s ease-out;
+            background-size: 200% 100%;
+            background-image: linear-gradient(to right, #dbeafe 0%, #eff6ff 50%, #dbeafe 100%);
+            animation: shimmer 3s infinite linear;
+        }
+        
+        .offer-icon {
+            transform-origin: center;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        
+        .offer-icon:hover {
+            transform: scale(1.2);
+        }
+
+
     </style>
     </head>
     <body
@@ -168,6 +229,41 @@
                     class="title">
                     AKKA'S MENU
                 </h1>
+            </div>
+               <!-- coke header -->
+            <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-6 mb-6 relative overflow-hidden">
+                <!-- Sparkle elements -->
+                <div class="sparkle bg-blue-200"></div>
+                <div class="sparkle bg-blue-300"></div>
+                <div class="sparkle bg-blue-400"></div>
+                <div class="sparkle bg-blue-300"></div>
+                
+                <!-- Header -->
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-xl bottle-shake">🥤</span>
+                    <h2 class="text-lg font-semibold text-blue-800">Special Coke Offers!</h2>
+                </div>
+                
+                <!-- Offers Container -->
+                <div class="space-y-3 relative">
+                    <!-- First Offer -->
+                    <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-3 border border-blue-200 hover:bg-white/70 transition-colors duration-200">
+                        <span class="w-24 font-medium text-blue-700">₹299+</span>
+                        <span class="text-gray-700">Get a FREE 200ml Coke <span class="bottle-shake inline-block">🥤</span></span>
+                    </div>
+                    
+                    <!-- Second Offer -->
+                    <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-3 border border-blue-200 hover:bg-white/70 transition-colors duration-200">
+                        <span class="w-24 font-medium text-blue-700">₹499+</span>
+                        <span class="text-gray-700">Get a FREE 250ml Coke <span class="bottle-shake inline-block">🥤</span></span>
+                    </div>
+                    
+                    <!-- Third Offer -->
+                    <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-3 border border-blue-200 hover:bg-white/70 transition-colors duration-200">
+                        <span class="w-24 font-medium text-blue-700">₹899+</span>
+                        <span class="text-gray-700">Get a FREE 750ml Coke <span class="bottle-shake inline-block">🥤</span></span>
+                    </div>
+                </div>
             </div>
 
             <div class="lg:hidden fixed bottom-4 right-4 z-40">
@@ -200,6 +296,7 @@
                     </span>
                 </div>
             </div>
+
 
             <div class="flex flex-col lg:flex-row gap-6 relative">
 
@@ -251,11 +348,50 @@
                                 </svg>
                             </button>
                         </h2>
-                        <div id="cokeOfferNotification" class="text-sm bg-blue-100 p-3 rounded-md mb-4">
+                        <!-- <div id="cokeOfferNotification" class="text-sm bg-blue-100 p-3 rounded-md mb-4">
                             <p>Order more than ₹299 and get a free 200ml Coke!</p>
                             <p>Order more than ₹499 and get a free 250ml Coke!</p>
                             <p>Order more than ₹899 and get a free 750ml Coke!</p>
+                        </div> --> 
+
+
+                        <div id="cokeOfferNotification" class="cart-offer border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
+                            <div class="p-3 space-y-2">
+                                <!-- Header -->
+                                <div class="flex items-center gap-2 text-blue-800 font-medium pb-2 border-b border-blue-200">
+                                    <span class="offer-icon">🎁</span>
+                                    <span>Available Offers</span>
+                                </div>
+                                
+                                <!-- Offers -->
+                                <div class="space-y-1.5 text-sm">
+                                    <div class="flex items-center gap-2">
+                                        <span class="offer-icon text-xs">🥤</span>
+                                        <p class="text-gray-700">
+                                            <span class="font-medium">₹299+:</span> Free 200ml Coke
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <span class="offer-icon text-xs">🥤</span>
+                                        <p class="text-gray-700">
+                                            <span class="font-medium">₹499+:</span> Free 250ml Coke
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <span class="offer-icon text-xs">🥤</span>
+                                        <p class="text-gray-700">
+                                            <span class="font-medium">₹899+:</span> Free 750ml Coke
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+
+
+
                         <ul id="cartItems" class="space-y-2">
                             <!-- Cart items will be dynamically added here -->
                         </ul>
