@@ -251,6 +251,11 @@
                                 </svg>
                             </button>
                         </h2>
+                        <div id="cokeOfferNotification" class="text-sm bg-blue-100 p-3 rounded-md mb-4">
+                            <p>Order more than ₹299 and get a free 200ml Coke!</p>
+                            <p>Order more than ₹499 and get a free 250ml Coke!</p>
+                            <p>Order more than ₹899 and get a free 750ml Coke!</p>
+                        </div>
                         <ul id="cartItems" class="space-y-2">
                             <!-- Cart items will be dynamically added here -->
                         </ul>
@@ -921,6 +926,19 @@
             });
         }
 
+        function getCokeSize(totalAmount) {
+            if (totalAmount > 799) {
+                return '750ml Coke';
+            } else if (totalAmount > 499) {
+                return '250ml Coke';
+            } else if (totalAmount > 299) {
+                return '200ml Coke';
+            } else {
+                return null;
+            }
+        }
+
+
         function renderItems(category) {
             history.pushState({ page: 'items' }, '', '#items');
             document.getElementById('menuCategories').classList.add('hidden');
@@ -1060,6 +1078,47 @@ if (window.location.hash !== '#cart') {
             mobileBadge.textContent = cart.length;
             totalItemCount.textContent = totalItems;
             totalAmount.textContent = `₹${total}`;
+
+            // Highlight the current eligible offer based on the cart total
+    const cokeOfferNotification = document.getElementById('cokeOfferNotification');
+    const offerMessages = cokeOfferNotification.querySelectorAll('p');
+    let earnedCokeMessage = '';
+
+    offerMessages.forEach((message, index) => {
+        // Remove any previous highlights or messages
+        message.classList.remove('font-bold', 'text-green-600');
+
+        // Determine which offer is currently applicable
+        if (total > 799 && index === 2) {
+            message.classList.add('font-bold', 'text-green-600');
+            earnedCokeMessage = 'Congratulations! You get a free 750ml Coke with your order!';
+        } else if (total > 499 && total <= 899 && index === 1) {
+            message.classList.add('font-bold', 'text-green-600');
+            earnedCokeMessage = 'Congratulations! You get a free 250ml Coke with your order!';
+        } else if (total > 299 && total <= 499 && index === 0) {
+            message.classList.add('font-bold', 'text-green-600');
+            earnedCokeMessage = 'Congratulations! You get a free 200ml Coke with your order!';
+        }
+    });
+
+    // Display the earned Coke message if applicable
+    const cartSummary = document.getElementById('cartSummary'); // Assuming this is the ID of the cart summary section
+    const earnedCokeNotification = document.getElementById('earnedCokeNotification');
+    if (earnedCokeMessage) {
+        if (!earnedCokeNotification) {
+            const earnedCokeInfo = document.createElement('p');
+            earnedCokeInfo.id = 'earnedCokeNotification';
+            earnedCokeInfo.textContent = earnedCokeMessage;
+            earnedCokeInfo.className = 'text-green-600 font-bold mt-2';
+            cartSummary.before(earnedCokeInfo); // Place it before the cart summary section
+        } else {
+            earnedCokeNotification.textContent = earnedCokeMessage;
+        }
+    } else if (earnedCokeNotification) {
+        // If the message is empty and the element exists, remove it
+        earnedCokeNotification.remove();
+    }
+
         }
         
 
@@ -1099,10 +1158,16 @@ document.getElementById('whatsappButton').addEventListener('click', () => {
         totalAmount += itemTotal;
         orderSummary += `*${index + 1}. 🍽️ ${item.name} x ${item.quantity} - ₹${itemTotal.toFixed(2)}*\n`;
     });
+    // Determine the free Coke giveaway based on the total amount
+    const cokeGiveaway = getCokeSize(totalAmount);
 
     whatsappMessage += orderSummary;
     whatsappMessage += `\n*───────────────────────*\n`;
     whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
+     // Include the free gift in the WhatsApp message if applicable
+     if (cokeGiveaway) {
+        whatsappMessage += `*🎁 Free Gift: ${cokeGiveaway}*\n`;
+    }
     whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
     whatsappMessage += `🌟 *We are also available on:*\n\n`;
     whatsappMessage += `🟠 *Zomato:* https://zomato.onelink.me/xqzv/luq0zr6h\n`;
@@ -1159,6 +1224,16 @@ document.getElementById('checkoutButton').addEventListener('click', () => {
         `;
         orderDetailsContainer.appendChild(orderItem);
     });
+    const cokeGiveaway = getCokeSize(totalAmount);
+    if (cokeGiveaway) {
+        const cokeGiveawayElement = document.createElement('li');
+        cokeGiveawayElement.className = 'flex justify-between mb-2 font-bold text-lg';
+        cokeGiveawayElement.innerHTML = `
+            <span>🎁 Free Gift:</span>
+            <span>${cokeGiveaway}</span>
+        `;
+        orderDetailsContainer.appendChild(cokeGiveawayElement);
+    }
 
     modalTotalAmount.textContent = `₹${totalAmount.toFixed(2)}`;
     modal.classList.add('active');
