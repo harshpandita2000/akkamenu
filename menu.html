@@ -9,7 +9,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
             rel="stylesheet" />
         <style>
-        
+
         input[type="number"]:focus {
             font-size: 16px;
         }
@@ -21,7 +21,7 @@
                 opacity: 0.5;
             }
         }
-    
+
         .pulse {
             animation: pulse 2s infinite ease-in-out;
         }
@@ -32,7 +32,7 @@
             overflow: hidden;
             background: linear-gradient(135deg, #fff5f5, #fff);
         }
-        
+
         .logo-grid {
             display: flex;
             justify-content: center;
@@ -42,12 +42,12 @@
             position: relative;
             z-index: 1;
         }
-        
+
         .logo-item {
             position: relative;
             text-decoration: none;
         }
-        
+
         .rating-logo {
             width: 45px;
             height: 45px;
@@ -59,22 +59,22 @@
             animation: gentleFloat 3s infinite;
             animation-delay: calc(var(--delay) * 0.5s);
         }
-        
+
         .logo-item:nth-child(1) { --delay: 0; }
         .logo-item:nth-child(2) { --delay: 1; }
         .logo-item:nth-child(3) { --delay: 2; }
         .logo-item:nth-child(4) { --delay: 3; }
-        
+
         @keyframes gentleFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
-        
+
         .logo-item:hover .rating-logo {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
-        
+
         .footer-text {
             color: #666;
             font-size: 16px;
@@ -83,41 +83,41 @@
             padding: 0 10px;
             text-align: center;
         }
-        
+
         .heart-icon {
             color: #ff6b6b;
             display: inline-block;
             animation: heartBeat 1.5s ease-in-out infinite;
         }
-        
+
         @keyframes heartBeat {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
-        
+
         /* Active state for touch devices */
         .logo-item:active .rating-logo {
             transform: scale(0.95);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
+
         @media (max-width: 480px) {
             .logo-grid {
                 gap: 20px;
                 padding: 10px 15px;
             }
-            
+
             .rating-logo {
                 width: 40px;
                 height: 40px;
                 padding: 6px;
             }
-        
+
             .footer-text {
                 font-size: 14px;
             }
         }
-        
+
         * {
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -131,7 +131,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             animation: rotate 10s linear infinite;
           }
-          
+
           .title {
             font-size: 2.5rem;
             font-weight: 800;
@@ -142,28 +142,28 @@
             color: transparent;
             animation: pulse 2s ease-in-out infinite;
           }
-          
+
           @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
-          
+
           @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.8; }
           }
-          
+
           @keyframes sparkle {
             0%, 100% { opacity: 0; transform: scale(0); }
             50% { opacity: 1; transform: scale(1); }
         }
-        
+
         @keyframes bottleTwinkle {
             0% { transform: rotate(-10deg); }
             50% { transform: rotate(10deg); }
             100% { transform: rotate(-10deg); }
         }
-        
+
         .sparkle {
             position: absolute;
             width: 4px;
@@ -172,12 +172,12 @@
             border-radius: 50%;
             animation: sparkle 1.5s infinite;
         }
-        
+
         .sparkle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
         .sparkle:nth-child(2) { top: 30%; left: 20%; animation-delay: 0.2s; }
         .sparkle:nth-child(3) { top: 40%; right: 20%; animation-delay: 0.4s; }
         .sparkle:nth-child(4) { top: 25%; right: 10%; animation-delay: 0.6s; }
-        
+
         .bottle-shake {
             animation: bottleTwinkle 3s infinite ease-in-out;
             display: inline-block;
@@ -189,25 +189,25 @@
             0% { transform: translateX(-100%); opacity: 0; }
             100% { transform: translateX(0); opacity: 1; }
         }
-        
+
         @keyframes shimmer {
             0% { background-position: -1000px 0; }
             100% { background-position: 1000px 0; }
         }
-        
+
         .cart-offer {
             animation: slidein 0.5s ease-out;
             background-size: 200% 100%;
             background-image: linear-gradient(to right, #dbeafe 0%, #eff6ff 50%, #dbeafe 100%);
             animation: shimmer 3s infinite linear;
         }
-        
+
         .offer-icon {
             transform-origin: center;
             display: inline-block;
             transition: transform 0.3s ease;
         }
-        
+
         .offer-icon:hover {
             transform: scale(1.2);
         }
@@ -216,7 +216,7 @@
     </style>
     </head>
     <body
-    
+
         class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 min-h-screen">
         <div class="container mx-auto px-4 py-8">
 
@@ -253,41 +253,42 @@
 
 
 
-               <!-- coke header -->
-            <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-6 mb-6 relative overflow-hidden">
-                <!-- Sparkle elements -->
-                <div class="sparkle bg-blue-200"></div>
-                <div class="sparkle bg-blue-300"></div>
-                <div class="sparkle bg-blue-400"></div>
-                <div class="sparkle bg-blue-300"></div>
-                
-                <!-- Header -->
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-xl bottle-shake">🥤</span>
-                    <h2 class="text-lg font-semibold text-blue-800">Special Coke Offers!</h2>
-                </div>
-                
-                <!-- Offers Container -->
-                <div class="space-y-3 relative">
-                    <!-- First Offer -->
-                    <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-3 border border-blue-200 hover:bg-white/70 transition-colors duration-200">
-                        <span class="w-24 font-medium text-blue-700">₹299+</span>
-                        <span class="text-gray-700">Get a FREE 200ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
-                    </div>
-                    
-                    <!-- Second Offer -->
-                    <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-3 border border-blue-200 hover:bg-white/70 transition-colors duration-200">
-                        <span class="w-24 font-medium text-blue-700">₹499+</span>
-                        <span class="text-gray-700">Get a FREE 250ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
-                    </div>
-                    
-                    <!-- Third Offer -->
-                    <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-3 border border-blue-200 hover:bg-white/70 transition-colors duration-200">
-                        <span class="w-24 font-medium text-blue-700">₹899+</span>
-                        <span class="text-gray-700">Get a FREE 750ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
-                    </div>
-                </div>
-            </div>
+              <!-- Coke Offers Banner (Smaller Size) -->
+<div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-4 mb-4 relative overflow-hidden max-w-sm mx-auto">
+    <!-- Sparkle elements -->
+    <div class="sparkle bg-blue-200"></div>
+    <div class="sparkle bg-blue-300"></div>
+    <div class="sparkle bg-blue-400"></div>
+    <div class="sparkle bg-blue-300"></div>
+
+    <!-- Header -->
+    <div class="flex items-center gap-2 mb-3">
+        <span class="text-lg bottle-shake">🥤</span>
+        <h2 class="text-sm font-semibold text-blue-800">Special Coke Offers!</h2>
+    </div>
+
+    <!-- Offers Container -->
+    <div class="space-y-2 relative">
+        <!-- First Offer -->
+        <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
+            <span class="w-20 font-medium text-blue-700">₹299+</span>
+            <span class="text-gray-700">FREE 200ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
+        </div>
+
+        <!-- Second Offer -->
+        <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
+            <span class="w-20 font-medium text-blue-700">₹499+</span>
+            <span class="text-gray-700">FREE 250ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
+        </div>
+
+        <!-- Third Offer -->
+        <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
+            <span class="w-20 font-medium text-blue-700">₹899+</span>
+            <span class="text-gray-700">FREE 750ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
+        </div>
+    </div>
+</div>
+
 
             <div class="lg:hidden fixed bottom-4 right-4 z-40">
                 <button id="mobileCartToggle"
@@ -375,7 +376,7 @@
                             <p>Order more than ₹299 and get a free 200ml Coke!</p>
                             <p>Order more than ₹499 and get a free 250ml Coke!</p>
                             <p>Order more than ₹899 and get a free 750ml Coke!</p>
-                        </div> --> 
+                        </div> -->
 
 
                         <div id="cokeOfferNotification" class="cart-offer border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
@@ -385,7 +386,7 @@
                                     <span class="offer-icon">🎁</span>
                                     <span>Available Offers</span>
                                 </div>
-                                
+
                                 <!-- Offers -->
                                 <div class="space-y-1.5 text-sm">
                                     <div class="flex items-center gap-2">
@@ -394,14 +395,14 @@
                                             <span class="font-medium">₹299+:</span> Free 200ml Soft Drink
                                         </p>
                                     </div>
-                                    
+
                                     <div class="flex items-center gap-2">
                                         <span class="offer-icon text-xs">🥤</span>
                                         <p class="text-gray-700">
                                             <span class="font-medium">₹499+:</span> Free 250ml Soft Drink
                                         </p>
                                     </div>
-                                    
+
                                     <div class="flex items-center gap-2">
                                         <span class="offer-icon text-xs">🥤</span>
                                         <p class="text-gray-700">
@@ -462,22 +463,22 @@
                         <a href="https://zomato.onelink.me/xqzv/luq0zr6h" class="logo-item" target="_blank" rel="noopener noreferrer">
                             <img src="https://cdn.iconscout.com/icon/free/png-512/free-zomato-logo-icon-download-in-svg-png-gif-file-formats--food-company-brand-delivery-brans-logos-icons-1637644.png?f=webp&w=256" alt="Zomato" class="rating-logo">
                         </a>
-                        
+
                         <a href="https://www.swiggy.com/menu/1031731?source=sharing" class="logo-item" target="_blank" rel="noopener noreferrer">
                             <img src="https://cdn.iconscout.com/icon/free/png-512/free-swiggy-logo-icon-download-in-svg-png-gif-file-formats--food-delivery-package-pack-logos-icons-1369418.png?f=webp&w=256" alt="Swiggy" class="rating-logo">
                         </a>
-                        
+
                         <a href="https://magicpin.in/walletRecharge?merchantId=52083382" class="logo-item" target="_blank" rel="noopener noreferrer">
                             <img src="https://images.yourstory.com/cs/images/companies/6723190122636619372819335513378071094231040o-1590990173281.png?fm=png&auto=format" alt="MagicPin" class="rating-logo">
                         </a>
-                        
+
                         <a href="https://g.co/kgs/JNGPftN" class="logo-item" target="_blank" rel="noopener noreferrer">
                             <img src="https://cdn.iconscout.com/icon/free/png-512/free-google-logo-icon-download-in-svg-png-gif-file-formats--brands-pack-logos-icons-189824.png?f=webp&w=256" alt="Google" class="rating-logo">
                         </a>
                     </div>
                     <p class="footer-text">We'd love to hear from you! <span class="heart-icon">❤️</span></p>
                 </div>
-        
+
                 <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
                     <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
                         <!-- Modal Header -->
@@ -488,21 +489,21 @@
                          <p class="text-sm text-gray-600 text-center mb-6">
                             👀 Look behind the QR stand for your table number 😉
                         </p>
-                
+
                         <!-- Table Number Input -->
                         <div class="mb-4">
                             <label for="tableNumber" class="block text-sm font-medium text-gray-700">Enter Your Table Number:</label>
                             <input type="text" id="tableNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                         </div>
-                
+
                         <!-- Order Details -->
                         <ul id="orderDetails" class="space-y-2 mb-4 text-lg font-bold text-gray-700"></ul>
-                
+
                         <!-- Total Amount -->
                         <p class="font-semibold text-lg text-center">
                             💰 Total Amount: <span id="modalTotalAmount" class="text-green-600 font-bold"></span>
                         </p>
-                
+
                         <!-- Action Buttons -->
                         <div class="flex justify-between mt-4">
                             <button id="closeModalButton"
@@ -537,13 +538,13 @@
                 </a>
             </p>
         </footer>
-        
-        
-        
+
+
+
         <style>
-        
+
         #orderModal {
-            display: flex; 
+            display: flex;
             align-items: center;
             justify-content: center;
             position: fixed;
@@ -552,33 +553,33 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            z-index: 100; 
+            z-index: 100;
             opacity: 0;
-            visibility: hidden; 
-            transition: opacity 0.3s ease, visibility 0.3s ease; 
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-    
+
         #orderModal.active {
             opacity: 1;
-            visibility: visible; 
+            visibility: visible;
         }
-    
-        
+
+
         @media (max-width: 640px) {
             #orderModal .modal-content {
                 width: 90%;
-                max-height: 80vh; 
+                max-height: 80vh;
                 overflow-y: auto;
             }
         }
 
     </style>
-    
-    
+
+
 
         <script>
         const menuData = [
-            
+
         {
             "category": "Chicken & Fish Specials",
             "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_xux7J8JULrVaTZHN3kfaaP9fOeuDazqag&s",
@@ -597,7 +598,7 @@
               { "name": "Garlic Fish Fry", "price": 200 },
               { "name": "Ginger Fish Fry", "price": 200 }
               ]},
-              
+
         {
         "category": "Must Try Combos",
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqfejkG-k6jahDIerNX4qPGSbnWTacheTbCQ&s",
@@ -609,7 +610,7 @@
             { "name": "Egg Biryani Bliss with Coke", "price": 120 }
         ]
         },
-        
+
         {
             "category": "Biryani Specials",
             "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Wc-hevy-yxW0pVomqf2_T6_w4EOLiSl22w&s",
@@ -639,7 +640,7 @@
               { "name": "Boiled Egg", "price": 18 }
             ]
           },
-        
+
         {
 
                 category: "Roti & Paratha",
@@ -680,7 +681,7 @@
                 { name: "Egg Parata (2 Eggs)", price: 50 },
                 { name: "Sweet Parata (Sugar)", price: 40 },
                 { name: "Sweet Parata (Jaggery)", price: 40 }
-                    
+
                 ],
             },
             {
@@ -707,7 +708,7 @@
                 { name: "Boondi Raita", price: 20 },
                 { name: "Aloo Raita", price: 20 },
                 { name: "Mix Raita", price: 25 }
-            
+
                 ],
             },
             {
@@ -789,7 +790,7 @@
                 { name: "Fish Fry", price: 60 }
                 ],
             },
-           
+
             {
                 category: "Special Veg Menu",
                 image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhFmMGJlfxGvp0zGmsGjUijCWxynckzwvYfQ&s",
@@ -823,7 +824,7 @@
                 ],
             },
 
-            
+
 
             {
                 category: "Soups",
@@ -1007,10 +1008,10 @@
                 { name: "Cold Horlicks", price: 50 }
                 ],
             },
-           
-        { 
+
+        {
             category: "Falooda",
-            image: "https://static.toiimg.com/thumb/63533203.cms?imgsize=528108&width=800&height=800", 
+            image: "https://static.toiimg.com/thumb/63533203.cms?imgsize=528108&width=800&height=800",
             items: [
             { name: "Akka Special Falooda", price: 110 },
             { name: "Malabar Falooda", price: 90 },
@@ -1019,10 +1020,10 @@
             { name: "Choco Falooda", price: 90 },
             ]
         },
-        
+
         {
             category: "Kulukki",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBHeoGRq_d4ZEK2t875LgIp8H3b47SLXlrrQ&s", 
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBHeoGRq_d4ZEK2t875LgIp8H3b47SLXlrrQ&s",
             items: [
             { name: "Pineapple", price: 40 },
             { name: "Butterscotch", price: 40 },
@@ -1034,10 +1035,10 @@
             { name: "Grape", price: 40 }
             ]
         },
-        
+
         {
         category: "Lemonade",
-        image: "https://media.istockphoto.com/id/1401150816/photo/two-glasses-of-lemonade-with-mint-and-lemons.jpg?b=1&s=612x612&w=0&k=20&c=h9g_LNwAmpLWQz1xH55FoL8AHgedjCHufWkCOBgoN0o=", 
+        image: "https://media.istockphoto.com/id/1401150816/photo/two-glasses-of-lemonade-with-mint-and-lemons.jpg?b=1&s=612x612&w=0&k=20&c=h9g_LNwAmpLWQz1xH55FoL8AHgedjCHufWkCOBgoN0o=",
         items: [
             { name: "Fresh Lemonade", price: 30 },
             { name: "Pineapple Lemonade", price: 30 },
@@ -1050,7 +1051,7 @@
 
         {
             category: "Dry Fruit Shake",
-            image: "https://www.shutterstock.com/image-photo/anjeer-milk-shake-dried-fig-600nw-1370793977.jpg", 
+            image: "https://www.shutterstock.com/image-photo/anjeer-milk-shake-dried-fig-600nw-1370793977.jpg",
             items: [
                 { name: "Mix Dry Fruit Shake", price: 90 },
                 { name: "Dates Shake", price: 80 },
@@ -1060,15 +1061,15 @@
                 { name: "Fig Shake", price: 80 }
             ]
         }
-        
+
     ];
-      
+
 
         const cart = [];
 
-        
+
         document.addEventListener('click', function(event) {
-           
+
             if (event.target.classList.contains('quantity-decrease')) {
                 const quantityInput = event.target.nextElementSibling;
                 let currentValue = parseInt(quantityInput.value);
@@ -1077,14 +1078,14 @@
                 }
             }
 
-            
+
             if (event.target.classList.contains('quantity-increase')) {
                 const quantityInput = event.target.previousElementSibling;
                 let currentValue = parseInt(quantityInput.value);
                 quantityInput.value = currentValue + 1;
             }
 
-            
+
             if (event.target.classList.contains('add-to-cart')) {
                 const itemCard = event.target.closest('.bg-white');
                 const itemName = itemCard.querySelector('h3').textContent;
@@ -1098,34 +1099,34 @@
                 }
             }
 
-           
+
             if (event.target.id === 'mobileCartToggle' || event.target.closest('#mobileCartToggle')) {
                 const cartContainer = document.getElementById('cartContainer');
                 cartContainer.classList.remove('hidden');
                 history.pushState({ page: 'cart' }, '', '#cart'); // Add this line
             }
 
-        
+
             if (event.target.id === 'mobileCartClose' || event.target.closest('#mobileCartClose')) {
                 const cartContainer = document.getElementById('cartContainer');
                 cartContainer.classList.add('hidden');
                 history.back(); // Add this line
             }
 
-            
+
             if (event.target.id === 'backButton' || event.target.closest('#backButton')) {
                 document.getElementById('menuItems').classList.add('hidden');
                 document.getElementById('menuCategories').classList.remove('hidden');
             }
 
-            
+
             if (event.target.id === 'clearCartButton') {
                 cart.length = 0;
                 updateCart();
             }
 
-            
-            
+
+
         });
 
         function renderCategories(data) {
@@ -1204,7 +1205,7 @@
                 document.getElementById('menuCategories').classList.remove('hidden');
             }
         });
-        
+
         // Listen for the popstate event
 window.addEventListener('popstate', function(event) {
     const cartContainer = document.getElementById('cartContainer');
@@ -1243,12 +1244,12 @@ if (window.location.hash !== '#cart') {
             const mobileBadge = document.getElementById('mobileBadge');
             const totalItemCount = document.getElementById('totalItemCount');
             const totalAmount = document.getElementById('totalAmount');
-        
+
             cartItemsContainer.innerHTML = '';
-            
+
             let totalItems = 0;
             let total = 0;
-        
+
             cart.forEach((item, index) => {
                 const cartItem = document.createElement('li');
                 cartItem.className = 'flex justify-between items-center';
@@ -1266,36 +1267,36 @@ if (window.location.hash !== '#cart') {
                     </div>
                     <button class="remove-item text-red-500 hover:text-red-700 ml-4 focus:outline-none" data-index="${index}">Remove</button>
                 `;
-        
+
                 cartItemsContainer.appendChild(cartItem);
-        
+
                 totalItems += item.quantity;
                 total += item.price * item.quantity;
-        
-                
+
+
                 const removeButton = cartItem.querySelector('.remove-item');
                 removeButton.addEventListener('click', function() {
                     cart.splice(index, 1);
-                    updateCart(); 
+                    updateCart();
                 });
-        
-                
+
+
                 const minusButton = cartItem.querySelector('.quantity-btn.minus');
                 minusButton.addEventListener('click', function() {
-                    if (item.quantity > 1) { 
+                    if (item.quantity > 1) {
                         item.quantity--;
-                        updateCart(); 
+                        updateCart();
                     }
                 });
-        
-               
+
+
                 const plusButton = cartItem.querySelector('.quantity-btn.plus');
                 plusButton.addEventListener('click', function() {
                     item.quantity++;
-                    updateCart(); 
+                    updateCart();
                 });
             });
-        
+
             cartItemCount.textContent = cart.length;
             mobileBadge.textContent = cart.length;
             totalItemCount.textContent = totalItems;
@@ -1342,13 +1343,13 @@ if (window.location.hash !== '#cart') {
     }
 
         }
-        
+
 
         document.getElementById('searchInput').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
 
             const filteredData = menuData.filter(category => {
-               
+
                 const categoryMatches = category.category.toLowerCase().includes(searchTerm);
                 const itemsMatch = category.items.some(item =>
                     item.name.toLowerCase().includes(searchTerm)
@@ -1361,7 +1362,7 @@ if (window.location.hash !== '#cart') {
         });
              renderCategories(menuData);
 
-             
+
 document.getElementById('whatsappButton').addEventListener('click', () => {
     const tableNumberInput = document.getElementById('tableNumber');
     const tableNumber = tableNumberInput.value.trim();
@@ -1399,7 +1400,7 @@ document.getElementById('whatsappButton').addEventListener('click', () => {
     whatsappMessage += `*💬 Got suggestions or feedback?*\n`;
     whatsappMessage += `👉 *Drop me a message on LinkedIn:* https://www.linkedin.com/in/harsh-pandita-dev/\n\n`;
     //whatsappMessage += `*Made with ❤️ by Harsh*`;
-    
+
 
     const encodedMessage = encodeURIComponent(whatsappMessage);
     const whatsappUrl = `https://wa.me/919515543873?text=${encodedMessage}`;
@@ -1418,7 +1419,7 @@ document.getElementById('checkoutButton').addEventListener('click', () => {
             tableHelperText.className = 'text-sm text-gray-600 mt-1';
            // tableHelperText.innerHTML = 'Please check behind the QR scanner stand on your table for table number (1-8)';
             tableNumberInput.parentNode.appendChild(tableHelperText);
-            
+
             // Add table number validation
             tableNumberInput.setAttribute('min', '1');
             tableNumberInput.setAttribute('max', '8');
@@ -1461,7 +1462,7 @@ document.getElementById('checkoutButton').addEventListener('click', () => {
     modal.classList.add('active');
 });
 
-            
+
             // Close modal functionality
             document.getElementById('closeModalButton').addEventListener('click', () => {
                 const modal = document.getElementById('orderModal');
