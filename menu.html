@@ -1115,80 +1115,81 @@
 
         });
 
-         function renderCategories(data) {
-            const container = document.getElementById('menuCategories');
-            container.innerHTML = `
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
-                </div>
-            `;
-        
-            const gridContainer = container.querySelector('.grid');
-            let touchMoved = false; // Track touch movement
-        
-            data.forEach(category => {
-                const categoryCard = document.createElement('div');
-                categoryCard.className = `
-                    bg-white rounded-lg overflow-hidden
-                    transform transition-all duration-300
-                    hover:scale-102 active:scale-98
-                    cursor-pointer
-                    flex flex-col
-                    border border-gray-100
-                `;
-        
-                categoryCard.innerHTML = `
-                    <div class="aspect-square w-full overflow-hidden">
-                        <img
-                            src="${category.image}"
-                            alt="${category.category}"
-                            class="w-full h-full object-cover"
-                            onerror="this.src='placeholder-image.jpg'"
-                        >
-                    </div>
-                    <div class="p-1.5 flex-1 flex flex-col justify-center min-h-[2.5rem]">
-                        <h2 class="text-xs font-medium text-gray-800 text-center leading-tight">
-                            ${category.category}
-                        </h2>
-                        <p class="text-[10px] text-gray-500 mt-0.5 text-center">
-                            ${category.items?.length || 0} items
-                        </p>
-                    </div>
-                `;
-        
-                // Detect touch movement to prevent accidental opening
-                categoryCard.addEventListener('touchstart', (e) => {
-                    touchMoved = false; // Reset flag
-                    categoryCard.style.backgroundColor = 'rgb(243 244 246)'; // gray-100
-                });
-        
-                categoryCard.addEventListener('touchmove', () => {
-                    touchMoved = true; // User is scrolling
-                });
-        
-                categoryCard.addEventListener('touchend', () => {
-                    categoryCard.style.backgroundColor = 'white';
-                    if (!touchMoved) {
-                        renderItems(category);
-                    }
-                });
-        
-                categoryCard.addEventListener('click', () => renderItems(category));
-                gridContainer.appendChild(categoryCard);
-            });
-        
-            // Add scroll restoration
-            if (!document.getElementById('scrollStyle')) {
-                const style = document.createElement('style');
-                style.id = 'scrollStyle';
-                style.textContent = `
-                    #menuCategories {
-                        scroll-behavior: smooth;
-                        -webkit-overflow-scrolling: touch;
-                    }
-                `;
-                document.head.appendChild(style);
+function renderCategories(data) {
+    const container = document.getElementById('menuCategories');
+    container.innerHTML = `
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
+        </div>
+    `;
+
+    const gridContainer = container.querySelector('.grid');
+    let touchMoved = false; // Track touch movement
+
+    data.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.className = `
+            bg-white rounded-lg overflow-hidden
+            transform transition-all duration-300
+            hover:scale-102 active:scale-98
+            cursor-pointer
+            flex flex-col
+            border border-gray-100
+        `;
+
+        categoryCard.innerHTML = `
+            <div class="aspect-square w-full overflow-hidden">
+                <img
+                    src="${category.image}"
+                    alt="${category.category}"
+                    class="w-full h-full object-cover"
+                    onerror="this.src='placeholder-image.jpg'"
+                >
+            </div>
+            <div class="p-1.5 flex-1 flex flex-col justify-center min-h-[2.5rem]">
+                <h2 class="text-xs font-bold text-gray-800 text-center leading-tight">
+                    ${category.category}
+                </h2>
+                <p class="text-[10px] font-bold text-gray-600 mt-0.5 text-center">
+                    ${category.items?.length || 0} items
+                </p>
+            </div>
+        `;
+
+        // Detect touch movement to prevent accidental opening
+        categoryCard.addEventListener('touchstart', (e) => {
+            touchMoved = false; // Reset flag
+            categoryCard.style.backgroundColor = 'rgb(243 244 246)'; // gray-100
+        });
+
+        categoryCard.addEventListener('touchmove', () => {
+            touchMoved = true; // User is scrolling
+        });
+
+        categoryCard.addEventListener('touchend', () => {
+            categoryCard.style.backgroundColor = 'white';
+            if (!touchMoved) {
+                renderItems(category);
             }
-        }
+        });
+
+        categoryCard.addEventListener('click', () => renderItems(category));
+        gridContainer.appendChild(categoryCard);
+    });
+
+    // Add scroll restoration
+    if (!document.getElementById('scrollStyle')) {
+        const style = document.createElement('style');
+        style.id = 'scrollStyle';
+        style.textContent = `
+            #menuCategories {
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
 
         function getCokeSize(totalAmount) {
             if (totalAmount > 799) {
