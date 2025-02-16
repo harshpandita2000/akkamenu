@@ -1115,7 +1115,7 @@
 
         });
 
-function renderCategories(data) {
+        function renderCategories(data) {
     const container = document.getElementById('menuCategories');
     container.innerHTML = `
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
@@ -1123,7 +1123,8 @@ function renderCategories(data) {
     `;
 
     const gridContainer = container.querySelector('.grid');
-    let touchMoved = false; // Track touch movement
+    let touchStartY = 0; // Track vertical touch position
+    let touchEndY = 0;
 
     data.forEach(category => {
         const categoryCard = document.createElement('div');
@@ -1157,17 +1158,16 @@ function renderCategories(data) {
 
         // Detect touch movement to prevent accidental opening
         categoryCard.addEventListener('touchstart', (e) => {
-            touchMoved = false; // Reset flag
-            categoryCard.style.backgroundColor = 'rgb(243 244 246)'; // gray-100
+            touchStartY = e.touches[0].clientY; // Store start Y position
         });
 
-        categoryCard.addEventListener('touchmove', () => {
-            touchMoved = true; // User is scrolling
+        categoryCard.addEventListener('touchmove', (e) => {
+            touchEndY = e.touches[0].clientY; // Update end Y position
         });
 
         categoryCard.addEventListener('touchend', () => {
-            categoryCard.style.backgroundColor = 'white';
-            if (!touchMoved) {
+            // If vertical movement is minimal (less than 10px), it's a valid tap
+            if (Math.abs(touchStartY - touchEndY) < 10) {
                 renderItems(category);
             }
         });
