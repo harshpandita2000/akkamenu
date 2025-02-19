@@ -1192,7 +1192,7 @@
 
 
         function getCokeSize(totalAmount) {
-            if (totalAmount > 799) {
+            if (totalAmount > 899) {
                 return '750ml Soft Drink';
             } else if (totalAmount > 499) {
                 return '250ml Soft Drink';
@@ -1448,7 +1448,7 @@ if (window.location.hash !== '#cart') {
         message.classList.remove('font-bold', 'text-green-600');
 
         // Determine which offer is currently applicable
-        if (total > 799 && index === 2) {
+        if (total > 899 && index === 2) {
             message.classList.add('font-bold', 'text-green-600');
             earnedCokeMessage = 'Congratulations! You get a free 750ml Soft Drink with your order!';
         } else if (total > 499 && total <= 899 && index === 1) {
