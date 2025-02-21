@@ -213,10 +213,93 @@
         }
 
 
+/* CSS */
+/* CSS */
+.addons-container {
+    max-width: 280px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+.addons-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.addons-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+}
+
+.addon-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.addon-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.addon-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.addon-size {
+    color: #666;
+    font-size: 13px;
+    flex: 1; /* Makes size labels take equal space */
+    text-align: left; /* Aligns text to left */
+}
+
+.addon-price {
+    color: #333;
+    font-size: 13px;
+    margin-right: 12px;
+    flex: 1;
+    text-align: right; /* Aligns price to right */
+}
+
+.addon-add-to-cart {
+    background: #34A853;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+
+
     </style>
     </head>
     <body
-
         class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 min-h-screen">
         <div class="container mx-auto px-4 py-8">
 
@@ -231,64 +314,76 @@
                 </h1>
             </div>
 
-        <!-- Tiffins Subscription Banner -->
-<div class="mx-2 my-3 bg-gradient-to-r from-purple-500 to-purple-800 rounded-lg shadow">
-    <div class="p-4 text-center">
-        <h2 class="text-base font-bold text-white flex items-center justify-center gap-1">
-            <span>🍱</span>
-            <span>Tiffins Monthly Subscription</span>
-            <span>🍽️</span>
-        </h2>
-        <p class="mt-1 text-white/90 text-sm">
-            Enjoy hassle-free, nutritious meals delivered to your home.
-        </p>
-        <p class="mt-1 text-white/90 text-sm font-semibold">
-            📢 Ask the reception for more details!
-        </p>
-        <div class="mt-2 inline-block bg-white/20 px-3 py-1 rounded-full text-white text-xs">
-            Coming Soon!
-        </div>
-    </div>
-</div>
+            <!-- Tiffins Subscription Banner -->
+            <div
+                class="mx-2 my-3 bg-gradient-to-r from-purple-500 to-purple-800 rounded-lg shadow">
+                <div class="p-4 text-center">
+                    <h2
+                        class="text-base font-bold text-white flex items-center justify-center gap-1">
+                        <span>🍱</span>
+                        <span>Tiffins Monthly Subscription</span>
+                        <span>🍽️</span>
+                    </h2>
+                    <p class="mt-1 text-white/90 text-sm">
+                        Enjoy hassle-free, nutritious meals delivered to your
+                        home.
+                    </p>
+                    <p class="mt-1 text-white/90 text-sm font-semibold">
+                        📢 Ask the reception for more details!
+                    </p>
+                    <div
+                        class="mt-2 inline-block bg-white/20 px-3 py-1 rounded-full text-white text-xs">
+                        Coming Soon!
+                    </div>
+                </div>
+            </div>
 
+            <!-- Coke Offers Banner (Smaller Size) -->
+            <div
+                class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-4 mb-4 relative overflow-hidden max-w-sm mx-auto">
+                <!-- Sparkle elements -->
+                <div class="sparkle bg-blue-200"></div>
+                <div class="sparkle bg-blue-300"></div>
+                <div class="sparkle bg-blue-400"></div>
+                <div class="sparkle bg-blue-300"></div>
 
+                <!-- Header -->
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-lg bottle-shake">🥤</span>
+                    <h2 class="text-sm font-semibold text-blue-800">Special Coke
+                        Offers!</h2>
+                </div>
 
-              <!-- Coke Offers Banner (Smaller Size) -->
-<div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-4 mb-4 relative overflow-hidden max-w-sm mx-auto">
-    <!-- Sparkle elements -->
-    <div class="sparkle bg-blue-200"></div>
-    <div class="sparkle bg-blue-300"></div>
-    <div class="sparkle bg-blue-400"></div>
-    <div class="sparkle bg-blue-300"></div>
+                <!-- Offers Container -->
+                <div class="space-y-2 relative">
+                    <!-- First Offer -->
+                    <div
+                        class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
+                        <span
+                            class="w-20 font-medium text-blue-700">₹299+</span>
+                        <span class="text-gray-700">FREE 200ml Soft Drink <span
+                                class="bottle-shake inline-block">🥤</span></span>
+                    </div>
 
-    <!-- Header -->
-    <div class="flex items-center gap-2 mb-3">
-        <span class="text-lg bottle-shake">🥤</span>
-        <h2 class="text-sm font-semibold text-blue-800">Special Coke Offers!</h2>
-    </div>
+                    <!-- Second Offer -->
+                    <div
+                        class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
+                        <span
+                            class="w-20 font-medium text-blue-700">₹499+</span>
+                        <span class="text-gray-700">FREE 250ml Soft Drink <span
+                                class="bottle-shake inline-block">🥤</span></span>
+                    </div>
 
-    <!-- Offers Container -->
-    <div class="space-y-2 relative">
-        <!-- First Offer -->
-        <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
-            <span class="w-20 font-medium text-blue-700">₹299+</span>
-            <span class="text-gray-700">FREE 200ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
-        </div>
-
-        <!-- Second Offer -->
-        <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
-            <span class="w-20 font-medium text-blue-700">₹499+</span>
-            <span class="text-gray-700">FREE 250ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
-        </div>
-
-        <!-- Third Offer -->
-        <div class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
-            <span class="w-20 font-medium text-blue-700">₹899+</span>
-            <span class="text-gray-700">FREE 750ml Soft Drink <span class="bottle-shake inline-block">🥤</span></span>
-        </div>
-    </div>
-</div>
-
+                    <!-- Third Offer -->
+                    <div
+                        class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
+                        <span
+                            class="w-20 font-medium text-blue-700">₹899+</span>
+                        <span class="text-gray-700">FREE 750ml Soft Drink <span
+                                class="bottle-shake inline-block">🥤</span></span>
+                    </div>
+                </div>
+            </div>
 
             <div class="lg:hidden fixed bottom-4 right-4 z-40">
                 <button id="mobileCartToggle"
@@ -321,12 +416,12 @@
                 </div>
             </div>
 
-
             <div class="flex flex-col lg:flex-row gap-6 relative">
 
                 <div class="flex-grow">
 
-                    <div id="menuCategories" class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
+                    <div id="menuCategories"
+                        class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
                     </div>
 
                     <div id="menuItems" class="mt-8 hidden">
@@ -371,10 +466,12 @@
                             </button>
                         </h2>
 
-                        <div id="cokeOfferNotification" class="cart-offer border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
+                        <div id="cokeOfferNotification"
+                            class="cart-offer border-l-4 border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 shadow-sm">
                             <div class="p-3 space-y-2">
                                 <!-- Header -->
-                                <div class="flex items-center gap-2 text-blue-800 font-medium pb-2 border-b border-blue-200">
+                                <div
+                                    class="flex items-center gap-2 text-blue-800 font-medium pb-2 border-b border-blue-200">
                                     <span class="offer-icon">🎁</span>
                                     <span>Available Offers</span>
                                 </div>
@@ -382,35 +479,46 @@
                                 <!-- Offers -->
                                 <div class="space-y-1.5 text-sm">
                                     <div class="flex items-center gap-2">
-                                        <span class="offer-icon text-xs">🥤</span>
+                                        <span
+                                            class="offer-icon text-xs">🥤</span>
                                         <p class="text-gray-700">
-                                            <span class="font-medium">₹299+:</span> Free 200ml Soft Drink
+                                            <span
+                                                class="font-medium">₹299+:</span>
+                                            Free 200ml Soft Drink
                                         </p>
                                     </div>
 
                                     <div class="flex items-center gap-2">
-                                        <span class="offer-icon text-xs">🥤</span>
+                                        <span
+                                            class="offer-icon text-xs">🥤</span>
                                         <p class="text-gray-700">
-                                            <span class="font-medium">₹499+:</span> Free 250ml Soft Drink
+                                            <span
+                                                class="font-medium">₹499+:</span>
+                                            Free 250ml Soft Drink
                                         </p>
                                     </div>
 
                                     <div class="flex items-center gap-2">
-                                        <span class="offer-icon text-xs">🥤</span>
+                                        <span
+                                            class="offer-icon text-xs">🥤</span>
                                         <p class="text-gray-700">
-                                            <span class="font-medium">₹899+:</span> Free 750ml Soft Drink
+                                            <span
+                                                class="font-medium">₹899+:</span>
+                                            Free 750ml Soft Drink
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-
-
-
                         <ul id="cartItems" class="space-y-2">
                             <!-- Cart items will be dynamically added here -->
                         </ul>
+
+                        <!-- HTML Structure -->
+                        <div id="cartAddons" class="cart-addons">
+                            <!-- Addons will be dynamically added here -->
+                        </div>
 
                         <div id="cartSummary" class="mt-4 pt-4 border-t">
                             <div class="flex justify-between font-semibold">
@@ -453,48 +561,75 @@
                 <!-- Rating Section -->
                 <div class="rating-container">
                     <div class="logo-grid">
-                        <a href="https://zomato.onelink.me/xqzv/luq0zr6h" class="logo-item" target="_blank" rel="noopener noreferrer">
-                            <img src="https://cdn.iconscout.com/icon/free/png-512/free-zomato-logo-icon-download-in-svg-png-gif-file-formats--food-company-brand-delivery-brans-logos-icons-1637644.png?f=webp&w=256" alt="Zomato" class="rating-logo">
+                        <a href="https://zomato.onelink.me/xqzv/luq0zr6h"
+                            class="logo-item" target="_blank"
+                            rel="noopener noreferrer">
+                            <img
+                                src="https://cdn.iconscout.com/icon/free/png-512/free-zomato-logo-icon-download-in-svg-png-gif-file-formats--food-company-brand-delivery-brans-logos-icons-1637644.png?f=webp&w=256"
+                                alt="Zomato" class="rating-logo">
                         </a>
 
-                        <a href="https://www.swiggy.com/menu/1031731?source=sharing" class="logo-item" target="_blank" rel="noopener noreferrer">
-                            <img src="https://cdn.iconscout.com/icon/free/png-512/free-swiggy-logo-icon-download-in-svg-png-gif-file-formats--food-delivery-package-pack-logos-icons-1369418.png?f=webp&w=256" alt="Swiggy" class="rating-logo">
+                        <a
+                            href="https://www.swiggy.com/menu/1031731?source=sharing"
+                            class="logo-item" target="_blank"
+                            rel="noopener noreferrer">
+                            <img
+                                src="https://cdn.iconscout.com/icon/free/png-512/free-swiggy-logo-icon-download-in-svg-png-gif-file-formats--food-delivery-package-pack-logos-icons-1369418.png?f=webp&w=256"
+                                alt="Swiggy" class="rating-logo">
                         </a>
 
-                        <a href="https://magicpin.in/walletRecharge?merchantId=52083382" class="logo-item" target="_blank" rel="noopener noreferrer">
-                            <img src="https://images.yourstory.com/cs/images/companies/6723190122636619372819335513378071094231040o-1590990173281.png?fm=png&auto=format" alt="MagicPin" class="rating-logo">
+                        <a
+                            href="https://magicpin.in/walletRecharge?merchantId=52083382"
+                            class="logo-item" target="_blank"
+                            rel="noopener noreferrer">
+                            <img
+                                src="https://images.yourstory.com/cs/images/companies/6723190122636619372819335513378071094231040o-1590990173281.png?fm=png&auto=format"
+                                alt="MagicPin" class="rating-logo">
                         </a>
 
-                        <a href="https://g.co/kgs/JNGPftN" class="logo-item" target="_blank" rel="noopener noreferrer">
-                            <img src="https://cdn.iconscout.com/icon/free/png-512/free-google-logo-icon-download-in-svg-png-gif-file-formats--brands-pack-logos-icons-189824.png?f=webp&w=256" alt="Google" class="rating-logo">
+                        <a href="https://g.co/kgs/JNGPftN" class="logo-item"
+                            target="_blank" rel="noopener noreferrer">
+                            <img
+                                src="https://cdn.iconscout.com/icon/free/png-512/free-google-logo-icon-download-in-svg-png-gif-file-formats--brands-pack-logos-icons-189824.png?f=webp&w=256"
+                                alt="Google" class="rating-logo">
                         </a>
                     </div>
-                    <p class="footer-text">We'd love to hear from you! <span class="heart-icon">❤️</span></p>
+                    <p class="footer-text">We'd love to hear from you! <span
+                            class="heart-icon">❤️</span></p>
                 </div>
 
-                <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-                    <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
+                <div id="orderModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                    <div
+                        class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
                         <!-- Modal Header -->
-                        <h2 class="text-xl font-bold text-center text-gray-800 mb-4">🛒 Order Summary</h2>
+                        <h2
+                            class="text-xl font-bold text-center text-gray-800 mb-4">🛒
+                            Order Summary</h2>
                         <!-- <p class="text-sm text-gray-600 text-center mb-6">
                             Please show this order summary to the receptionist or waiter to proceed. 🍽️
                         </p> -->
-                         <p class="text-sm text-gray-600 text-center mb-6">
+                        <p class="text-sm text-gray-600 text-center mb-6">
                             👀 Look behind the QR stand for your table number 😉
                         </p>
 
                         <!-- Table Number Input -->
                         <div class="mb-4">
-                            <label for="tableNumber" class="block text-sm font-medium text-gray-700">Enter Your Table Number:</label>
-                            <input type="text" id="tableNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                            <label for="tableNumber"
+                                class="block text-sm font-medium text-gray-700">Enter
+                                Your Table Number:</label>
+                            <input type="text" id="tableNumber"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
                         </div>
 
                         <!-- Order Details -->
-                        <ul id="orderDetails" class="space-y-2 mb-4 text-lg font-bold text-gray-700"></ul>
+                        <ul id="orderDetails"
+                            class="space-y-2 mb-4 text-lg font-bold text-gray-700"></ul>
 
                         <!-- Total Amount -->
                         <p class="font-semibold text-lg text-center">
-                            💰 Total Amount: <span id="modalTotalAmount" class="text-green-600 font-bold"></span>
+                            💰 Total Amount: <span id="modalTotalAmount"
+                                class="text-green-600 font-bold"></span>
                         </p>
 
                         <!-- Action Buttons -->
@@ -505,36 +640,38 @@
                             </button>
                             <button id="whatsappButton"
                                 class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300">
-                                 <!-- 📲 Send via WhatsApp --> Place Order
+                                <!-- 📲 Send via WhatsApp --> Place Order
                             </button>
                         </div>
                     </div>
                 </div>
 
-         <footer class="bg-gray-100 p-4 text-center pb-16 lg:pb-4">
-            <p class="text-sm flex justify-center items-center pulse">
-                Developed by
-                <a href="https://www.linkedin.com/in/harsh-pandita-dev/"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="text-blue-600 hover:underline inline-flex items-center ml-2">
-                    Harsh Pandita
-                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png"
-                         alt="LinkedIn Badge" height="20" width="20" class="ml-2" />
-                </a>
-                <a href="https://www.instagram.com/harsh_.pandita/"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="text-blue-600 hover:underline inline-flex items-center ml-2">
-                    <img src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Instagram-256.png"
-                         alt="Instagram Badge" height="20" width="20" class="ml-2" />
-                </a>
-            </p>
-        </footer>
+                <footer class="bg-gray-100 p-4 text-center pb-16 lg:pb-4">
+                    <p class="text-sm flex justify-center items-center pulse">
+                        Developed by
+                        <a href="https://www.linkedin.com/in/harsh-pandita-dev/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-blue-600 hover:underline inline-flex items-center ml-2">
+                            Harsh Pandita
+                            <img
+                                src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png"
+                                alt="LinkedIn Badge" height="20" width="20"
+                                class="ml-2" />
+                        </a>
+                        <a href="https://www.instagram.com/harsh_.pandita/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-blue-600 hover:underline inline-flex items-center ml-2">
+                            <img
+                                src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Instagram-256.png"
+                                alt="Instagram Badge" height="20" width="20"
+                                class="ml-2" />
+                        </a>
+                    </p>
+                </footer>
 
-
-
-        <style>
+                <style>
 
         #orderModal {
             display: flex;
@@ -568,9 +705,7 @@
 
     </style>
 
-
-
-        <script>
+                <script>
         const menuData = [
 
         {
@@ -1049,6 +1184,29 @@
         }
 
     ];
+   
+
+    const addonsData = [
+    {
+        name: "Water Bottle",
+        icon: '<span class="bottle-shake inline-block">💧</span>', // Wrapped in span with class
+        options: [
+            { size: "Small", price: 10 },
+            { size: "Large", price: 20 }
+        ]
+    },
+    {
+        name: "Cold Drinks",
+        icon: '<span class="bottle-shake inline-block">🥤</span>', // Wrapped in span with class
+        options: [
+            { size: "Small", price: 10 },
+            { size: "Medium", price: 20 },
+            { size: "Large", price: 40 }
+        ]
+    }
+];
+
+
 
 
         const cart = [];
@@ -1110,7 +1268,14 @@
                 cart.length = 0;
                 updateCart();
             }
-
+            if (event.target.classList.contains('addon-add-to-cart')) {
+                const addonName = event.target.getAttribute('data-name');
+                const addonSize = event.target.getAttribute('data-size');
+                const addonPrice = parseFloat(event.target.getAttribute('data-price'));
+        
+                addToCart({ name: `${addonName} (${addonSize})`, price: addonPrice, quantity: 1 });
+                updateCart(); // Update the cart to reflect the new item
+            }
 
 
         });
@@ -1189,6 +1354,42 @@
         document.head.appendChild(style);
     }
 }
+
+
+/* Updated JavaScript Function */
+/* Function to render addons */
+function renderAddons(addons) {
+    const container = document.getElementById('cartAddons');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="addons-container">
+            <div class="addons-header">
+                <h2 class="addons-title">Addons</h2>
+                <button class="close-button" onclick="closeAddons()">&#10006;</button>
+            </div>
+            ${addons.map(addon => {
+                return `
+                    <div class="addon-card">
+                        <div class="addon-name">
+                            <span class="bottle-shake inline-block">🥤</span> ${addon.name}
+                        </div>
+                        ${addon.options.map(option => `
+                            <div class="addon-option">
+                                <span class="addon-size">${option.size}</span>
+                                <span class="addon-price">₹${option.price}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+
+
+
 
 
         function getCokeSize(totalAmount) {
@@ -1380,43 +1581,74 @@ if (window.location.hash !== '#cart') {
             const mobileBadge = document.getElementById('mobileBadge');
             const totalItemCount = document.getElementById('totalItemCount');
             const totalAmount = document.getElementById('totalAmount');
-
+            const cartAddonsContainer = document.getElementById('cartAddons');
+        
             cartItemsContainer.innerHTML = '';
-
+            cartAddonsContainer.innerHTML = '<h3 class="text-lg font-bold mb-2">Addons</h3>';
+        
             let totalItems = 0;
             let total = 0;
+        
+            // Render addons in the cart
+            addonsData.forEach(addon => {
+                const addonCard = document.createElement('div');
+                addonCard.className = 'addon-card bg-white p-4 rounded-lg shadow-md mb-4';
+        
+                let addonOptionsHtml = '';
+                addon.options.forEach(option => {
+                    addonOptionsHtml += `
+                        <div class="addon-option flex items-center justify-between mb-2">
+    <span class="addon-size">${option.size}</span>
+     <button class="addon-add-to-cart bg-green-500 text-white px-3 py-1 rounded-full"
+        data-name="${addon.name}" 
+        data-size="${option.size}" 
+        data-price="${option.price}">
+        ₹${option.price}
+    </button>
+</div>
 
+                    `;
+                });
+        
+                addonCard.innerHTML = `
+                    <h4 class="addon-name text-md font-semibold mb-1">${addon.name}</h4>
+                    ${addonOptionsHtml}
+                `;
+        
+                cartAddonsContainer.appendChild(addonCard);
+            });
+        
+            // Render cart items
             cart.forEach((item, index) => {
                 const cartItem = document.createElement('li');
                 cartItem.className = 'flex justify-between items-center';
                 cartItem.innerHTML = `
                     <div class="flex items-center justify-between w-full mb-4">
-                    <div class="flex-1">
-                        <span class="font-medium text-gray-800">${item.name} x </span>
-                        <span class="font-bold text-gray-800">${item.quantity}</span>
-                        <span class="text-gray-500 ml-2">₹${item.price * item.quantity}</span>
+                        <div class="flex-1">
+                            <span class="font-medium text-gray-800">${item.name} x </span>
+                            <span class="font-bold text-gray-800">${item.quantity}</span>
+                            <span class="text-gray-500 ml-2">₹${item.price * item.quantity}</span>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <button class="quantity-btn minus text-gray-500 w-8 h-8 flex items-center justify-center border rounded-full" data-index="${index}">-</button>
+                            <span class="mx-2 text-gray-800 font-bold">${item.quantity}</span>
+                            <button class="quantity-btn plus text-gray-500 w-8 h-8 flex items-center justify-center border rounded-full" data-index="${index}">+</button>
+                        </div>
+                        <button class="remove-item text-red-500 hover:text-red-700 ml-4 focus:outline-none" data-index="${index}">Remove</button>
                     </div>
-                    <div class="flex items-center justify-center">
-                        <button class="quantity-btn minus text-gray-500 w-8 h-8 flex items-center justify-center border rounded-full" data-index="${index}">-</button>
-                        <span class="mx-2 text-gray-800 font-bold">${item.quantity}</span>
-                        <button class="quantity-btn plus text-gray-500 w-8 h-8 flex items-center justify-center border rounded-full" data-index="${index}">+</button>
-                    </div>
-                    <button class="remove-item text-red-500 hover:text-red-700 ml-4 focus:outline-none" data-index="${index}">Remove</button>
                 `;
-
+        
                 cartItemsContainer.appendChild(cartItem);
-
+        
                 totalItems += item.quantity;
                 total += item.price * item.quantity;
-
-
+        
                 const removeButton = cartItem.querySelector('.remove-item');
                 removeButton.addEventListener('click', function() {
                     cart.splice(index, 1);
                     updateCart();
                 });
-
-
+        
                 const minusButton = cartItem.querySelector('.quantity-btn.minus');
                 minusButton.addEventListener('click', function() {
                     if (item.quantity > 1) {
@@ -1424,21 +1656,20 @@ if (window.location.hash !== '#cart') {
                         updateCart();
                     }
                 });
-
-
+        
                 const plusButton = cartItem.querySelector('.quantity-btn.plus');
                 plusButton.addEventListener('click', function() {
                     item.quantity++;
                     updateCart();
                 });
             });
-
+        
             cartItemCount.textContent = cart.length;
             mobileBadge.textContent = cart.length;
             totalItemCount.textContent = totalItems;
             totalAmount.textContent = `₹${total}`;
 
-            // Highlight the current eligible offer based on the cart total
+             // Highlight the current eligible offer based on the cart total
     const cokeOfferNotification = document.getElementById('cokeOfferNotification');
     const offerMessages = cokeOfferNotification.querySelectorAll('p');
     let earnedCokeMessage = '';
@@ -1461,26 +1692,48 @@ if (window.location.hash !== '#cart') {
     });
 
     // Display the earned Coke message if applicable
-    const cartSummary = document.getElementById('cartSummary'); // Assuming this is the ID of the cart summary section
-    const earnedCokeNotification = document.getElementById('earnedCokeNotification');
-    if (earnedCokeMessage) {
-        if (!earnedCokeNotification) {
-            const earnedCokeInfo = document.createElement('p');
-            earnedCokeInfo.id = 'earnedCokeNotification';
-            earnedCokeInfo.textContent = earnedCokeMessage;
-            earnedCokeInfo.className = 'text-green-600 font-bold mt-2';
-            cartSummary.before(earnedCokeInfo); // Place it before the cart summary section
-        } else {
-            earnedCokeNotification.textContent = earnedCokeMessage;
-        }
-    } else if (earnedCokeNotification) {
+    //const cartSummary = document.getElementById('cartSummary'); // Assuming this is the ID of the cart summary section
+    //const earnedCokeNotification = document.getElementById('earnedCokeNotification');
+    //if (earnedCokeMessage) {
+      //  if (!earnedCokeNotification) {
+        //    const earnedCokeInfo = document.createElement('p');
+          //  earnedCokeInfo.id = 'earnedCokeNotification';
+            //earnedCokeInfo.textContent = earnedCokeMessage;
+            //earnedCokeInfo.className = 'text-green-600 font-bold mt-2';
+            //cartSummary.before(earnedCokeInfo); // Place it before the cart summary section
+       // } else {
+         //   earnedCokeNotification.textContent = earnedCokeMessage;
+        //}
+    //} else if (earnedCokeNotification) {
         // If the message is empty and the element exists, remove it
-        earnedCokeNotification.remove();
+      //  earnedCokeNotification.remove();
+    //}
+
+    // Display the earned Coke message if applicable
+const cartAddonsContainers = document.getElementById('cartAddons'); // Target addons section
+const earnedCokeNotification = document.getElementById('earnedCokeNotification');
+
+if (earnedCokeMessage) {
+    if (!earnedCokeNotification) {
+        const earnedCokeInfo = document.createElement('p');
+        earnedCokeInfo.id = 'earnedCokeNotification';
+        earnedCokeInfo.textContent = earnedCokeMessage;
+        earnedCokeInfo.className = 'text-green-600 font-bold mt-2';
+        
+        // Insert before addons section
+        cartAddonsContainer.parentNode.insertBefore(earnedCokeInfo, cartAddonsContainers);
+    } else {
+        earnedCokeNotification.textContent = earnedCokeMessage;
     }
+} else if (earnedCokeNotification) {
+    // If the message is empty and the element exists, remove it
+    earnedCokeNotification.remove();
+}
+
 
         }
-
-
+        
+    
         document.getElementById('searchInput').addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
 
@@ -1498,7 +1751,7 @@ if (window.location.hash !== '#cart') {
         });
              renderCategories(menuData);
 
-
+            
 document.getElementById('whatsappButton').addEventListener('click', () => {
     const tableNumberInput = document.getElementById('tableNumber');
     const tableNumber = tableNumberInput.value.trim();
@@ -1614,5 +1867,5 @@ function getTotalAmount() {
                 modal.classList.remove('active');
             });
     </script>
-    </body>
-</html>
+            </body>
+        </html>
