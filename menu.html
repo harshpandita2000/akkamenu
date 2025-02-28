@@ -428,19 +428,22 @@
             </div>
 
               
-                <div class="container mx-auto px-4 lg:px-12">
+                       <div class="container mx-auto px-4 lg:px-12">
     <div class="flex flex-col lg:flex-row gap-6 relative">
         <!-- Main Content -->
         <div class="flex-grow">
-            <!-- Menu Categories -->
-            <div id="menuCategories" 
-                 class="grid gap-4 
-                        sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 
-                        sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 p-4">
+            <!-- Menu Categories Section -->
+            <div id="menuCategoriesContainer" class="mt-8">
+                <h2 class="text-2xl font-bold mb-4">Categories</h2>
+                <div id="menuCategories" 
+                     class="grid gap-4 
+                            sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 
+                            sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 p-4">
+                </div>
             </div>
 
             <!-- Menu Items Section -->
-            <div id="menuItems" class="mt-8 hidden">
+            <div id="menuItemsContainer" class="mt-8 hidden">
                 <button id="backButton"
                     class="mb-6 px-4 py-2 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -451,8 +454,9 @@
                     Back to Categories
                 </button>
 
+                <h2 class="text-2xl font-bold mb-4">Menu Items</h2>
                 <!-- Items List -->
-                <div id="itemsList" 
+                <div id="menuItems" 
                      class="grid gap-4 
                             sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 
                             sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10">
