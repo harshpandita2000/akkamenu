@@ -1610,6 +1610,7 @@ function getAllMenuItems() {
     return allItems;
 }
 
+
 // Setup search functionality for items
 function setupItemSearch() {
     const searchInput = document.getElementById('searchInput');
@@ -1618,14 +1619,11 @@ function setupItemSearch() {
     suggestionsContainer.id = 'searchSuggestions';
     suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
     
-    // Optimize for smooth mobile scrolling with complete isolation
+    // Simplified scrolling styles - removing potentially problematic properties
     suggestionsContainer.style.cssText = `
         overflow-y: auto;
         -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
-        overscroll-behavior: contain; /* Prevent scroll chaining */
-        touch-action: pan-y; /* Explicitly allow vertical touch actions only */
-        will-change: transform; /* GPU acceleration hint */
-        transform: translateZ(0); /* Force GPU acceleration */
+        max-height: 240px; /* Fixed height in pixels */
     `;
     
     // Add to DOM
@@ -1642,6 +1640,13 @@ function setupItemSearch() {
         }
         const matchingItems = allItems.filter(item => item.name.toLowerCase().includes(query));
         displaySuggestions(matchingItems, query);
+        
+        // Force reflow to ensure scrolling works after content is updated
+        setTimeout(() => {
+            suggestionsContainer.style.display = 'none';
+            suggestionsContainer.offsetHeight; // Force reflow
+            suggestionsContainer.style.display = 'block';
+        }, 10);
     });
     
     // Handle outside clicks
@@ -1658,56 +1663,51 @@ function setupItemSearch() {
         }
     });
     
-    // Complete touch isolation solution
-    let isTouchingContainer = false;
-    
-    // Capture the start of touch in the container
-    suggestionsContainer.addEventListener('touchstart', function(e) {
-        isTouchingContainer = true;
-        
-        // Allow the container to receive the touch for native scrolling
-        // but prevent it from propagating to parent elements
+    // Simplified approach for mobile scrolling
+    // Create a passive touchmove handler on the suggestions container
+    suggestionsContainer.addEventListener('touchmove', function(e) {
+        // Let the container scroll naturally
         e.stopPropagation();
     }, { passive: true });
     
-    // Prevent ANY page scrolling while touching the container
+    // Create a non-passive touchmove handler on the document to prevent body scrolling
+    // when touch started in the suggestions container
+    let touchStartInContainer = false;
+    
+    suggestionsContainer.addEventListener('touchstart', function() {
+        touchStartInContainer = true;
+    }, { passive: true });
+    
     document.addEventListener('touchmove', function(e) {
-        if (isTouchingContainer) {
-            // If the user is interacting with the suggestions container
-            // and the container is visible, prevent page scroll completely
-            if (!suggestionsContainer.classList.contains('hidden')) {
+        if (touchStartInContainer && !suggestionsContainer.classList.contains('hidden')) {
+            // Only prevent default if the touch originated in the container
+            // This stops the page from scrolling underneath
+            if (!e.target.closest('#searchSuggestions')) {
                 e.preventDefault();
-                
-                // But let the container itself scroll normally
-                // by ensuring the event still reaches the container
-                return false;
             }
         }
     }, { passive: false, capture: true });
     
-    // End touch tracking when touch ends
-    suggestionsContainer.addEventListener('touchend', function() {
-        isTouchingContainer = false;
-    });
+    document.addEventListener('touchend', function() {
+        touchStartInContainer = false;
+    }, { passive: true });
     
-    suggestionsContainer.addEventListener('touchcancel', function() {
-        isTouchingContainer = false;
-    });
+    document.addEventListener('touchcancel', function() {
+        touchStartInContainer = false;
+    }, { passive: true });
     
-    // Ensure wheel events inside container don't propagate to page
-    suggestionsContainer.addEventListener('wheel', function(e) {
-        e.stopPropagation();
-    });
-    
-    // Allow clicks within container without losing focus
+    // Keep mousedown events from propagating and remove focus
     suggestionsContainer.addEventListener('mousedown', function(e) {
-        e.stopPropagation();
+        e.preventDefault(); // Don't blur the search input
     });
 }
 
 // Display matching items as suggestions
 function displaySuggestions(items, query) {
     const suggestionsContainer = document.getElementById('searchSuggestions');
+    const searchInput = document.getElementById('searchInput');
+    
+    // Clear existing content
     suggestionsContainer.innerHTML = '';
     
     if (items.length === 0) {
@@ -1716,6 +1716,10 @@ function displaySuggestions(items, query) {
         noResults.textContent = 'No matching items found';
         suggestionsContainer.appendChild(noResults);
     } else {
+        // Create a wrapper for better touch scrolling
+        const itemsWrapper = document.createElement('div');
+        itemsWrapper.className = 'pb-1'; // Add padding at bottom
+        
         items.forEach(item => {
             const suggestionItem = document.createElement('div');
             suggestionItem.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center';
@@ -1762,8 +1766,8 @@ function displaySuggestions(items, query) {
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
             
-            // Add click handler to select this item
-            suggestionItem.addEventListener('click', () => {
+            // Add tap handler using both touchend and click for better mobile responsiveness
+            const selectItem = () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
                 
@@ -1789,14 +1793,28 @@ function displaySuggestions(items, query) {
                         });
                     }, 300);
                 }
-            });
+            };
             
-            suggestionsContainer.appendChild(suggestionItem);
+            suggestionItem.addEventListener('click', selectItem);
+            
+            // Add to wrapper
+            itemsWrapper.appendChild(suggestionItem);
         });
+        
+        // Add wrapper to container
+        suggestionsContainer.appendChild(itemsWrapper);
     }
     
     suggestionsContainer.classList.remove('hidden');
+    
+    // Force a reflow to ensure scrolling works
+    setTimeout(() => {
+        suggestionsContainer.style.display = 'none';
+        suggestionsContainer.offsetHeight; // Force reflow
+        suggestionsContainer.style.display = 'block';
+    }, 10);
 }
+
 
 
 document.addEventListener('DOMContentLoaded', function() {
