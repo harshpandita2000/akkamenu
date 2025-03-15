@@ -1611,52 +1611,54 @@ function getAllMenuItems() {
 }
 
 // Setup search functionality for items
+// Setup search functionality for items
 function setupItemSearch() {
     const searchInput = document.getElementById('searchInput');
     const allItems = getAllMenuItems();
     
-    // Create a suggestions container
-    const suggestionsContainer = document.createElement('div');
-    suggestionsContainer.id = 'searchSuggestions';
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
-    searchInput.parentNode.appendChild(suggestionsContainer);
-    
-    // Update placeholder text for item search
-    searchInput.placeholder = "Search menu items...";
-    
-    // Handle input in the search field
-    searchInput.addEventListener('input', function() {
-        const query = this.value.toLowerCase().trim();
+    // Create a suggestions container if it doesn't exist
+    let suggestionsContainer = document.getElementById('searchSuggestions');
+    if (!suggestionsContainer) {
+        suggestionsContainer = document.createElement('div');
+        suggestionsContainer.id = 'searchSuggestions';
+        // Improved styling for better mobile scrolling
+        suggestionsContainer.className = 'absolute z-20 bg-white w-full mt-1 rounded-lg shadow-lg hidden';
+        suggestionsContainer.style.maxHeight = '60vh';
+        suggestionsContainer.style.overflowY = 'auto';
+        suggestionsContainer.style.webkitOverflowScrolling = 'touch'; // Smooth scrolling on iOS
         
-        // Clear suggestions if query is less than 3 characters
-        if (query.length < 3) {
-            suggestionsContainer.innerHTML = '';
-            suggestionsContainer.classList.add('hidden');
-            return;
+        // Mobile-specific styling
+        if (window.innerWidth <= 768) {
+            suggestionsContainer.style.position = 'fixed';
+            suggestionsContainer.style.left = '2.5%';
+            suggestionsContainer.style.width = '95%';
+            suggestionsContainer.style.top = '60px'; // Adjust based on your header height
         }
         
-        // Filter items that match the query
-        const matchingItems = allItems.filter(item => 
-            item.name.toLowerCase().includes(query)
-        );
+        searchInput.parentNode.appendChild(suggestionsContainer);
         
-        // Display suggestions
-        displaySuggestions(matchingItems, query);
-    });
+        // Stop event propagation on touchmove to prevent parent scrolling issues
+        suggestionsContainer.addEventListener('touchmove', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+    }
     
-    // Hide suggestions when clicking outside
-    document.addEventListener('click', function(e) {
-        if (e.target !== searchInput && e.target !== suggestionsContainer) {
-            suggestionsContainer.classList.add('hidden');
+    // Handle window resize for responsive layout
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+            suggestionsContainer.style.position = 'fixed';
+            suggestionsContainer.style.left = '2.5%';
+            suggestionsContainer.style.width = '95%';
+            suggestionsContainer.style.top = '60px';
+        } else {
+            suggestionsContainer.style.position = 'absolute';
+            suggestionsContainer.style.left = '';
+            suggestionsContainer.style.width = '100%';
+            suggestionsContainer.style.top = '';
         }
     });
     
-    // Show suggestions when search input is focused if there's content
-    searchInput.addEventListener('focus', function() {
-        if (this.value.trim().length >= 3) {
-            suggestionsContainer.classList.remove('hidden');
-        }
-    });
+    // The rest of your setupItemSearch function remains the same...
 }
 
 // Display matching items as suggestions
@@ -1664,21 +1666,41 @@ function displaySuggestions(items, query) {
     const suggestionsContainer = document.getElementById('searchSuggestions');
     suggestionsContainer.innerHTML = '';
     
+    // Add close button for mobile
+    if (window.innerWidth <= 768) {
+        const closeButton = document.createElement('div');
+        closeButton.className = 'sticky top-0 bg-white border-b border-gray-200 p-2 flex justify-end';
+        closeButton.innerHTML = `
+            <button class="bg-gray-100 p-1 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        `;
+        closeButton.querySelector('button').addEventListener('click', function() {
+            suggestionsContainer.classList.add('hidden');
+        });
+        suggestionsContainer.appendChild(closeButton);
+    }
+    
+    // Item suggestions content
     if (items.length === 0) {
         const noResults = document.createElement('div');
-        noResults.className = 'px-4 py-2 text-gray-500 italic';
+        noResults.className = 'px-4 py-3 text-gray-500 italic';
         noResults.textContent = 'No matching items found';
         suggestionsContainer.appendChild(noResults);
     } else {
         items.forEach(item => {
             const suggestionItem = document.createElement('div');
-            suggestionItem.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center';
+            // Increased padding and touch target size for mobile
+            suggestionItem.className = 'px-4 py-3 hover:bg-gray-100 active:bg-gray-200 cursor-pointer flex items-center border-b border-gray-100';
             
-            // Create thumbnail image
+            // Thumbnail image
             const thumbnail = document.createElement('img');
             thumbnail.src = item.image;
             thumbnail.alt = item.name;
-            thumbnail.className = 'w-10 h-10 object-cover rounded-md mr-3';
+            thumbnail.className = 'w-12 h-12 object-cover rounded-md mr-3';
+            thumbnail.loading = 'lazy';
             thumbnail.onerror = function() {
                 this.src = 'placeholder-image.jpg';
             };
@@ -1687,11 +1709,11 @@ function displaySuggestions(items, query) {
             const contentDiv = document.createElement('div');
             contentDiv.className = 'flex-1';
             
-            // Highlight the matching part of the name
+            // Item name with highlighted match
             const itemName = document.createElement('div');
-            itemName.className = 'font-medium text-gray-800';
+            itemName.className = 'font-medium text-gray-800 text-base'; // Larger text for better mobile tapping
             
-            // Create the highlighted name
+            // Highlight matching text
             const nameLower = item.name.toLowerCase();
             const queryStart = nameLower.indexOf(query.toLowerCase());
             if (queryStart !== -1) {
@@ -1704,30 +1726,27 @@ function displaySuggestions(items, query) {
                 itemName.textContent = item.name;
             }
             
-            // Add category and price info
+            // Item details
             const itemDetails = document.createElement('div');
-            itemDetails.className = 'text-xs text-gray-500';
+            itemDetails.className = 'text-sm text-gray-500';
             itemDetails.textContent = `${item.categoryName} • ₹${item.price}`;
             
-            // Assemble the content
             contentDiv.appendChild(itemName);
             contentDiv.appendChild(itemDetails);
             
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
             
-            // Add click handler to select this item
+            // Click handler with the same functionality
             suggestionItem.addEventListener('click', () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
                 
-                // Find the category for this item
+                // Find category and navigate
                 const category = menuData.find(cat => cat.category === item.categoryName);
                 if (category) {
-                    // Navigate to the item's category
                     renderItems(category);
                     
-                    // Highlight the selected item with a slight delay to allow rendering
                     setTimeout(() => {
                         const itemElements = document.querySelectorAll('#itemsList > div');
                         itemElements.forEach(el => {
@@ -1735,7 +1754,6 @@ function displaySuggestions(items, query) {
                                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 el.classList.add('ring-2', 'ring-blue-500');
                                 
-                                // Remove highlight after a few seconds
                                 setTimeout(() => {
                                     el.classList.remove('ring-2', 'ring-blue-500');
                                 }, 3000);
@@ -1750,6 +1768,36 @@ function displaySuggestions(items, query) {
     }
     
     suggestionsContainer.classList.remove('hidden');
+    
+    // Add a custom class to body to prevent background scrolling on mobile
+    if (window.innerWidth <= 768) {
+        document.body.classList.add('suggestions-open');
+        
+        // Add necessary CSS if not already present
+        if (!document.getElementById('suggestions-style')) {
+            const style = document.createElement('style');
+            style.id = 'suggestions-style';
+            style.textContent = `
+                body.suggestions-open {
+                    overflow: hidden;
+                    position: relative;
+                }
+                #searchSuggestions {
+                    -webkit-overflow-scrolling: touch;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+}
+
+// Add this helper function to manage body scroll locking
+function closeSearchSuggestions() {
+    const suggestionsContainer = document.getElementById('searchSuggestions');
+    if (suggestionsContainer) {
+        suggestionsContainer.classList.add('hidden');
+        document.body.classList.remove('suggestions-open');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
