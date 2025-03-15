@@ -1618,11 +1618,13 @@ function setupItemSearch() {
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
     suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
+    suggestionsContainer.style.overflowY = 'auto'; // Ensure internal scrolling
+    suggestionsContainer.style.touchAction = 'pan-y'; // Allow vertical scrolling
     searchInput.parentNode.appendChild(suggestionsContainer);
 
     searchInput.placeholder = "Search menu items...";
 
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
         const query = this.value.toLowerCase().trim();
 
         if (query.length < 3) {
@@ -1635,30 +1637,39 @@ function setupItemSearch() {
         displaySuggestions(matchingItems, query);
     });
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
             suggestionsContainer.classList.add('hidden');
         }
     });
 
-    searchInput.addEventListener('focus', function() {
+    searchInput.addEventListener('focus', function () {
         if (this.value.trim().length >= 3) {
             suggestionsContainer.classList.remove('hidden');
         }
     });
 
-    // Prevent main page from scrolling while inside the suggestion box
-    suggestionsContainer.addEventListener('touchstart', function(e) {
+    // **Prevent page from scrolling when interacting with suggestionsContainer**
+    suggestionsContainer.addEventListener('touchstart', function (e) {
         e.stopPropagation();
     });
 
-    suggestionsContainer.addEventListener('touchmove', function(e) {
+    suggestionsContainer.addEventListener('touchmove', function (e) {
+        if (suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight) {
+            e.stopPropagation(); // Prevent main page scrolling
+        }
+    });
+
+    suggestionsContainer.addEventListener('wheel', function (e) {
         e.stopPropagation();
     });
 
-    suggestionsContainer.addEventListener('wheel', function(e) {
-        e.stopPropagation();
-    });
+    // **Prevent body from scrolling when touch starts inside suggestionsContainer**
+    suggestionsContainer.addEventListener('touchmove', function (e) {
+        if (suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight) {
+            e.preventDefault(); // Stop the default page scrolling
+        }
+    }, { passive: false }); // Passive false ensures preventDefault works
 }
 
 // Display matching items as suggestions
