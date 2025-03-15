@@ -1615,90 +1615,56 @@ function getAllMenuItems() {
 function setupItemSearch() {
     const searchInput = document.getElementById('searchInput');
     const allItems = getAllMenuItems();
+    
+    // Create suggestions container
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
-    
-    // Make the container scrollable with visible scrollbar
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
-    
-    // Enable custom scrollbar styling
-    suggestionsContainer.style.cssText = `
-        scrollbar-width: thin;
-        scrollbar-color: #CBD5E0 #F7FAFC;
-    `;
-    
-    // Add explicit scrollbar styling for WebKit browsers (Safari, Chrome)
-    const scrollbarStyles = document.createElement('style');
-    scrollbarStyles.textContent = `
-        #searchSuggestions::-webkit-scrollbar {
-            width: 8px;
-            background: transparent;
-        }
-        #searchSuggestions::-webkit-scrollbar-track {
-            background: #F7FAFC;
-            border-radius: 4px;
-        }
-        #searchSuggestions::-webkit-scrollbar-thumb {
-            background-color: #CBD5E0;
-            border-radius: 4px;
-            border: 2px solid #F7FAFC;
-        }
-        #searchSuggestions::-webkit-scrollbar-thumb:hover {
-            background-color: #A0AEC0;
-        }
-    `;
-    document.head.appendChild(scrollbarStyles);
-    
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100';
+
     // Add to DOM
     searchInput.parentNode.appendChild(suggestionsContainer);
     searchInput.placeholder = "Search menu items...";
 
+    // Hide scrollbar initially
+    suggestionsContainer.style.visibility = 'hidden';
+
     // Input handler
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
         const query = this.value.toLowerCase().trim();
+        
         if (query.length < 3) {
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.classList.add('hidden');
+            suggestionsContainer.style.visibility = 'hidden';
             return;
         }
+        
         const matchingItems = allItems.filter(item => item.name.toLowerCase().includes(query));
         displaySuggestions(matchingItems, query);
+        
+        if (matchingItems.length > 0) {
+            suggestionsContainer.classList.remove('hidden');
+            suggestionsContainer.style.visibility = 'visible';
+        } else {
+            suggestionsContainer.classList.add('hidden');
+            suggestionsContainer.style.visibility = 'hidden';
+        }
     });
 
     // Handle outside clicks
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
             suggestionsContainer.classList.add('hidden');
+            suggestionsContainer.style.visibility = 'hidden';
         }
     });
 
     // Focus handler
-    searchInput.addEventListener('focus', function() {
+    searchInput.addEventListener('focus', function () {
         if (this.value.trim().length >= 3) {
             suggestionsContainer.classList.remove('hidden');
+            suggestionsContainer.style.visibility = 'visible';
         }
-    });
-    
-    // Add custom scroll indicator bar
-    const scrollBar = document.createElement('div');
-    scrollBar.className = 'absolute right-2 top-12 bottom-4 w-2 bg-gray-200 rounded opacity-70';
-    scrollBar.id = 'customScrollBar';
-    
-    const scrollThumb = document.createElement('div');
-    scrollThumb.className = 'w-2 bg-gray-500 rounded absolute';
-    scrollThumb.style.top = '0px';
-    scrollThumb.style.height = '30px';
-    
-    scrollBar.appendChild(scrollThumb);
-    suggestionsContainer.appendChild(scrollBar);
-    
-    // Update scroll thumb position when scrolling
-    suggestionsContainer.addEventListener('scroll', function() {
-        const scrollPercentage = suggestionsContainer.scrollTop / 
-            (suggestionsContainer.scrollHeight - suggestionsContainer.clientHeight);
-        const maxThumbTravel = scrollBar.clientHeight - scrollThumb.clientHeight;
-        
-        scrollThumb.style.top = `${scrollPercentage * maxThumbTravel}px`;
     });
 }
 
@@ -1706,16 +1672,9 @@ function setupItemSearch() {
 function displaySuggestions(items, query) {
     const suggestionsContainer = document.getElementById('searchSuggestions');
     const searchInput = document.getElementById('searchInput');
-    const customScrollBar = document.getElementById('customScrollBar');
 
     // Clear existing content
     suggestionsContainer.innerHTML = '';
-    
-    // Re-add the custom scroll bar (since we cleared the container)
-    suggestionsContainer.appendChild(customScrollBar);
-    
-    // Initially hide the custom scrollbar - will show only if needed
-    customScrollBar.style.display = 'none';
 
     if (items.length === 0) {
         const noResults = document.createElement('div');
@@ -1734,7 +1693,7 @@ function displaySuggestions(items, query) {
             thumbnail.src = item.image;
             thumbnail.alt = item.name;
             thumbnail.className = 'w-10 h-10 object-cover rounded-md mr-3';
-            thumbnail.onerror = function() {
+            thumbnail.onerror = function () {
                 this.src = 'placeholder-image.jpg';
             };
 
@@ -1765,9 +1724,11 @@ function displaySuggestions(items, query) {
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
 
+            // Function to select item
             const selectItem = () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
+                suggestionsContainer.style.visibility = 'hidden';
 
                 const category = menuData.find(cat => cat.category === item.categoryName);
                 if (category) {
@@ -1790,8 +1751,7 @@ function displaySuggestions(items, query) {
             suggestionItem.addEventListener('click', selectItem);
             
             // Add touch event for better mobile experience
-            suggestionItem.addEventListener('touchend', function(e) {
-                // Prevent touchend from triggering unexpected clicks
+            suggestionItem.addEventListener('touchend', function (e) {
                 e.preventDefault();
                 selectItem();
             });
@@ -1800,22 +1760,12 @@ function displaySuggestions(items, query) {
         });
 
         suggestionsContainer.appendChild(itemsWrapper);
-        
-        // After adding content, check if scrollbar is needed
-        setTimeout(() => {
-            if (suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight) {
-                customScrollBar.style.display = 'block';
-                
-                // Update the scroll thumb height based on visible percentage
-                const scrollThumb = customScrollBar.querySelector('div');
-                const visibleRatio = suggestionsContainer.clientHeight / suggestionsContainer.scrollHeight;
-                scrollThumb.style.height = `${Math.max(20, visibleRatio * customScrollBar.clientHeight)}px`;
-            }
-        }, 10);
     }
 
     suggestionsContainer.classList.remove('hidden');
+    suggestionsContainer.style.visibility = 'visible';
 }
+
 
 document.addEventListener('DOMContentLoaded', function() {
     setupItemSearch();
