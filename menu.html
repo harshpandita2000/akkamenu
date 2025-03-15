@@ -1617,14 +1617,7 @@ function setupItemSearch() {
     const allItems = getAllMenuItems();
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
-    
-    // Simplified scrolling styles - removing potentially problematic properties
-    suggestionsContainer.style.cssText = `
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
-        max-height: 240px; /* Fixed height in pixels */
-    `;
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-hidden hidden';
     
     // Add to DOM
     searchInput.parentNode.appendChild(suggestionsContainer);
@@ -1640,13 +1633,6 @@ function setupItemSearch() {
         }
         const matchingItems = allItems.filter(item => item.name.toLowerCase().includes(query));
         displaySuggestions(matchingItems, query);
-        
-        // Force reflow to ensure scrolling works after content is updated
-        setTimeout(() => {
-            suggestionsContainer.style.display = 'none';
-            suggestionsContainer.offsetHeight; // Force reflow
-            suggestionsContainer.style.display = 'block';
-        }, 10);
     });
     
     // Handle outside clicks
@@ -1663,42 +1649,45 @@ function setupItemSearch() {
         }
     });
     
-    // Simplified approach for mobile scrolling
-    // Create a passive touchmove handler on the suggestions container
-    suggestionsContainer.addEventListener('touchmove', function(e) {
-        // Let the container scroll naturally
-        e.stopPropagation();
+    // Variable to track if user is touching/holding the suggestions
+    let isTouchingContainer = false;
+    
+    // Only enable scrolling when touch starts in the container
+    suggestionsContainer.addEventListener('touchstart', function(e) {
+        isTouchingContainer = true;
+        suggestionsContainer.style.overflowY = 'auto';
     }, { passive: true });
     
-    // Create a non-passive touchmove handler on the document to prevent body scrolling
-    // when touch started in the suggestions container
-    let touchStartInContainer = false;
-    
-    suggestionsContainer.addEventListener('touchstart', function() {
-        touchStartInContainer = true;
-    }, { passive: true });
-    
-    document.addEventListener('touchmove', function(e) {
-        if (touchStartInContainer && !suggestionsContainer.classList.contains('hidden')) {
-            // Only prevent default if the touch originated in the container
-            // This stops the page from scrolling underneath
-            if (!e.target.closest('#searchSuggestions')) {
-                e.preventDefault();
-            }
-        }
-    }, { passive: false, capture: true });
-    
+    // Disable scrolling when touch ends
     document.addEventListener('touchend', function() {
-        touchStartInContainer = false;
+        if (isTouchingContainer) {
+            isTouchingContainer = false;
+            // Small delay before disabling scroll to allow momentum to finish
+            setTimeout(() => {
+                if (!isTouchingContainer) {
+                    suggestionsContainer.style.overflowY = 'hidden';
+                }
+            }, 500);
+        }
     }, { passive: true });
     
     document.addEventListener('touchcancel', function() {
-        touchStartInContainer = false;
+        isTouchingContainer = false;
+        suggestionsContainer.style.overflowY = 'hidden';
     }, { passive: true });
     
-    // Keep mousedown events from propagating and remove focus
+    // Enable scroll only when mouse is over container
+    suggestionsContainer.addEventListener('mouseenter', function() {
+        suggestionsContainer.style.overflowY = 'auto';
+    });
+    
+    suggestionsContainer.addEventListener('mouseleave', function() {
+        suggestionsContainer.style.overflowY = 'hidden';
+    });
+    
+    // Prevent mousedown from taking focus away
     suggestionsContainer.addEventListener('mousedown', function(e) {
-        e.preventDefault(); // Don't blur the search input
+        e.preventDefault();
     });
 }
 
@@ -1718,7 +1707,7 @@ function displaySuggestions(items, query) {
     } else {
         // Create a wrapper for better touch scrolling
         const itemsWrapper = document.createElement('div');
-        itemsWrapper.className = 'pb-1'; // Add padding at bottom
+        itemsWrapper.className = 'pb-1';
         
         items.forEach(item => {
             const suggestionItem = document.createElement('div');
@@ -1766,7 +1755,7 @@ function displaySuggestions(items, query) {
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
             
-            // Add tap handler using both touchend and click for better mobile responsiveness
+            // Add selection handler
             const selectItem = () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
@@ -1806,15 +1795,7 @@ function displaySuggestions(items, query) {
     }
     
     suggestionsContainer.classList.remove('hidden');
-    
-    // Force a reflow to ensure scrolling works
-    setTimeout(() => {
-        suggestionsContainer.style.display = 'none';
-        suggestionsContainer.offsetHeight; // Force reflow
-        suggestionsContainer.style.display = 'block';
-    }, 10);
 }
-
 
 
 document.addEventListener('DOMContentLoaded', function() {
