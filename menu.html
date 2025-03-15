@@ -1617,15 +1617,12 @@ function setupItemSearch() {
     const allItems = getAllMenuItems();
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 hidden';
-    
-    // Start with no scrolling - very important
-    suggestionsContainer.style.overflowY = 'hidden';
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-hidden'; // Start with overflow hidden
     
     // Add to DOM
     searchInput.parentNode.appendChild(suggestionsContainer);
     searchInput.placeholder = "Search menu items...";
-    
+
     // Input handler
     searchInput.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim();
@@ -1637,45 +1634,46 @@ function setupItemSearch() {
         const matchingItems = allItems.filter(item => item.name.toLowerCase().includes(query));
         displaySuggestions(matchingItems, query);
     });
-    
+
     // Handle outside clicks
     document.addEventListener('click', function(e) {
         if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
             suggestionsContainer.classList.add('hidden');
         }
     });
-    
+
     // Focus handler
     searchInput.addEventListener('focus', function() {
         if (this.value.trim().length >= 3) {
             suggestionsContainer.classList.remove('hidden');
         }
     });
-    
-    // Enable scrolling ONLY when touch is active on the container
+
+    // Enable scrolling when suggestions are shown and content overflows
     suggestionsContainer.addEventListener('touchstart', function() {
-        suggestionsContainer.style.overflowY = 'auto';
+        if (suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight) {
+            suggestionsContainer.style.overflowY = 'auto'; // Enable scrolling only if needed
+        }
     }, { passive: true });
-    
-    // Disable scrolling immediately when touch ends
+
+    // Prevent body scrolling when interacting with suggestions
+    suggestionsContainer.addEventListener('touchmove', function(e) {
+        e.stopPropagation(); // Stop propagation to prevent body scrolling
+        const isScrollable = suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight;
+        if (isScrollable) {
+            e.preventDefault(); // Prevent default only if scrollable to allow natural scrolling within container
+        }
+    }, { passive: false }); // Set passive to false to allow preventDefault
+
+    // Reset overflow when touch ends
     suggestionsContainer.addEventListener('touchend', function() {
-        suggestionsContainer.style.overflowY = 'hidden';
+        suggestionsContainer.style.overflowY = 'hidden'; // Reset to hidden
     }, { passive: true });
-    
+
     suggestionsContainer.addEventListener('touchcancel', function() {
         suggestionsContainer.style.overflowY = 'hidden';
     }, { passive: true });
-    
-    // Also disable when touch moves out of the container
-    suggestionsContainer.addEventListener('touchleave', function() {
-        suggestionsContainer.style.overflowY = 'hidden';
-    }, { passive: true });
-    
-    // Prevent default on touchmove within container to stop body scrolling
-    suggestionsContainer.addEventListener('touchmove', function(e) {
-        e.stopPropagation(); 
-    }, { passive: true });
-    
+
     // Keep mousedown events from propagating
     suggestionsContainer.addEventListener('mousedown', function(e) {
         e.preventDefault(); // Don't blur the search input
@@ -1686,25 +1684,23 @@ function setupItemSearch() {
 function displaySuggestions(items, query) {
     const suggestionsContainer = document.getElementById('searchSuggestions');
     const searchInput = document.getElementById('searchInput');
-    
+
     // Clear existing content
     suggestionsContainer.innerHTML = '';
-    
+
     if (items.length === 0) {
         const noResults = document.createElement('div');
         noResults.className = 'px-4 py-2 text-gray-500 italic';
         noResults.textContent = 'No matching items found';
         suggestionsContainer.appendChild(noResults);
     } else {
-        // Create a wrapper for better touch scrolling
         const itemsWrapper = document.createElement('div');
         itemsWrapper.className = 'pb-1';
-        
+
         items.forEach(item => {
             const suggestionItem = document.createElement('div');
             suggestionItem.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center';
-            
-            // Create thumbnail image
+
             const thumbnail = document.createElement('img');
             thumbnail.src = item.image;
             thumbnail.alt = item.name;
@@ -1712,61 +1708,47 @@ function displaySuggestions(items, query) {
             thumbnail.onerror = function() {
                 this.src = 'placeholder-image.jpg';
             };
-            
-            // Create content div for text
+
             const contentDiv = document.createElement('div');
             contentDiv.className = 'flex-1';
-            
-            // Highlight the matching part of the name
+
             const itemName = document.createElement('div');
             itemName.className = 'font-medium text-gray-800';
-            
-            // Create the highlighted name
+
             const nameLower = item.name.toLowerCase();
             const queryStart = nameLower.indexOf(query.toLowerCase());
             if (queryStart !== -1) {
                 const before = item.name.substring(0, queryStart);
                 const match = item.name.substring(queryStart, queryStart + query.length);
                 const after = item.name.substring(queryStart + query.length);
-                
                 itemName.innerHTML = `${before}<span class="bg-yellow-200">${match}</span>${after}`;
             } else {
                 itemName.textContent = item.name;
             }
-            
-            // Add category and price info
+
             const itemDetails = document.createElement('div');
             itemDetails.className = 'text-xs text-gray-500';
             itemDetails.textContent = `${item.categoryName} • ₹${item.price}`;
-            
-            // Assemble the content
+
             contentDiv.appendChild(itemName);
             contentDiv.appendChild(itemDetails);
-            
+
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
-            
-            // Add selection handler - but make it work on touchend instead of click
-            // This avoids conflicts with the scrolling behavior
+
             const selectItem = () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
-                
-                // Find the category for this item
+
                 const category = menuData.find(cat => cat.category === item.categoryName);
                 if (category) {
-                    // Navigate to the item's category
                     renderItems(category);
-                    
-                    // Highlight the selected item with a slight delay to allow rendering
                     setTimeout(() => {
                         const itemElements = document.querySelectorAll('#itemsList > div');
                         itemElements.forEach(el => {
                             if (el.querySelector('h3').textContent === item.name) {
                                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 el.classList.add('ring-2', 'ring-blue-500');
-                                
-                                // Remove highlight after a few seconds
                                 setTimeout(() => {
                                     el.classList.remove('ring-2', 'ring-blue-500');
                                 }, 3000);
@@ -1775,22 +1757,19 @@ function displaySuggestions(items, query) {
                     }, 300);
                 }
             };
-            
-            // Use both touchend and click for better cross-device compatibility
+
             suggestionItem.addEventListener('click', selectItem);
             suggestionItem.addEventListener('touchend', function(e) {
-                e.preventDefault(); // Prevent any ghost clicks
+                e.preventDefault();
                 selectItem();
             });
-            
-            // Add to wrapper
+
             itemsWrapper.appendChild(suggestionItem);
         });
-        
-        // Add wrapper to container
+
         suggestionsContainer.appendChild(itemsWrapper);
     }
-    
+
     suggestionsContainer.classList.remove('hidden');
 }
 
