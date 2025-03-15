@@ -1614,62 +1614,82 @@ function getAllMenuItems() {
 function setupItemSearch() {
     const searchInput = document.getElementById('searchInput');
     const allItems = getAllMenuItems();
-
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
     suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
-    suggestionsContainer.style.overflowY = 'auto'; // Ensure internal scrolling
-    suggestionsContainer.style.touchAction = 'pan-y'; // Allow vertical scrolling
+    
+    // Add to DOM
     searchInput.parentNode.appendChild(suggestionsContainer);
-
     searchInput.placeholder = "Search menu items...";
-
-    searchInput.addEventListener('input', function () {
+    
+    // Input handler
+    searchInput.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim();
-
         if (query.length < 3) {
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.classList.add('hidden');
             return;
         }
-
         const matchingItems = allItems.filter(item => item.name.toLowerCase().includes(query));
         displaySuggestions(matchingItems, query);
     });
-
-    document.addEventListener('click', function (e) {
+    
+    // Handle outside clicks
+    document.addEventListener('click', function(e) {
         if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
             suggestionsContainer.classList.add('hidden');
         }
     });
-
-    searchInput.addEventListener('focus', function () {
+    
+    // Focus handler
+    searchInput.addEventListener('focus', function() {
         if (this.value.trim().length >= 3) {
             suggestionsContainer.classList.remove('hidden');
         }
     });
-
-    // **Prevent page from scrolling when interacting with suggestionsContainer**
-    suggestionsContainer.addEventListener('touchstart', function (e) {
-        e.stopPropagation();
-    });
-
-    suggestionsContainer.addEventListener('touchmove', function (e) {
-        if (suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight) {
-            e.stopPropagation(); // Prevent main page scrolling
+    
+    // Fix for scrolling issues - using proper approach
+    suggestionsContainer.addEventListener('touchmove', function(e) {
+        // Check if we're at the top and trying to scroll down or at the bottom and trying to scroll up
+        const isAtTop = suggestionsContainer.scrollTop === 0;
+        const isAtBottom = suggestionsContainer.scrollHeight - suggestionsContainer.scrollTop === suggestionsContainer.clientHeight;
+        const touchY = e.touches[0].clientY;
+        
+        // Store current touch position for next event
+        if (!suggestionsContainer.lastTouchY) {
+            suggestionsContainer.lastTouchY = touchY;
+            return;
         }
-    });
-
-    suggestionsContainer.addEventListener('wheel', function (e) {
-        e.stopPropagation();
-    });
-
-    // **Prevent body from scrolling when touch starts inside suggestionsContainer**
-    suggestionsContainer.addEventListener('touchmove', function (e) {
-        if (suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight) {
-            e.preventDefault(); // Stop the default page scrolling
+        
+        const isScrollingUp = touchY > suggestionsContainer.lastTouchY;
+        const isScrollingDown = touchY < suggestionsContainer.lastTouchY;
+        
+        // Prevent parent scrolling only when needed
+        if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
+            e.preventDefault();
+        } else {
+            // Allow scrolling within the container but prevent page scroll
+            e.stopPropagation();
         }
-    }, { passive: false }); // Passive false ensures preventDefault works
+        
+        suggestionsContainer.lastTouchY = touchY;
+    }, { passive: false });
+    
+    // Reset touch tracking when touch ends
+    suggestionsContainer.addEventListener('touchend', function() {
+        delete suggestionsContainer.lastTouchY;
+    });
+    
+    // Prevent mousewheel events from propagating to parent
+    suggestionsContainer.addEventListener('wheel', function(e) {
+        e.stopPropagation();
+        
+        // Prevent scrolling parent if we're at boundaries
+        if ((suggestionsContainer.scrollTop === 0 && e.deltaY < 0) || 
+            (suggestionsContainer.scrollHeight - suggestionsContainer.scrollTop === suggestionsContainer.clientHeight && e.deltaY > 0)) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 }
 
 // Display matching items as suggestions
