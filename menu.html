@@ -1618,6 +1618,16 @@ function setupItemSearch() {
     suggestionsContainer.id = 'searchSuggestions';
     suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
     
+    // Optimize for smooth mobile scrolling with complete isolation
+    suggestionsContainer.style.cssText = `
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
+        overscroll-behavior: contain; /* Prevent scroll chaining */
+        touch-action: pan-y; /* Explicitly allow vertical touch actions only */
+        will-change: transform; /* GPU acceleration hint */
+        transform: translateZ(0); /* Force GPU acceleration */
+    `;
+    
     // Add to DOM
     searchInput.parentNode.appendChild(suggestionsContainer);
     searchInput.placeholder = "Search menu items...";
@@ -1648,48 +1658,51 @@ function setupItemSearch() {
         }
     });
     
-    // Fix for scrolling issues - using proper approach
-    suggestionsContainer.addEventListener('touchmove', function(e) {
-        // Check if we're at the top and trying to scroll down or at the bottom and trying to scroll up
-        const isAtTop = suggestionsContainer.scrollTop === 0;
-        const isAtBottom = suggestionsContainer.scrollHeight - suggestionsContainer.scrollTop === suggestionsContainer.clientHeight;
-        const touchY = e.touches[0].clientY;
-        
-        // Store current touch position for next event
-        if (!suggestionsContainer.lastTouchY) {
-            suggestionsContainer.lastTouchY = touchY;
-            return;
-        }
-        
-        const isScrollingUp = touchY > suggestionsContainer.lastTouchY;
-        const isScrollingDown = touchY < suggestionsContainer.lastTouchY;
-        
-        // Prevent parent scrolling only when needed
-        if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
-            e.preventDefault();
-        } else {
-            // Allow scrolling within the container but prevent page scroll
-            e.stopPropagation();
-        }
-        
-        suggestionsContainer.lastTouchY = touchY;
-    }, { passive: false });
+    // Complete touch isolation solution
+    let isTouchingContainer = false;
     
-    // Reset touch tracking when touch ends
+    // Capture the start of touch in the container
+    suggestionsContainer.addEventListener('touchstart', function(e) {
+        isTouchingContainer = true;
+        
+        // Allow the container to receive the touch for native scrolling
+        // but prevent it from propagating to parent elements
+        e.stopPropagation();
+    }, { passive: true });
+    
+    // Prevent ANY page scrolling while touching the container
+    document.addEventListener('touchmove', function(e) {
+        if (isTouchingContainer) {
+            // If the user is interacting with the suggestions container
+            // and the container is visible, prevent page scroll completely
+            if (!suggestionsContainer.classList.contains('hidden')) {
+                e.preventDefault();
+                
+                // But let the container itself scroll normally
+                // by ensuring the event still reaches the container
+                return false;
+            }
+        }
+    }, { passive: false, capture: true });
+    
+    // End touch tracking when touch ends
     suggestionsContainer.addEventListener('touchend', function() {
-        delete suggestionsContainer.lastTouchY;
+        isTouchingContainer = false;
     });
     
-    // Prevent mousewheel events from propagating to parent
+    suggestionsContainer.addEventListener('touchcancel', function() {
+        isTouchingContainer = false;
+    });
+    
+    // Ensure wheel events inside container don't propagate to page
     suggestionsContainer.addEventListener('wheel', function(e) {
         e.stopPropagation();
-        
-        // Prevent scrolling parent if we're at boundaries
-        if ((suggestionsContainer.scrollTop === 0 && e.deltaY < 0) || 
-            (suggestionsContainer.scrollHeight - suggestionsContainer.scrollTop === suggestionsContainer.clientHeight && e.deltaY > 0)) {
-            e.preventDefault();
-        }
-    }, { passive: false });
+    });
+    
+    // Allow clicks within container without losing focus
+    suggestionsContainer.addEventListener('mousedown', function(e) {
+        e.stopPropagation();
+    });
 }
 
 // Display matching items as suggestions
