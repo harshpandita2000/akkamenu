@@ -1610,7 +1610,6 @@ function getAllMenuItems() {
     return allItems;
 }
 
-
 // Setup search functionality for items
 function setupItemSearch() {
     const searchInput = document.getElementById('searchInput');
@@ -1649,28 +1648,43 @@ function setupItemSearch() {
         }
     });
 
-    // Enable scrolling when suggestions are shown and content overflows
+    // Enable scrolling when touch starts in suggestions container
     suggestionsContainer.addEventListener('touchstart', function() {
-        if (suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight) {
-            suggestionsContainer.style.overflowY = 'auto'; // Enable scrolling only if needed
-        }
+        suggestionsContainer.style.overflowY = 'auto';
     }, { passive: true });
 
-    // Prevent body scrolling when interacting with suggestions
+    // IMPORTANT: This is the key change - allow the container to scroll naturally
+    // without preventing default behavior
     suggestionsContainer.addEventListener('touchmove', function(e) {
-        e.stopPropagation(); // Stop propagation to prevent body scrolling
-        const isScrollable = suggestionsContainer.scrollHeight > suggestionsContainer.clientHeight;
-        if (isScrollable) {
-            e.preventDefault(); // Prevent default only if scrollable to allow natural scrolling within container
-        }
-    }, { passive: false }); // Set passive to false to allow preventDefault
+        // Don't call preventDefault here - this allows the natural scrolling
+        // Just stop propagation to prevent body scrolling
+        e.stopPropagation();
+    }, { passive: true }); // Making this passive: true allows natural scrolling
 
-    // Reset overflow when touch ends
+    // Add a document level handler to prevent body scrolling when touching suggestions
+    let touchStartInContainer = false;
+    
+    suggestionsContainer.addEventListener('touchstart', function() {
+        touchStartInContainer = true;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', function(e) {
+        // Only prevent default if touch started in container and we're scrolling outside
+        if (touchStartInContainer && !suggestionsContainer.contains(e.target)) {
+            e.preventDefault(); // Prevent body scrolling
+        }
+    }, { passive: false }); // This needs to be non-passive to prevent default
+
+    // Reset overflow and tracking when touch ends
     suggestionsContainer.addEventListener('touchend', function() {
-        suggestionsContainer.style.overflowY = 'hidden'; // Reset to hidden
+        setTimeout(() => {
+            touchStartInContainer = false;
+            suggestionsContainer.style.overflowY = 'hidden';
+        }, 300); // Small delay to allow momentum scrolling to finish
     }, { passive: true });
 
     suggestionsContainer.addEventListener('touchcancel', function() {
+        touchStartInContainer = false;
         suggestionsContainer.style.overflowY = 'hidden';
     }, { passive: true });
 
@@ -1736,6 +1750,24 @@ function displaySuggestions(items, query) {
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
 
+            // Use a variable to detect taps vs scrolls
+            let touchStartY = 0;
+            let touchMoved = false;
+            
+            // Track touch start position
+            suggestionItem.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+                touchMoved = false;
+            }, { passive: true });
+            
+            // Detect if touch moved significantly (user is scrolling)
+            suggestionItem.addEventListener('touchmove', function(e) {
+                const touchY = e.touches[0].clientY;
+                if (Math.abs(touchY - touchStartY) > 10) {
+                    touchMoved = true;
+                }
+            }, { passive: true });
+
             const selectItem = () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
@@ -1758,10 +1790,15 @@ function displaySuggestions(items, query) {
                 }
             };
 
+            // Click handler for desktop
             suggestionItem.addEventListener('click', selectItem);
+            
+            // Touchend handler for mobile that distinguishes between scrolls and taps
             suggestionItem.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                selectItem();
+                if (!touchMoved) {
+                    e.preventDefault();
+                    selectItem();
+                }
             });
 
             itemsWrapper.appendChild(suggestionItem);
@@ -1772,7 +1809,6 @@ function displaySuggestions(items, query) {
 
     suggestionsContainer.classList.remove('hidden');
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     setupItemSearch();
