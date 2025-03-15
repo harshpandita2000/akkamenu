@@ -1617,11 +1617,40 @@ function setupItemSearch() {
     const allItems = getAllMenuItems();
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto'; // Always scrollable
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
     
     // Add to DOM
     searchInput.parentNode.appendChild(suggestionsContainer);
     searchInput.placeholder = "Search menu items...";
+
+    // Create scroll indicator container
+    const scrollIndicatorContainer = document.createElement('div');
+    scrollIndicatorContainer.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 z-20 opacity-70';
+    scrollIndicatorContainer.style.pointerEvents = 'none'; // Initially non-interactive
+    
+    // Create up arrow
+    const upArrow = document.createElement('div');
+    upArrow.className = 'w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer shadow';
+    upArrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>';
+    upArrow.id = 'scrollUpButton';
+    upArrow.style.pointerEvents = 'auto'; // Make this specific element interactive
+    
+    // Create down arrow
+    const downArrow = document.createElement('div');
+    downArrow.className = 'w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer shadow';
+    downArrow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>';
+    downArrow.id = 'scrollDownButton';
+    downArrow.style.pointerEvents = 'auto'; // Make this specific element interactive
+    
+    // Add arrows to container
+    scrollIndicatorContainer.appendChild(upArrow);
+    scrollIndicatorContainer.appendChild(downArrow);
+    
+    // Add scroll indicators after suggestions container is added to DOM
+    searchInput.parentNode.appendChild(scrollIndicatorContainer);
+    
+    // Hide scroll indicators initially
+    scrollIndicatorContainer.classList.add('hidden');
 
     // Input handler
     searchInput.addEventListener('input', function() {
@@ -1629,16 +1658,58 @@ function setupItemSearch() {
         if (query.length < 3) {
             suggestionsContainer.innerHTML = '';
             suggestionsContainer.classList.add('hidden');
+            scrollIndicatorContainer.classList.add('hidden');
             return;
         }
         const matchingItems = allItems.filter(item => item.name.toLowerCase().includes(query));
         displaySuggestions(matchingItems, query);
+        
+        // Show scroll indicators if we have results
+        if (matchingItems.length > 0) {
+            scrollIndicatorContainer.classList.remove('hidden');
+        } else {
+            scrollIndicatorContainer.classList.add('hidden');
+        }
+    });
+
+    // Handle scroll button clicks
+    upArrow.addEventListener('click', function() {
+        suggestionsContainer.scrollBy({
+            top: -100,
+            behavior: 'smooth'
+        });
+    });
+    
+    downArrow.addEventListener('click', function() {
+        suggestionsContainer.scrollBy({
+            top: 100,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Touch handlers for scroll buttons
+    upArrow.addEventListener('touchstart', function(e) {
+        e.stopPropagation();
+        suggestionsContainer.scrollBy({
+            top: -100,
+            behavior: 'smooth'
+        });
+    });
+    
+    downArrow.addEventListener('touchstart', function(e) {
+        e.stopPropagation();
+        suggestionsContainer.scrollBy({
+            top: 100,
+            behavior: 'smooth'
+        });
     });
 
     // Handle outside clicks
     document.addEventListener('click', function(e) {
-        if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
+        if (e.target !== searchInput && !suggestionsContainer.contains(e.target) && 
+            e.target !== upArrow && e.target !== downArrow) {
             suggestionsContainer.classList.add('hidden');
+            scrollIndicatorContainer.classList.add('hidden');
         }
     });
 
@@ -1646,29 +1717,8 @@ function setupItemSearch() {
     searchInput.addEventListener('focus', function() {
         if (this.value.trim().length >= 3) {
             suggestionsContainer.classList.remove('hidden');
+            scrollIndicatorContainer.classList.remove('hidden');
         }
-    });
-
-    // Prevent body scrolling when touch is in suggestions
-    suggestionsContainer.addEventListener('touchmove', function(e) {
-        // Important: Check if we're at the top or bottom boundary
-        const isAtTop = suggestionsContainer.scrollTop === 0;
-        const isAtBottom = suggestionsContainer.scrollHeight - suggestionsContainer.scrollTop === suggestionsContainer.clientHeight;
-        
-        // Allow overscroll (body scrolling) only at boundaries
-        if ((isAtTop && e.touches[0].clientY > 0) || 
-            (isAtBottom && e.touches[0].clientY < 0)) {
-            // At boundary, allow body to scroll
-            return;
-        }
-        
-        // Not at boundary, prevent body scrolling
-        e.stopPropagation();
-    }, { passive: true });
-
-    // Keep mousedown events from propagating
-    suggestionsContainer.addEventListener('mousedown', function(e) {
-        e.preventDefault(); // Don't blur the search input
     });
 }
 
@@ -1676,6 +1726,7 @@ function setupItemSearch() {
 function displaySuggestions(items, query) {
     const suggestionsContainer = document.getElementById('searchSuggestions');
     const searchInput = document.getElementById('searchInput');
+    const scrollIndicatorContainer = document.getElementById('scrollUpButton').parentNode;
 
     // Clear existing content
     suggestionsContainer.innerHTML = '';
@@ -1685,6 +1736,7 @@ function displaySuggestions(items, query) {
         noResults.className = 'px-4 py-2 text-gray-500 italic';
         noResults.textContent = 'No matching items found';
         suggestionsContainer.appendChild(noResults);
+        scrollIndicatorContainer.classList.add('hidden');
     } else {
         const itemsWrapper = document.createElement('div');
         itemsWrapper.className = 'pb-1';
@@ -1728,25 +1780,10 @@ function displaySuggestions(items, query) {
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
 
-            // Track touch start position and movement to distinguish between scrolls and taps
-            let touchStartY = 0;
-            let touchMoved = false;
-            
-            suggestionItem.addEventListener('touchstart', function(e) {
-                touchStartY = e.touches[0].clientY;
-                touchMoved = false;
-            }, { passive: true });
-            
-            suggestionItem.addEventListener('touchmove', function(e) {
-                const touchY = e.touches[0].clientY;
-                if (Math.abs(touchY - touchStartY) > 5) {
-                    touchMoved = true;
-                }
-            }, { passive: true });
-
             const selectItem = () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
+                scrollIndicatorContainer.classList.add('hidden');
 
                 const category = menuData.find(cat => cat.category === item.categoryName);
                 if (category) {
@@ -1766,21 +1803,20 @@ function displaySuggestions(items, query) {
                 }
             };
 
-            // Click handler for desktop
             suggestionItem.addEventListener('click', selectItem);
             
-            // Only select item if touch didn't move much (wasn't a scroll)
+            // Add touch event for better mobile experience
             suggestionItem.addEventListener('touchend', function(e) {
-                if (!touchMoved) {
-                    e.preventDefault();
-                    selectItem();
-                }
+                // Prevent touchend from triggering unexpected clicks
+                e.preventDefault();
+                selectItem();
             });
 
             itemsWrapper.appendChild(suggestionItem);
         });
 
         suggestionsContainer.appendChild(itemsWrapper);
+        scrollIndicatorContainer.classList.remove('hidden');
     }
 
     suggestionsContainer.classList.remove('hidden');
