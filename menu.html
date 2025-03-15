@@ -1617,7 +1617,10 @@ function setupItemSearch() {
     const allItems = getAllMenuItems();
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-hidden hidden';
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 hidden';
+    
+    // Start with no scrolling - very important
+    suggestionsContainer.style.overflowY = 'hidden';
     
     // Add to DOM
     searchInput.parentNode.appendChild(suggestionsContainer);
@@ -1649,45 +1652,33 @@ function setupItemSearch() {
         }
     });
     
-    // Variable to track if user is touching/holding the suggestions
-    let isTouchingContainer = false;
-    
-    // Only enable scrolling when touch starts in the container
-    suggestionsContainer.addEventListener('touchstart', function(e) {
-        isTouchingContainer = true;
+    // Enable scrolling ONLY when touch is active on the container
+    suggestionsContainer.addEventListener('touchstart', function() {
         suggestionsContainer.style.overflowY = 'auto';
     }, { passive: true });
     
-    // Disable scrolling when touch ends
-    document.addEventListener('touchend', function() {
-        if (isTouchingContainer) {
-            isTouchingContainer = false;
-            // Small delay before disabling scroll to allow momentum to finish
-            setTimeout(() => {
-                if (!isTouchingContainer) {
-                    suggestionsContainer.style.overflowY = 'hidden';
-                }
-            }, 500);
-        }
-    }, { passive: true });
-    
-    document.addEventListener('touchcancel', function() {
-        isTouchingContainer = false;
+    // Disable scrolling immediately when touch ends
+    suggestionsContainer.addEventListener('touchend', function() {
         suggestionsContainer.style.overflowY = 'hidden';
     }, { passive: true });
     
-    // Enable scroll only when mouse is over container
-    suggestionsContainer.addEventListener('mouseenter', function() {
-        suggestionsContainer.style.overflowY = 'auto';
-    });
-    
-    suggestionsContainer.addEventListener('mouseleave', function() {
+    suggestionsContainer.addEventListener('touchcancel', function() {
         suggestionsContainer.style.overflowY = 'hidden';
-    });
+    }, { passive: true });
     
-    // Prevent mousedown from taking focus away
+    // Also disable when touch moves out of the container
+    suggestionsContainer.addEventListener('touchleave', function() {
+        suggestionsContainer.style.overflowY = 'hidden';
+    }, { passive: true });
+    
+    // Prevent default on touchmove within container to stop body scrolling
+    suggestionsContainer.addEventListener('touchmove', function(e) {
+        e.stopPropagation(); 
+    }, { passive: true });
+    
+    // Keep mousedown events from propagating
     suggestionsContainer.addEventListener('mousedown', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Don't blur the search input
     });
 }
 
@@ -1755,7 +1746,8 @@ function displaySuggestions(items, query) {
             suggestionItem.appendChild(thumbnail);
             suggestionItem.appendChild(contentDiv);
             
-            // Add selection handler
+            // Add selection handler - but make it work on touchend instead of click
+            // This avoids conflicts with the scrolling behavior
             const selectItem = () => {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
@@ -1784,7 +1776,12 @@ function displaySuggestions(items, query) {
                 }
             };
             
+            // Use both touchend and click for better cross-device compatibility
             suggestionItem.addEventListener('click', selectItem);
+            suggestionItem.addEventListener('touchend', function(e) {
+                e.preventDefault(); // Prevent any ghost clicks
+                selectItem();
+            });
             
             // Add to wrapper
             itemsWrapper.appendChild(suggestionItem);
