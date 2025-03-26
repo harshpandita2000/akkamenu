@@ -295,34 +295,6 @@
 }
 
 
-/* Categories grid layout */
-#menuCategories {
-    display: grid;
-    gap: 1rem; /* equivalent to gap-4 in Tailwind */
-    grid-template-columns: 1fr; /* mobile - single column */
-    padding: 1rem; /* p-4 in Tailwind */
-    width: 100%; /* ensure full width */
-}
-
-@media (min-width: 640px) {
-    #menuCategories {
-        grid-template-columns: repeat(2, 1fr); /* sm:grid-cols-2 */
-    }
-}
-
-@media (min-width: 768px) {
-    #menuCategories {
-        grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
-    }
-}
-
-@media (min-width: 1024px) {
-    #menuCategories {
-        grid-template-columns: repeat(3, 1fr); /* lg:grid-cols-3 */
-    }
-}
-
-
 
     </style>
     </head>
@@ -448,8 +420,7 @@
 
                 <div class="flex-grow">
 
-                  <div id="menuCategories" class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-4 w-full">
-                                <!-- Your menu category items -->
+                    <div id="menuCategories" class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
                     </div>
 
                     <div id="menuItems" class="mt-8 hidden">
