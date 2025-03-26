@@ -295,6 +295,36 @@
 }
 
 
+/* Categories grid layout */
+.categories-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four columns by default */
+    gap: 20px;
+    padding: 20px;
+    width: 100%; /* Ensure full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* For tablets and iPads */
+@media (max-width: 1024px) {
+    .categories-container {
+        grid-template-columns: repeat(4, 1fr); /* Back to 4 columns */
+        width: 100%; /* Full width */
+        overflow-x: auto; /* Allow horizontal scrolling if content is wider */
+    }
+}
+
+/* For mobile phones */
+@media (max-width: 768px) {
+    .categories-container {
+        grid-template-columns: repeat(2, 1fr); /* Two columns for mobile */
+        width: 100%; /* Full width */
+        gap: 15px; /* Slightly reduced gap for smaller screens */
+        padding: 10px; /* Reduced padding */
+    }
+}
+
+
 
     </style>
     </head>
@@ -420,7 +450,7 @@
 
                 <div class="flex-grow">
 
-                    <div id="menuCategories" class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
+                    <div id="menuCategories" class="categories-container">
                     </div>
 
                     <div id="menuItems" class="mt-8 hidden">
