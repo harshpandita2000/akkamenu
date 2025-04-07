@@ -2065,13 +2065,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function filterMenuData(filterType) {
+    
     if (filterType === 'All') {
         return menuData;
     }
-    return menuData.map(category => ({
-        ...category,
-        items: category.items.filter(item => item.type === filterType)
-    }));
+
+    const categoriesWithFilteredItems = menuData.map(category => {
+       
+        const filteredItems = category.items.filter(item => {
+            if (filterType === 'Veg') {
+                return item.type === 'Veg' || !item.type;
+            } else if (filterType === 'Non-Veg') {
+                return item.type === 'Non-Veg';
+            }
+            return false;
+        });
+
+        return {
+            ...category,        
+            items: filteredItems 
+        };
+    });
+
+    const finalFilteredCategories = categoriesWithFilteredItems.filter(category => {
+        
+        return category.items.length > 0;
+    });
+
+    return finalFilteredCategories;
 }
 
 
