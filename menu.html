@@ -416,14 +416,7 @@
                 </div>
 
                 <div class="space-y-2 relative">
-                    <div
-                        class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
-                        <span
-                            class="w-20 font-medium text-blue-700">₹299+</span>
-                        <span class="text-gray-700">FREE 200ml Soft Drink <span
-                                class="bottle-shake inline-block">🥤</span></span>
-                    </div>
-
+                    
                     <div
                         class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
                         <span
@@ -555,15 +548,7 @@
                                 </div>
 
                                 <div class="space-y-1.5 text-sm">
-                                    <div class="flex items-center gap-2">
-                                        <span
-                                            class="offer-icon text-xs">🥤</span>
-                                        <p class="text-gray-700">
-                                            <span
-                                                class="font-medium">₹299+:</span>
-                                            Free 200ml Soft Drink
-                                        </p>
-                                    </div>
+                                    
 
                                     <div class="flex items-center gap-2">
                                         <span
@@ -947,7 +932,7 @@
                 category: "Special Thali",
                 image: "https://5.imimg.com/data5/HU/PG/OE/SELLER-9770898/special-veg-thali.jpg",
                 items: [
-                { name: "Daal+Sabji+Rice+3 Roti", price: 110, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s", type: "Veg" },
+               
                 { name: "Daal+Paneer+Rice+3 Roti", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s", type: "Veg" },
                 { name: "Daal Makhni+Paneer+Rice+3 Roti", price: 200, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s", type: "Veg" },
                 { name: "Daal Makhni+Sabji+Rice+3 Roti", price: 130, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s", type: "Veg" },
@@ -1547,9 +1532,7 @@ function renderAddons(addons) {
                 return '750ml Soft Drink';
             } else if (totalAmount > 499) {
                 return '250ml Soft Drink';
-            } else if (totalAmount > 299) {
-                return '200ml Soft Drink';
-            } else {
+            }  else {
                 return null;
             }
         }
@@ -1996,10 +1979,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (total > 499 && total <= 899 && index === 1) {
             message.classList.add('font-bold', 'text-green-600');
             earnedCokeMessage = 'Congratulations! You get a free 250ml Soft Drink with your order!';
-        } else if (total > 299 && total <= 499 && index === 0) {
-            message.classList.add('font-bold', 'text-green-600');
-            earnedCokeMessage = 'Congratulations! You get a free 200ml Soft Drink with your order!';
-        }
+        } 
     });
 
 
