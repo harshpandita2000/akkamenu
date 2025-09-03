@@ -362,6 +362,13 @@
     background-color: #dc2626;
 }
 
+.item-type-indicator.egg-indicator {
+    border-color: #eab308;
+}
+.item-type-indicator.egg-indicator .dot {
+    background-color: #eab308;
+}
+
     </style>
     </head>
     <body
@@ -450,12 +457,12 @@
             </div>
 
             <div class="flex items-center justify-center mb-6">
-                <div class="relative w-full max-w-md">
+                <div class="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
                     <input type="text" id="searchInput"
                         placeholder="Search menu categories..."
-                        class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md">
-                    <span class="absolute top-2 right-4 text-gray-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                        class="w-full px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-4 text-base md:text-lg border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md">
+                    <span class="absolute top-3 md:top-4 lg:top-4 right-4 md:right-6 lg:right-8 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7"
                             viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M8 4a6 6 0 100 12A6 6 0 008 4zm8.707 11.293a1 1 0 01-1.414 1.414l-3.621-3.621a8 8 0 111.414-1.414l3.621 3.621z"
@@ -465,27 +472,36 @@
                 </div>
             </div>
 
-            <div class="flex justify-center items-center space-x-2 mb-4 px-2">
+            <div class="flex justify-center items-center flex-wrap gap-2 md:gap-3 lg:gap-4 mb-6 px-2">
                 <button id="showAll"
-                    class="filter-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition active-filter">All
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition active-filter">All
                     Items</button>
                 <button id="showVeg"
-                    class="filter-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition flex items-center space-x-1">
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition flex items-center space-x-2">
                     <span
-                        class="w-3 h-3 border border-green-700 bg-white flex items-center justify-center">
+                        class="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 border border-green-700 bg-white flex items-center justify-center">
                         <span
-                            class="w-1.5 h-1.5 bg-green-600 rounded-full"></span>
+                            class="w-1.5 h-1.5 md:w-2 md:h-2 lg:w-2.5 lg:h-2.5 bg-green-600 rounded-full"></span>
                     </span>
                     <span>Veg</span>
                 </button>
                 <button id="showNonVeg"
-                    class="filter-button px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition flex items-center space-x-1">
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition flex items-center space-x-2">
                     <span
-                        class="w-3 h-3 border border-red-700 bg-white flex items-center justify-center">
+                        class="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 border border-red-700 bg-white flex items-center justify-center">
                         <span
-                            class="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                            class="w-1.5 h-1.5 md:w-2 md:h-2 lg:w-2.5 lg:h-2.5 bg-red-600 rounded-full"></span>
                     </span>
                     <span>Non-Veg</span>
+                </button>
+                <button id="showEgg"
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition flex items-center space-x-2">
+                    <span
+                        class="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 border border-yellow-600 bg-white flex items-center justify-center">
+                        <span
+                            class="w-1.5 h-1.5 md:w-2 md:h-2 lg:w-2.5 lg:h-2.5 bg-yellow-500 rounded-full"></span>
+                    </span>
+                    <span>Egg</span>
                 </button>
             </div>
             <div class="flex flex-col lg:flex-row gap-6 relative">
@@ -784,7 +800,7 @@
         { "name": "Royal Paneer Biryani & Refreshing Coke", "price": 199, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqSKp4YAmMIUS59m_ZPNTwXoIQ1rt7YYGtGA&s", "type": "Veg" },
         { "name": "Spicy Chicken Biryani with Ice-Cold Coke", "price": 199, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI9AoSeCc-epa7RO4Wee9Uipm7eobjhpMRWw&s", "type": "Non-Veg" },
         { "name": "Flavorful Veg Biryani & Cool Coke", "price": 169, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ4d6LLY7IXQXyEk2iIumf2hzLLJMRwKzrQQ&s", "type": "Veg" },
-        { "name": "Egg Biryani Bliss with Coke", "price": 149, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmSWz_Qf6GNCa17WmuM5nIEwE73pl8Mzkqw&s", "type": "Non-Veg" }
+        { "name": "Egg Biryani Bliss with Coke", "price": 149, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmSWz_Qf6GNCa17WmuM5nIEwE73pl8Mzkqw&s", "type": "Egg" }
         ]
         },
 
@@ -795,7 +811,7 @@
             { "name": "Chicken Biryani", "price": 149, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoIycguxFgTpIN3L00tYQhJ2WkypXj5w_QkQ&s", "type": "Non-Veg" },
             { "name": "Paneer Biryani", "price": 169, "image": "https://ministryofcurry.com/wp-content/uploads/2023/10/Laxmi-Paneer-Biryani_-5.jpg", "type": "Veg" },
             { "name": "Veg Biryani", "price": 119, "image": "https://www.madhuseverydayindian.com/wp-content/uploads/2022/11/easy-vegetable-biryani.jpg", "type": "Veg" },
-            { "name": "Egg Biryani", "price": 139, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgcVbkj0kqkqRqaWxhZHiHsFP14MO5_LR9Og&s", "type": "Non-Veg" },
+            { "name": "Egg Biryani", "price": 139, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgcVbkj0kqkqRqaWxhZHiHsFP14MO5_LR9Og&s", "type": "Egg" },
             { "name": "Chicken 65 Biryani", "price": 279, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7BPvFXQOahxB-TB13vq-En4xGxq_j_GPbpg&s", "type": "Non-Veg" },
             { "name": "Chicken Manchurian Biryani", "price": 249, "image": "https://b2958125.smushcdn.com/2958125/wp-content/uploads/chicken-manchurian-recipe-dry-restaurant-style-1.jpg?lossy=1&strip=1&webp=1", "type": "Non-Veg" },
             { "name": "Prawns 65 Biryani", "price": 349, "image": "https://vaya.in/recipes/wp-content/uploads/2018/06/Cabbage-and-Prawn-65-Biryani.jpg", "type": "Non-Veg" }
@@ -820,13 +836,13 @@
             "image": "https://e7.pngegg.com/pngimages/353/298/png-clipart-fried-egg-breakfast-omelette-recipe-breakfast-food-recipe-thumbnail.png",
             "items": [
               
-            { "name": "Boiled Egg", "price": 15, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDEGpYCA7mKNzDhCJm2O7oLUad33M769-SRw&s", "type": "Non-Veg" },
-            { "name": "Egg Curry", "price": 80, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6UivmKHpc6uKp-xe9ONz8M2qreTgsyIWy-g&s", "type": "Non-Veg" },
-            { "name": "Egg Bhurji", "price": 60, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxMffXh0Te3nn2PpVYSrupzNp21BElt2_cgw&s", "type": "Non-Veg" },
+            { "name": "Boiled Egg", "price": 15, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDEGpYCA7mKNzDhCJm2O7oLUad33M769-SRw&s", "type": "Egg" },
+            { "name": "Egg Curry", "price": 80, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6UivmKHpc6uKp-xe9ONz8M2qreTgsyIWy-g&s", "type": "Egg" },
+            { "name": "Egg Bhurji", "price": 60, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxMffXh0Te3nn2PpVYSrupzNp21BElt2_cgw&s", "type": "Egg" },
             { "name": "Omelette", "price": 50, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE3bXWtgsNofQPULUj4trso_u3jOjDo2LK0g&s", "type": "Non-Veg" },
-            { "name": "Poached Egg", "price": 40, "image": "https://madaboutfood.co/wp-content/uploads/2019/10/Poached-1-790x1024.jpg", "type": "Non-Veg" },
-            { "name": "Fried Boiled Egg", "price": 80, "image": "https://i.ytimg.com/vi/-5FOx5IJSWo/maxresdefault.jpg", "type": "Non-Veg" },
-            { "name": "Egg Bhurji Gravy", "price": 100, "image": "https://aayanshkitchen.com/wp-content/uploads/2023/02/Untitled-design-1-1024x576.png", "type": "Non-Veg" }
+            { "name": "Poached Egg", "price": 40, "image": "https://madaboutfood.co/wp-content/uploads/2019/10/Poached-1-790x1024.jpg", "type": "Egg" },
+            { "name": "Fried Boiled Egg", "price": 80, "image": "https://i.ytimg.com/vi/-5FOx5IJSWo/maxresdefault.jpg", "type": "Egg" },
+            { "name": "Egg Bhurji Gravy", "price": 100, "image": "https://aayanshkitchen.com/wp-content/uploads/2023/02/Untitled-design-1-1024x576.png", "type": "Egg" }
             ]
           },
 
@@ -869,7 +885,7 @@
                 { name: "Paneer Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
                 { name: "Mushroom Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzGD3MsDDVGL1ka4Gn5iTR8dS4cqQp5T5I_A&s", type: "Veg" },
                 { name: "Chicken Parata", price: 80, image:"https://c.ndtvimg.com/2021-08/e1f8dpq_paratha_625x300_04_August_21.jpg", type: "Non-Veg" },
-                { name: "Egg Parata (2 Eggs)", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe95xiHuHiPw5758xXzg-DieOtiZjI-oUUaQ&s", type: "Non-Veg" },
+                { name: "Egg Parata (2 Eggs)", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe95xiHuHiPw5758xXzg-DieOtiZjI-oUUaQ&s", type: "Egg" },
                 { name: "Sweet Parata (Sugar)", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDF4E6J8AJpAeyCddcJJgBYALJ3yPNwUuwgw&s", type: "Veg" },
                 { name: "Sweet Parata (Jaggery)", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDF4E6J8AJpAeyCddcJJgBYALJ3yPNwUuwgw&s", type: "Veg" }
               
@@ -1037,10 +1053,10 @@
                 { name: "Veg Manchurian Fried Rice", price: 100, image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg", type: "Veg" },
                 { name: "Veg Schezwan Fried Rice", price: 110, image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg", type: "Veg" },
                 { name: "Mushroom Fried Rice", price: 139 , image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg", type: "Veg"},
-                { name: "Egg Fried Rice", price: 90, image: "https://t3.ftcdn.net/jpg/00/80/06/42/360_F_80064236_Rxakveyae98OD4HbG2tOFDQdUXkf5DkM.jpg", type: "Non-Veg" },
-                { name: "Egg Manchurian Fried Rice", price: 109 , image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Non-Veg"},
-                { name: "Egg Schezwan Fried Rice", price: 109, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Non-Veg" },
-                { name: "Egg Mushroom Fried Rice", price: 139, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Non-Veg" },
+                { name: "Egg Fried Rice", price: 90, image: "https://t3.ftcdn.net/jpg/00/80/06/42/360_F_80064236_Rxakveyae98OD4HbG2tOFDQdUXkf5DkM.jpg", type: "Egg" },
+                { name: "Egg Manchurian Fried Rice", price: 109 , image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Egg"},
+                { name: "Egg Schezwan Fried Rice", price: 109, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Egg" },
+                { name: "Egg Mushroom Fried Rice", price: 139, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Egg" },
                 { name: "Chicken Fried Rice", price: 100, image: "https://watermark.lovepik.com/photo/20211119/large/lovepik-chicken-fried-rice-picture_500214688.jpg", type: "Non-Veg" },
                 { name: "Chicken Manchurian Fried Rice", price: 129, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" },
                 { name: "Chicken Schezwan Fried Rice", price: 129, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" },
@@ -1070,9 +1086,9 @@
                 { name: "Veg Schezwan Noodles", price: 100, image: "https://t4.ftcdn.net/jpg/05/62/35/69/360_F_562356997_xiBUbvdWrebPBzdhfKinYvQAaPAJnp6z.jpg", type: "Veg" },
                 { name: "Mushroom Noodles", price: 129 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUeYwKJ-y7ly366zEBx06vM7SUEn-a6pLpng&s", type: "Veg"},
                 { name: "Paneer Noodles", price: 139 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-vVkOxUjDhM0aewZ_ox2iSMkPO_3XMZqC-w&s", type: "Veg"},
-                { name: "Egg Noodles", price: 90 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ3gVe2EePEvPOchP9pcvqSJIkreRT7hjiSQ&s", type: "Non-Veg"},
-                { name: "Egg Manchurian Noodles", price: 109 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrNjPgRIABC0jF6XoS0O0WSvjw-odcgxuKlA&s", type: "Non-Veg"},
-                { name: "Egg Schezwan Noodles", price: 109, image: "https://img.freepik.com/premium-photo/egg-schezwan-hakka-noodles_974629-173396.jpg", type: "Non-Veg" },
+                { name: "Egg Noodles", price: 90 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ3gVe2EePEvPOchP9pcvqSJIkreRT7hjiSQ&s", type: "Egg"},
+                { name: "Egg Manchurian Noodles", price: 109 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrNjPgRIABC0jF6XoS0O0WSvjw-odcgxuKlA&s", type: "Egg"},
+                { name: "Egg Schezwan Noodles", price: 109, image: "https://img.freepik.com/premium-photo/egg-schezwan-hakka-noodles_974629-173396.jpg", type: "Egg" },
                 { name: "Egg Mushroom Noodles", price: 129, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6uHhmo-y9wZtiQF4QDXoHaujtOBIP3ErBhA&s", type: "Non-Veg" },
                 { name: "Chicken Noodles", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTj14IrKHRm3-4--sY8NCaB3TTqybtHVISMw&s", type: "Non-Veg" },
                 { name: "Chicken Manchurian Noodles", price: 120, image: "https://t4.ftcdn.net/jpg/11/71/00/45/360_F_1171004518_4NkJbBGkHBf6pEhEF4cGEVOA8ZSoFMKg.jpg", type: "Non-Veg" },
@@ -1194,6 +1210,8 @@ function filterMenuData(filterType) {
                 return item.type === 'Veg' || !item.type;
             } else if (filterType === 'Non-Veg') {
                 return item.type === 'Non-Veg';
+            } else if (filterType === 'Egg') {
+                return item.type === 'Egg';
             }
             return false;
         });
@@ -1203,6 +1221,8 @@ function filterMenuData(filterType) {
                  return item.type === 'Veg' || !item.type;
              } else if (filterType === 'Non-Veg') {
                  return item.type === 'Non-Veg';
+             } else if (filterType === 'Egg') {
+                 return item.type === 'Egg';
              }
              return true;
          });
@@ -1319,15 +1339,10 @@ function renderAddons(addons) {
     `;
 }
 
-
-
-
-
-
         function getCokeSize(totalAmount) {
-            if (totalAmount > 999) {
+            if (totalAmount >= 999) {
                 return '750ml Soft Drink';
-            } else if (totalAmount > 599) {
+            } else if (totalAmount >= 599) {
                 return '250ml Soft Drink';
             }  else {
                 return null;
@@ -1362,7 +1377,8 @@ function renderAddons(addons) {
                 `;
         
                 const isVegetarian = item.type === "Veg";
-                const indicatorClass = isVegetarian ? 'veg-indicator' : 'non-veg-indicator';
+                const isEgg = item.type === "Egg";
+                const indicatorClass = isVegetarian ? 'veg-indicator' : (isEgg ? 'egg-indicator' : 'non-veg-indicator');
         
                 itemCard.innerHTML = `
                     <div class="flex-1 text-left">
@@ -1767,16 +1783,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const offerMessages = cokeOfferNotification.querySelectorAll('p');
     let earnedCokeMessage = '';
 
-    offerMessages.forEach((message, index) => {
+    // Reset all offers first
+    offerMessages.forEach((message) => {
         message.classList.remove('font-bold', 'text-green-600');
+    });
 
-        if (total > 999 && index === 2) {
-            message.classList.add('font-bold', 'text-green-600');
-            earnedCokeMessage = 'Congratulations! You get a free 750ml Soft Drink with your order!';
-        } else if (total > 599 && total <= 999 && index === 1) {
-            message.classList.add('font-bold', 'text-green-600');
-            earnedCokeMessage = 'Congratulations! You get a free 250ml Soft Drink with your order!';
-        } 
+    // Apply highlighting based on total amount
+    offerMessages.forEach((message, index) => {
+        const messageText = message.textContent;
+        
+        // Check if this is the 250ml offer (₹599+)
+        if (messageText.includes('₹599+') && messageText.includes('250ml')) {
+            if (total >= 599 && total < 999) {
+                message.classList.add('font-bold', 'text-green-600');
+                earnedCokeMessage = 'Congratulations! You get a free 250ml Soft Drink with your order!';
+            }
+        }
+        
+        // Check if this is the 750ml offer (₹999+)
+        if (messageText.includes('₹999+') && messageText.includes('750ml')) {
+            if (total >= 999) {
+                message.classList.add('font-bold', 'text-green-600');
+                earnedCokeMessage = 'Congratulations! You get a free 750ml Soft Drink with your order!';
+            }
+        }
     });
 
 
@@ -1833,6 +1863,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 filterType = 'Veg';
             } else if (button.id === 'showNonVeg') {
                 filterType = 'Non-Veg';
+            } else if (button.id === 'showEgg') {
+                filterType = 'Egg';
             }
 
             const filteredData = filterMenuData(filterType);
@@ -1866,6 +1898,8 @@ function filterMenuData(filterType) {
                 return item.type === 'Veg' || !item.type;
             } else if (filterType === 'Non-Veg') {
                 return item.type === 'Non-Veg';
+            } else if (filterType === 'Egg') {
+                return item.type === 'Egg';
             }
             return false;
         });
