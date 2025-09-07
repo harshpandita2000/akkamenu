@@ -383,6 +383,7 @@
     scrollbar-width: thick;
     scrollbar-color: #8b5cf6 #e5e7eb;
     padding-right: 28px; /* Space for draggable slider */
+    position: relative; /* For absolute positioned clear button */
 }
 
 #searchSuggestions::-webkit-scrollbar {
@@ -410,10 +411,48 @@
     background: linear-gradient(135deg, #6d28d9, #5b21b6);
 }
 
+/* Keyboard open state */
+#searchSuggestions.keyboard-open {
+    -webkit-overflow-scrolling: touch !important;
+    overflow-y: scroll !important;
+    touch-action: pan-y !important;
+    overscroll-behavior: contain !important;
+}
+
+/* Hide slider when keyboard is open to prioritize touch scrolling */
+#searchSuggestions.keyboard-open .scroll-slider-container {
+    display: none !important;
+}
+
+/* Enhanced touch scrolling when keyboard is open */
+#searchSuggestions.keyboard-open {
+    padding-right: 8px; /* Less padding when slider is hidden */
+}
+
+/* Clear search button styling */
+#clearSearchBtn {
+    transition: all 0.2s ease-in-out;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+#clearSearchBtn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+}
+
+#clearSearchBtn:active {
+    transform: scale(0.95);
+}
+
 /* Mobile scrollbar indicator */
 @media (max-width: 768px) {
     #searchSuggestions {
         padding-right: 32px; /* More space for mobile slider */
+    }
+    
+    #searchSuggestions.keyboard-open {
+        padding-right: 30px; /* Room for clear button when keyboard open */
     }
     
     #searchSuggestions::-webkit-scrollbar {
@@ -507,19 +546,22 @@
 
 .scroll-slider-track {
     position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
     border-radius: 8px;
     background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
+    min-height: 100px;
 }
 
 .scroll-slider-thumb {
     position: absolute;
     left: 0;
     right: 0;
+    top: 0;
     min-height: 20px;
+    height: 30px;
     background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     border-radius: 6px;
     cursor: grab;
@@ -567,6 +609,7 @@
     
     .scroll-slider-thumb {
         min-height: 30px;
+        height: 40px;
     }
     
     .scroll-slider-thumb::before {
@@ -664,6 +707,17 @@
                     <input type="text" id="searchInput"
                         placeholder="Search menu categories..."
                         class="w-full px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-4 text-base md:text-lg border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md">
+                    
+                    <!-- Clear button (X) positioned before search icon -->
+                    <button type="button" id="clearSearchBtn" 
+                        class="absolute top-3 md:top-4 lg:top-4 right-12 md:right-16 lg:right-20 text-gray-400 hover:text-red-500 transition-colors duration-200 hidden"
+                        title="Clear search">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Search icon -->
                     <span class="absolute top-3 md:top-4 lg:top-4 right-4 md:right-6 lg:right-8 text-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7"
                             viewBox="0 0 20 20" fill="currentColor">
@@ -1839,48 +1893,115 @@ function setupItemSearch() {
     
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden relative';
     
-    // Enhanced scrolling for mobile
     suggestionsContainer.style.scrollBehavior = 'smooth';
     suggestionsContainer.style.webkitOverflowScrolling = 'touch';
     suggestionsContainer.style.overscrollBehavior = 'contain';
     suggestionsContainer.style.touchAction = 'pan-y';
     
-    // Add scroll indicator for mobile
-    const addScrollIndicator = () => {
-        if (window.innerWidth <= 768) {
-            const scrollIndicator = document.createElement('div');
-            scrollIndicator.id = 'scrollIndicator';
-            scrollIndicator.innerHTML = '↕️ Scroll to see more';
-            scrollIndicator.className = 'absolute bottom-0 right-0 bg-purple-600 text-white text-xs px-2 py-1 rounded-tl-md opacity-80 pointer-events-none z-20';
-            suggestionsContainer.style.position = 'relative';
+    let isKeyboardOpen = false;
+    let initialViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    
+    // Detect keyboard open/close
+    const handleViewportChange = () => {
+        const currentHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        const heightDifference = initialViewportHeight - currentHeight;
+        
+        const wasKeyboardOpen = isKeyboardOpen;
+        isKeyboardOpen = heightDifference > 150;
+        
+        if (isKeyboardOpen !== wasKeyboardOpen) {
+            if (isKeyboardOpen) {
+                suggestionsContainer.style.webkitOverflowScrolling = 'touch';
+                suggestionsContainer.style.overflowY = 'scroll';
+                suggestionsContainer.style.touchAction = 'pan-y';
+                suggestionsContainer.classList.add('keyboard-open');
+            } else {
+                suggestionsContainer.style.webkitOverflowScrolling = 'touch';
+                suggestionsContainer.style.overflowY = 'auto';
+                suggestionsContainer.classList.remove('keyboard-open');
+                
+                initialViewportHeight = currentHeight;
+            }
             
-            suggestionsContainer.addEventListener('scroll', () => {
-                const indicator = document.getElementById('scrollIndicator');
-                if (indicator) {
-                    const isAtBottom = suggestionsContainer.scrollTop + suggestionsContainer.clientHeight >= suggestionsContainer.scrollHeight - 5;
-                    indicator.style.display = isAtBottom ? 'none' : 'block';
-                }
-            });
-            
-            return scrollIndicator;
+            setTimeout(() => {
+                const event = new Event('resize');
+                window.dispatchEvent(event);
+            }, 100);
         }
-        return null;
     };
+    
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleViewportChange);
+    } else {
+        window.addEventListener('resize', handleViewportChange);
+    }
+    
+    searchInput.addEventListener('focus', () => {
+        setTimeout(handleViewportChange, 300);
+    });
+    
+    searchInput.addEventListener('blur', () => {
+        setTimeout(handleViewportChange, 300);
+    });
 
     searchInput.parentNode.appendChild(suggestionsContainer);
+    
     searchInput.placeholder = "Search menu items...";
+
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    
+    const toggleClearButton = () => {
+        if (searchInput.value.trim().length > 0) {
+            clearSearchBtn.classList.remove('hidden');
+        } else {
+            clearSearchBtn.classList.add('hidden');
+        }
+    };
+    
+    // Clear button click handler
+    clearSearchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        searchInput.value = '';
+        
+        hideSuggestions();
+        clearSearchBtn.classList.add('hidden');
+        
+        searchInput.focus();
+    });
+    
+    searchInput.addEventListener('focus', toggleClearButton);
+    searchInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            if (document.activeElement !== clearSearchBtn) {
+                toggleClearButton();
+            }
+        }, 100);
+    });
+
+    const hideSuggestions = () => {
+        suggestionsContainer.classList.add('hidden');
+        suggestionsContainer.style.visibility = 'hidden';
+    };
+    
+    const showSuggestions = () => {
+        suggestionsContainer.classList.remove('hidden');
+        suggestionsContainer.style.visibility = 'visible';
+    };
 
     suggestionsContainer.style.visibility = 'hidden';
 
     searchInput.addEventListener('input', function () {
         const query = this.value.toLowerCase().trim();
         
+        toggleClearButton();
+        
         if (query.length < 3) {
             suggestionsContainer.innerHTML = '';
-            suggestionsContainer.classList.add('hidden');
-            suggestionsContainer.style.visibility = 'hidden';
+            hideSuggestions();
             return;
         }
         
@@ -1888,25 +2009,21 @@ function setupItemSearch() {
         displaySuggestions(matchingItems, query);
         
         if (matchingItems.length > 0) {
-            suggestionsContainer.classList.remove('hidden');
-            suggestionsContainer.style.visibility = 'visible';
+            showSuggestions();
         } else {
-            suggestionsContainer.classList.add('hidden');
-            suggestionsContainer.style.visibility = 'hidden';
+            hideSuggestions();
         }
     });
 
     document.addEventListener('click', function (e) {
         if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
-            suggestionsContainer.classList.add('hidden');
-            suggestionsContainer.style.visibility = 'hidden';
+            hideSuggestions();
         }
     });
 
     searchInput.addEventListener('focus', function () {
         if (this.value.trim().length >= 3) {
-            suggestionsContainer.classList.remove('hidden');
-            suggestionsContainer.style.visibility = 'visible';
+            showSuggestions();
         }
     });
 }
@@ -1973,6 +2090,10 @@ function displaySuggestions(items, query) {
                 searchInput.value = item.name;
                 suggestionsContainer.classList.add('hidden');
                 suggestionsContainer.style.visibility = 'hidden';
+                const clearButton = suggestionsContainer.querySelector('button');
+                if (clearButton) {
+                    clearButton.style.display = 'none';
+                }
 
                 const category = menuData.find(cat => cat.category === item.categoryName);
                 if (category) {
@@ -2057,18 +2178,28 @@ function displaySuggestions(items, query) {
             const updateSliderSize = () => {
                 const containerHeight = suggestionsContainer.clientHeight;
                 const scrollHeight = suggestionsContainer.scrollHeight;
-                const trackHeight = sliderTrack.clientHeight;
                 
-                if (scrollHeight <= containerHeight) {
+                let trackHeight = sliderTrack.clientHeight;
+                if (trackHeight <= 0) {
+                    const containerRect = sliderContainer.getBoundingClientRect();
+                    trackHeight = Math.max(100, containerRect.height - 8);
+                    sliderTrack.style.height = trackHeight + 'px';
+                }
+                
+                if (scrollHeight <= containerHeight || trackHeight <= 0) {
                     sliderContainer.style.display = 'none';
-                    return;
+                    return false;
                 }
                 
                 sliderContainer.style.display = 'block';
                 
-                // Calculate thumb height proportional to visible content
-                const thumbHeight = Math.max(20, (containerHeight / scrollHeight) * trackHeight);
-                sliderThumb.style.height = thumbHeight + 'px';
+                const visibleRatio = containerHeight / scrollHeight;
+                const minThumbHeight = 15;
+                const maxThumbHeight = Math.min(trackHeight * 0.6, trackHeight - 10);
+                const calculatedHeight = visibleRatio * trackHeight;
+                const thumbHeight = Math.max(minThumbHeight, Math.min(maxThumbHeight, calculatedHeight));
+                
+                sliderThumb.style.height = Math.round(thumbHeight) + 'px';
                 
                 return thumbHeight;
             };
@@ -2083,18 +2214,19 @@ function displaySuggestions(items, query) {
                 const trackHeight = sliderTrack.clientHeight;
                 
                 const maxScrollTop = scrollHeight - containerHeight;
+                const availableTrackSpace = Math.max(0, trackHeight - thumbHeight);
                 
-                // Ensure we handle edge cases properly
-                if (maxScrollTop <= 0) {
+                if (maxScrollTop <= 0 || availableTrackSpace <= 0) {
                     sliderThumb.style.top = '0px';
                     return;
                 }
                 
-                const scrollRatio = Math.min(1, scrollTop / maxScrollTop);
-                const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
-                const thumbTop = scrollRatio * maxThumbTop;
+                const scrollPercentage = Math.min(1, Math.max(0, scrollTop / maxScrollTop));
+                const thumbPosition = scrollPercentage * availableTrackSpace;
                 
-                sliderThumb.style.top = Math.round(thumbTop) + 'px';
+                const clampedPosition = Math.max(0, Math.min(availableTrackSpace, thumbPosition));
+                
+                sliderThumb.style.top = Math.round(clampedPosition) + 'px';
             };
             
             const handleDragStart = (clientY) => {
@@ -2115,35 +2247,40 @@ function displaySuggestions(items, query) {
             const handleDragMove = (clientY) => {
                 if (!isDragging) return;
                 
+                const suggestionsElement = document.getElementById('searchSuggestions');
+                if (suggestionsElement && suggestionsElement.classList.contains('keyboard-open')) {
+                    return false;
+                }
+                
                 const trackRect = sliderTrack.getBoundingClientRect();
                 const thumbHeight = sliderThumb.clientHeight;
                 const trackHeight = sliderTrack.clientHeight;
+                const availableTrackSpace = Math.max(0, trackHeight - thumbHeight);
                 
-                // Calculate new thumb position
-                const mouseY = clientY - trackRect.top - dragOffset;
-                const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
-                const thumbTop = Math.max(0, Math.min(maxThumbTop, mouseY));
+                if (availableTrackSpace <= 0) {
+                    return false;
+                }
                 
-                // Update thumb position immediately
-                sliderThumb.style.top = Math.round(thumbTop) + 'px';
+                const relativeY = clientY - trackRect.top - dragOffset;
+                const clampedThumbTop = Math.max(0, Math.min(availableTrackSpace, relativeY));
                 
-                // Calculate corresponding scroll position
-                const scrollRatio = maxThumbTop > 0 ? thumbTop / maxThumbTop : 0;
+                sliderThumb.style.top = Math.round(clampedThumbTop) + 'px';
+                
+                const scrollPercentage = clampedThumbTop / availableTrackSpace;
+                
                 const containerHeight = suggestionsContainer.clientHeight;
                 const scrollHeight = suggestionsContainer.scrollHeight;
                 const maxScrollTop = Math.max(0, scrollHeight - containerHeight);
                 
-                // Ensure we can reach the very end
-                let newScrollTop;
-                if (scrollRatio >= 0.99) {
-                    // Force to bottom when very close
-                    newScrollTop = maxScrollTop;
+                let targetScrollTop;
+                if (clampedThumbTop >= availableTrackSpace - 2) {
+                    targetScrollTop = maxScrollTop;
+                    sliderThumb.style.top = availableTrackSpace + 'px';
                 } else {
-                    newScrollTop = Math.round(scrollRatio * maxScrollTop);
+                    targetScrollTop = Math.round(scrollPercentage * maxScrollTop);
                 }
                 
-                // Update scroll position
-                suggestionsContainer.scrollTop = newScrollTop;
+                suggestionsContainer.scrollTop = targetScrollTop;
                 
                 return false;
             };
@@ -2264,40 +2401,32 @@ function displaySuggestions(items, query) {
             
             // Initial setup with proper timing
             const initSlider = () => {
+                sliderContainer.style.display = 'block';
+                sliderTrack.style.display = 'block';
+                
+                const forceReflow = sliderContainer.offsetHeight;
+                const forceReflow2 = sliderTrack.offsetHeight;
+                
                 updateSliderSize();
                 updateSliderPosition();
+                
+                setTimeout(() => {
+                    const maxScroll = suggestionsContainer.scrollHeight - suggestionsContainer.clientHeight;
+                    suggestionsContainer.scrollTop = maxScroll;
+                    updateSliderPosition();
+                    
+                    setTimeout(() => {
+                        suggestionsContainer.scrollTop = 0;
+                        updateSliderPosition();
+                    }, 500);
+                }, 200);
             };
             
             // Multiple initialization attempts to ensure proper setup
             setTimeout(initSlider, 10);
             setTimeout(initSlider, 50);
-            setTimeout(initSlider, 100);
-        }
-        
-        // Add scroll indicator for mobile (fallback)
-        if (window.innerWidth <= 768 && items.length > 3) {
-            const scrollIndicator = document.createElement('div');
-            scrollIndicator.id = 'scrollIndicator';
-            scrollIndicator.innerHTML = '👆 Hold & drag slider';
-            scrollIndicator.className = 'absolute bottom-0 left-0 bg-purple-600 text-white text-xs px-2 py-1 rounded-tr-md opacity-90 pointer-events-none z-20';
-            scrollIndicator.style.position = 'absolute';
-            scrollIndicator.style.bottom = '4px';
-            scrollIndicator.style.left = '4px';
-            
-            suggestionsContainer.style.position = 'relative';
-            suggestionsContainer.appendChild(scrollIndicator);
-            
-            // Hide indicator after 3 seconds
-            setTimeout(() => {
-                if (scrollIndicator.parentNode) {
-                    scrollIndicator.style.opacity = '0';
-                    setTimeout(() => {
-                        if (scrollIndicator.parentNode) {
-                            scrollIndicator.remove();
-                        }
-                    }, 300);
-                }
-            }, 3000);
+            setTimeout(initSlider, 150);
+            setTimeout(initSlider, 300);
         }
     }
 
