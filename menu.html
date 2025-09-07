@@ -378,6 +378,202 @@
     background-color: #eab308;
 }
 
+/* Custom Scrollbar for Search Suggestions */
+#searchSuggestions {
+    scrollbar-width: thick;
+    scrollbar-color: #8b5cf6 #e5e7eb;
+    padding-right: 28px; /* Space for draggable slider */
+}
+
+#searchSuggestions::-webkit-scrollbar {
+    width: 14px;
+}
+
+#searchSuggestions::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 8px;
+    margin: 4px;
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    border-radius: 8px;
+    border: 2px solid #f1f5f9;
+    min-height: 30px;
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, #6d28d9, #5b21b6);
+}
+
+/* Mobile scrollbar indicator */
+@media (max-width: 768px) {
+    #searchSuggestions {
+        padding-right: 32px; /* More space for mobile slider */
+    }
+    
+    #searchSuggestions::-webkit-scrollbar {
+        width: 10px;
+    }
+    
+    #searchSuggestions::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 6px;
+        margin: 2px;
+    }
+    
+    #searchSuggestions::-webkit-scrollbar-thumb {
+        background: #8b5cf6;
+        border-radius: 6px;
+        border: 1px solid #f1f5f9;
+        min-height: 20px;
+    }
+    
+    #searchSuggestions::-webkit-scrollbar-thumb:hover {
+        background: #7c3aed;
+    }
+}
+
+/* Scroll Buttons for Search Suggestions */
+.scroll-button {
+    position: absolute;
+    right: 2px;
+    width: 24px;
+    height: 24px;
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 30;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.scroll-button:hover {
+    background: #7c3aed;
+    transform: scale(1.1);
+}
+
+.scroll-button:active {
+    background: #6d28d9;
+    transform: scale(0.95);
+}
+
+.scroll-button-up {
+    top: 4px;
+}
+
+.scroll-button-down {
+    bottom: 4px;
+}
+
+.scroll-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 768px) {
+    .scroll-button {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+}
+
+/* Custom Draggable Slider */
+.scroll-slider-container {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    width: 20px;
+    background: rgba(241, 245, 249, 0.95);
+    border-radius: 10px;
+    z-index: 35;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.scroll-slider-track {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
+}
+
+.scroll-slider-thumb {
+    position: absolute;
+    left: 0;
+    right: 0;
+    min-height: 20px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    border-radius: 6px;
+    cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    touch-action: none;
+}
+
+.scroll-slider-thumb:hover {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.scroll-slider-thumb:active,
+.scroll-slider-thumb.dragging {
+    cursor: grabbing;
+    background: linear-gradient(135deg, #6d28d9, #5b21b6);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+    transform: scaleX(1.1);
+}
+
+.scroll-slider-thumb::before {
+    content: '⋮⋮';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255,255,255,0.9);
+    font-size: 6px;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    pointer-events: none;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .scroll-slider-container {
+        width: 24px;
+        right: 1px;
+    }
+    
+    .scroll-slider-thumb {
+        min-height: 30px;
+    }
+    
+    .scroll-slider-thumb::before {
+        font-size: 8px;
+    }
+}
+
     </style>
     </head>
     <body class="min-h-screen bg-gray-100">
@@ -1643,11 +1839,35 @@ function setupItemSearch() {
     
     const suggestionsContainer = document.createElement('div');
     suggestionsContainer.id = 'searchSuggestions';
-    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100';
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
     
-    // Add smooth scrolling and momentum scrolling for mobile
+    // Enhanced scrolling for mobile
     suggestionsContainer.style.scrollBehavior = 'smooth';
     suggestionsContainer.style.webkitOverflowScrolling = 'touch';
+    suggestionsContainer.style.overscrollBehavior = 'contain';
+    suggestionsContainer.style.touchAction = 'pan-y';
+    
+    // Add scroll indicator for mobile
+    const addScrollIndicator = () => {
+        if (window.innerWidth <= 768) {
+            const scrollIndicator = document.createElement('div');
+            scrollIndicator.id = 'scrollIndicator';
+            scrollIndicator.innerHTML = '↕️ Scroll to see more';
+            scrollIndicator.className = 'absolute bottom-0 right-0 bg-purple-600 text-white text-xs px-2 py-1 rounded-tl-md opacity-80 pointer-events-none z-20';
+            suggestionsContainer.style.position = 'relative';
+            
+            suggestionsContainer.addEventListener('scroll', () => {
+                const indicator = document.getElementById('scrollIndicator');
+                if (indicator) {
+                    const isAtBottom = suggestionsContainer.scrollTop + suggestionsContainer.clientHeight >= suggestionsContainer.scrollHeight - 5;
+                    indicator.style.display = isAtBottom ? 'none' : 'block';
+                }
+            });
+            
+            return scrollIndicator;
+        }
+        return null;
+    };
 
     searchInput.parentNode.appendChild(suggestionsContainer);
     searchInput.placeholder = "Search menu items...";
@@ -1811,6 +2031,274 @@ function displaySuggestions(items, query) {
         });
 
         suggestionsContainer.appendChild(itemsWrapper);
+        
+        // Add draggable slider for easier navigation
+        if (items.length > 3) {
+            // Create slider container
+            const sliderContainer = document.createElement('div');
+            sliderContainer.className = 'scroll-slider-container';
+            
+            const sliderTrack = document.createElement('div');
+            sliderTrack.className = 'scroll-slider-track';
+            
+            const sliderThumb = document.createElement('div');
+            sliderThumb.className = 'scroll-slider-thumb';
+            
+            sliderTrack.appendChild(sliderThumb);
+            sliderContainer.appendChild(sliderTrack);
+            
+            // Add slider to container first
+            suggestionsContainer.appendChild(sliderContainer);
+            
+            // Slider state
+            let isDragging = false;
+            let dragOffset = 0;
+            
+            const updateSliderSize = () => {
+                const containerHeight = suggestionsContainer.clientHeight;
+                const scrollHeight = suggestionsContainer.scrollHeight;
+                const trackHeight = sliderTrack.clientHeight;
+                
+                if (scrollHeight <= containerHeight) {
+                    sliderContainer.style.display = 'none';
+                    return;
+                }
+                
+                sliderContainer.style.display = 'block';
+                
+                // Calculate thumb height proportional to visible content
+                const thumbHeight = Math.max(20, (containerHeight / scrollHeight) * trackHeight);
+                sliderThumb.style.height = thumbHeight + 'px';
+                
+                return thumbHeight;
+            };
+            
+            const updateSliderPosition = () => {
+                const thumbHeight = updateSliderSize();
+                if (!thumbHeight) return;
+                
+                const containerHeight = suggestionsContainer.clientHeight;
+                const scrollHeight = suggestionsContainer.scrollHeight;
+                const scrollTop = suggestionsContainer.scrollTop;
+                const trackHeight = sliderTrack.clientHeight;
+                
+                const maxScrollTop = scrollHeight - containerHeight;
+                
+                // Ensure we handle edge cases properly
+                if (maxScrollTop <= 0) {
+                    sliderThumb.style.top = '0px';
+                    return;
+                }
+                
+                const scrollRatio = Math.min(1, scrollTop / maxScrollTop);
+                const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+                const thumbTop = scrollRatio * maxThumbTop;
+                
+                sliderThumb.style.top = Math.round(thumbTop) + 'px';
+            };
+            
+            const handleDragStart = (clientY) => {
+                if (isDragging) return;
+                
+                isDragging = true;
+                const thumbRect = sliderThumb.getBoundingClientRect();
+                dragOffset = clientY - thumbRect.top;
+                
+                sliderThumb.classList.add('dragging');
+                document.body.style.userSelect = 'none';
+                document.body.style.webkitUserSelect = 'none';
+                
+                // Prevent default behaviors
+                return false;
+            };
+            
+            const handleDragMove = (clientY) => {
+                if (!isDragging) return;
+                
+                const trackRect = sliderTrack.getBoundingClientRect();
+                const thumbHeight = sliderThumb.clientHeight;
+                const trackHeight = sliderTrack.clientHeight;
+                
+                // Calculate new thumb position
+                const mouseY = clientY - trackRect.top - dragOffset;
+                const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+                const thumbTop = Math.max(0, Math.min(maxThumbTop, mouseY));
+                
+                // Update thumb position immediately
+                sliderThumb.style.top = Math.round(thumbTop) + 'px';
+                
+                // Calculate corresponding scroll position
+                const scrollRatio = maxThumbTop > 0 ? thumbTop / maxThumbTop : 0;
+                const containerHeight = suggestionsContainer.clientHeight;
+                const scrollHeight = suggestionsContainer.scrollHeight;
+                const maxScrollTop = Math.max(0, scrollHeight - containerHeight);
+                
+                // Ensure we can reach the very end
+                let newScrollTop;
+                if (scrollRatio >= 0.99) {
+                    // Force to bottom when very close
+                    newScrollTop = maxScrollTop;
+                } else {
+                    newScrollTop = Math.round(scrollRatio * maxScrollTop);
+                }
+                
+                // Update scroll position
+                suggestionsContainer.scrollTop = newScrollTop;
+                
+                return false;
+            };
+            
+            const handleDragEnd = () => {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                sliderThumb.classList.remove('dragging');
+                document.body.style.userSelect = '';
+                document.body.style.webkitUserSelect = '';
+            };
+            
+            // Mouse events
+            sliderThumb.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleDragStart(e.clientY);
+            });
+            
+            // Global mouse events
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragMove(e.clientY);
+                }
+            });
+            
+            document.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragEnd();
+                }
+            });
+            
+            // Touch events
+            sliderThumb.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDragStart(e.touches[0].clientY);
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    e.preventDefault();
+                    handleDragMove(e.touches[0].clientY);
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchend', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragEnd();
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchcancel', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragEnd();
+                }
+            }, { passive: false });
+            
+            // Track click for quick navigation
+            sliderTrack.addEventListener('mousedown', (e) => {
+                if (e.target === sliderTrack) {
+                    e.preventDefault();
+                    const trackRect = sliderTrack.getBoundingClientRect();
+                    const clickY = e.clientY - trackRect.top;
+                    const thumbHeight = sliderThumb.clientHeight;
+                    const trackHeight = sliderTrack.clientHeight;
+                    
+                    const targetThumbTop = Math.max(0, Math.min(trackHeight - thumbHeight, clickY - thumbHeight / 2));
+                    const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+                    const scrollRatio = maxThumbTop > 0 ? targetThumbTop / maxThumbTop : 0;
+                    
+                    const containerHeight = suggestionsContainer.clientHeight;
+                    const scrollHeight = suggestionsContainer.scrollHeight;
+                    const maxScrollTop = Math.max(0, scrollHeight - containerHeight);
+                    
+                    // Ensure we can reach the very end
+                    let newScrollTop;
+                    if (scrollRatio >= 0.99) {
+                        newScrollTop = maxScrollTop;
+                    } else {
+                        newScrollTop = Math.round(scrollRatio * maxScrollTop);
+                    }
+                    
+                    suggestionsContainer.scrollTop = newScrollTop;
+                }
+            });
+            
+            // Update slider when scrolling (but not during drag)
+            suggestionsContainer.addEventListener('scroll', () => {
+                if (!isDragging) {
+                    requestAnimationFrame(() => {
+                        updateSliderPosition();
+                    });
+                }
+            });
+            
+            // Also listen for content changes
+            const observer = new MutationObserver(() => {
+                if (!isDragging) {
+                    setTimeout(() => {
+                        updateSliderSize();
+                        updateSliderPosition();
+                    }, 10);
+                }
+            });
+            
+            observer.observe(suggestionsContainer, {
+                childList: true,
+                subtree: true
+            });
+            
+            // Initial setup with proper timing
+            const initSlider = () => {
+                updateSliderSize();
+                updateSliderPosition();
+            };
+            
+            // Multiple initialization attempts to ensure proper setup
+            setTimeout(initSlider, 10);
+            setTimeout(initSlider, 50);
+            setTimeout(initSlider, 100);
+        }
+        
+        // Add scroll indicator for mobile (fallback)
+        if (window.innerWidth <= 768 && items.length > 3) {
+            const scrollIndicator = document.createElement('div');
+            scrollIndicator.id = 'scrollIndicator';
+            scrollIndicator.innerHTML = '👆 Hold & drag slider';
+            scrollIndicator.className = 'absolute bottom-0 left-0 bg-purple-600 text-white text-xs px-2 py-1 rounded-tr-md opacity-90 pointer-events-none z-20';
+            scrollIndicator.style.position = 'absolute';
+            scrollIndicator.style.bottom = '4px';
+            scrollIndicator.style.left = '4px';
+            
+            suggestionsContainer.style.position = 'relative';
+            suggestionsContainer.appendChild(scrollIndicator);
+            
+            // Hide indicator after 3 seconds
+            setTimeout(() => {
+                if (scrollIndicator.parentNode) {
+                    scrollIndicator.style.opacity = '0';
+                    setTimeout(() => {
+                        if (scrollIndicator.parentNode) {
+                            scrollIndicator.remove();
+                        }
+                    }, 300);
+                }
+            }, 3000);
+        }
     }
 
     suggestionsContainer.classList.remove('hidden');
