@@ -2737,12 +2737,12 @@ function filterMenuData(filterType) {
             tableNumberInput.parentNode.appendChild(tableHelperText);
 
             tableNumberInput.setAttribute('min', '1');
-            tableNumberInput.setAttribute('max', '8');
+            tableNumberInput.setAttribute('max', '20');
             tableNumberInput.addEventListener('input', function() {
                 const value = parseInt(this.value);
-                if (value < 1 || value > 8) {
-                    this.setCustomValidity('Please enter a table number between 1 and 8');
-                    alert('Please enter a valid table number between 1 and 8');
+                if (value < 1 || value > 20) {
+                    this.setCustomValidity('Please enter a table number between 1 and 20');
+                    alert('Please enter a valid table number between 1 and 20');
                     this.value = '';
                 } else {
                     this.setCustomValidity('');
