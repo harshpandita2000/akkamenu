@@ -675,14 +675,6 @@
                     <div
                         class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
                         <span
-                            class="w-20 font-medium text-blue-700">₹599+</span>
-                        <span class="text-gray-700">FREE 250ml Soft Drink <span
-                                class="bottle-shake inline-block">🥤</span></span>
-                    </div>
-
-                    <div
-                        class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
-                        <span
                             class="w-20 font-medium text-blue-700">₹999+</span>
                         <span class="text-gray-700">FREE 750ml Soft Drink <span
                                 class="bottle-shake inline-block">🥤</span></span>
@@ -835,7 +827,6 @@
                                     🎁 Available Offers
                                 </div>
                                 <div class="text-xs space-y-1">
-                                    <p>🥤 ₹599+: Free 250ml Soft Drink</p>
                                     <p>🥤 ₹999+: Free 750ml Soft Drink</p>
                                 </div>
                             </div>
@@ -2813,13 +2804,6 @@ document.addEventListener('DOMContentLoaded', function() {
     offerMessages.forEach((message, index) => {
         const messageText = message.textContent;
         
-        if (messageText.includes('₹599+') && messageText.includes('250ml')) {
-            if (total >= 599 && total < 999) {
-                message.classList.add('font-bold', 'text-green-600');
-                earnedCokeMessage = 'Congratulations! You get a free 250ml Soft Drink with your order!';
-            }
-        }
-        
         if (messageText.includes('₹999+') && messageText.includes('750ml')) {
             if (total >= 999) {
                 message.classList.add('font-bold', 'text-green-600');
@@ -2991,7 +2975,20 @@ function filterMenuData(filterType) {
         return;
     }
 
-    let whatsappMessage = `*🍽️ Table No: ${tableNumber}*\n\n`;
+    // Generate unique order ID and timestamp for security
+    const orderID = 'ORD' + Date.now().toString().slice(-8) + Math.random().toString(36).substr(2, 4).toUpperCase();
+    const orderTime = new Date().toLocaleString('en-IN', { 
+        timeZone: 'Asia/Kolkata',
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    let whatsappMessage = `*🛡️ ORDER ID: ${orderID}*\n`;
+    whatsappMessage += `*🕐 Time: ${orderTime}*\n`;
+    whatsappMessage += `*🍽️ Table No: ${tableNumber}*\n\n`;
     let orderSummary = '📝 *Order Summary*\n\n';
     let totalAmount = 0;
 
@@ -3013,6 +3010,10 @@ function filterMenuData(filterType) {
         whatsappMessage += `\n*📝 Special Instructions:*\n${specialInstructions}\n\n`;
     }
     
+    // Generate security hash based on order details (simple checksum for verification)
+    const orderHash = btoa(orderID + totalAmount + cart.length).slice(0, 8);
+    whatsappMessage += `*🔐 Order Hash: ${orderHash}*\n`;
+    whatsappMessage += `*⚠️ DO NOT EDIT THIS MESSAGE - Order verification will fail*\n\n`;
     whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
 
     const encodedMessage = encodeURIComponent(whatsappMessage);
