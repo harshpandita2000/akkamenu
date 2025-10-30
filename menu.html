@@ -3010,10 +3010,7 @@ function filterMenuData(filterType) {
         whatsappMessage += `\n*📝 Special Instructions:*\n${specialInstructions}\n\n`;
     }
     
-    // Generate security hash based on order details (simple checksum for verification)
-    const orderHash = btoa(orderID + totalAmount + cart.length).slice(0, 8);
-    whatsappMessage += `*🔐 Order Hash: ${orderHash}*\n`;
-    whatsappMessage += `*⚠️ DO NOT EDIT THIS MESSAGE - Order verification will fail*\n\n`;
+
     whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
 
     const encodedMessage = encodeURIComponent(whatsappMessage);
