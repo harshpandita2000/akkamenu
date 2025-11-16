@@ -1,0 +1,3091 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Akka's Food Centre Menu</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+            rel="stylesheet" />
+        <style>
+        input[type="number"]:focus {
+            font-size: 16px;
+        }
+          @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+    .rating-container {
+            width: 100%;
+            padding: 15px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fff5f5, #fff);
+        }
+
+        .logo-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-item {
+            position: relative;
+            text-decoration: none;
+        }
+
+        .rating-logo {
+            width: 45px;
+            height: 45px;
+            padding: 8px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            animation: gentleFloat 3s infinite;
+            animation-delay: calc(var(--delay) * 0.5s);
+        }
+
+        .logo-item:nth-child(1) { --delay: 0; }
+        .logo-item:nth-child(2) { --delay: 1; }
+        .logo-item:nth-child(3) { --delay: 2; }
+        .logo-item:nth-child(4) { --delay: 3; }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo-item:hover .rating-logo {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            margin: 15px 0 0 0;
+            padding: 0 10px;
+            text-align: center;
+        }
+
+        .heart-icon {
+            color: #ff6b6b;
+            display: inline-block;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .logo-item:active .rating-logo {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Hide scrollbar for horizontal addon scroll */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .logo-grid {
+                gap: 20px;
+                padding: 10px 15px;
+            }
+
+            .rating-logo {
+                width: 40px;
+                height: 40px;
+                padding: 6px;
+            }
+
+            .footer-text {
+                font-size: 14px;
+            }
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: rotate 10s linear infinite;
+          }
+
+          .title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-top: 1rem;
+            background: linear-gradient(90deg, #ec5999, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: pulse 2s ease-in-out infinite;
+          }
+
+          @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+          }
+
+          @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes bottleTwinkle {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(-10deg); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle 1.5s infinite;
+        }
+
+        .sparkle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 30%; left: 20%; animation-delay: 0.2s; }
+        .sparkle:nth-child(3) { top: 40%; right: 20%; animation-delay: 0.4s; }
+        .sparkle:nth-child(4) { top: 25%; right: 10%; animation-delay: 0.6s; }
+
+        .bottle-shake {
+            animation: bottleTwinkle 3s infinite ease-in-out;
+            display: inline-block;
+        }
+
+
+
+        @keyframes slidein {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .cart-offer {
+            animation: slidein 0.5s ease-out;
+            background-size: 200% 100%;
+            background-image: linear-gradient(to right, #dbeafe 0%, #eff6ff 50%, #dbeafe 100%);
+            animation: shimmer 3s infinite linear;
+        }
+
+        .offer-icon {
+            transform-origin: center;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .offer-icon:hover {
+            transform: scale(1.2);
+        }
+
+
+.addons-container {
+    max-width: 280px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+.addons-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.addons-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+}
+
+.addon-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.addon-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.addon-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.addon-size {
+    color: #666;
+    font-size: 13px;
+    flex: 1;
+    text-align: left;
+}
+
+.addon-price {
+    color: #333;
+    font-size: 13px;
+    margin-right: 12px;
+    flex: 1;
+    text-align: right;
+}
+
+.addon-add-to-cart {
+    background: #34A853;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+
+.filter-button {
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    line-height: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-button:hover {
+    background-color: #e5e7eb;
+}
+
+.filter-button.active-filter {
+    background-color: #4f46e5;
+    color: white;
+    border-color: #4338ca;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.filter-button:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #a5b4fc;
+}
+
+.filter-button:focus:not(:focus-visible) {
+    box-shadow: none;
+}
+
+.filter-button span span {
+    display: inline-block;
+}
+
+
+.item-type-indicator {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #ccc;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    vertical-align: middle;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+}
+
+.item-type-indicator .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: block;
+}
+
+.item-type-indicator.veg-indicator {
+    border-color: #16a34a;
+}
+.item-type-indicator.veg-indicator .dot {
+    background-color: #16a34a;
+}
+
+.item-type-indicator.non-veg-indicator {
+    border-color: #dc2626;
+}
+.item-type-indicator.non-veg-indicator .dot {
+    background-color: #dc2626;
+}
+
+.item-type-indicator.egg-indicator {
+    border-color: #eab308;
+}
+.item-type-indicator.egg-indicator .dot {
+    background-color: #eab308;
+}
+
+/* Custom Scrollbar for Search Suggestions */
+#searchSuggestions {
+    scrollbar-width: thick;
+    scrollbar-color: #8b5cf6 #e5e7eb;
+    padding-right: 28px; /* Space for draggable slider */
+    position: relative; /* For absolute positioned clear button */
+}
+
+#searchSuggestions::-webkit-scrollbar {
+    width: 14px;
+}
+
+#searchSuggestions::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 8px;
+    margin: 4px;
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    border-radius: 8px;
+    border: 2px solid #f1f5f9;
+    min-height: 30px;
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+}
+
+#searchSuggestions::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, #6d28d9, #5b21b6);
+}
+
+/* Keyboard open state */
+#searchSuggestions.keyboard-open {
+    -webkit-overflow-scrolling: touch !important;
+    overflow-y: scroll !important;
+    touch-action: pan-y !important;
+    overscroll-behavior: contain !important;
+}
+
+/* Hide slider when keyboard is open to prioritize touch scrolling */
+#searchSuggestions.keyboard-open .scroll-slider-container {
+    display: none !important;
+}
+
+/* Enhanced touch scrolling when keyboard is open */
+#searchSuggestions.keyboard-open {
+    padding-right: 8px; /* Less padding when slider is hidden */
+}
+
+/* Clear search button styling */
+#clearSearchBtn {
+    transition: all 0.2s ease-in-out;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+#clearSearchBtn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+}
+
+#clearSearchBtn:active {
+    transform: scale(0.95);
+}
+
+/* Mobile scrollbar indicator */
+@media (max-width: 768px) {
+    #searchSuggestions {
+        padding-right: 32px; /* More space for mobile slider */
+    }
+    
+    #searchSuggestions.keyboard-open {
+        padding-right: 30px; /* Room for clear button when keyboard open */
+    }
+    
+    #searchSuggestions::-webkit-scrollbar {
+        width: 10px;
+    }
+    
+    #searchSuggestions::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 6px;
+        margin: 2px;
+    }
+    
+    #searchSuggestions::-webkit-scrollbar-thumb {
+        background: #8b5cf6;
+        border-radius: 6px;
+        border: 1px solid #f1f5f9;
+        min-height: 20px;
+    }
+    
+    #searchSuggestions::-webkit-scrollbar-thumb:hover {
+        background: #7c3aed;
+    }
+}
+
+/* Scroll Buttons for Search Suggestions */
+.scroll-button {
+    position: absolute;
+    right: 2px;
+    width: 24px;
+    height: 24px;
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 30;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.scroll-button:hover {
+    background: #7c3aed;
+    transform: scale(1.1);
+}
+
+.scroll-button:active {
+    background: #6d28d9;
+    transform: scale(0.95);
+}
+
+.scroll-button-up {
+    top: 4px;
+}
+
+.scroll-button-down {
+    bottom: 4px;
+}
+
+.scroll-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@media (max-width: 768px) {
+    .scroll-button {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+}
+
+/* Custom Draggable Slider */
+.scroll-slider-container {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    bottom: 2px;
+    width: 20px;
+    background: rgba(241, 245, 249, 0.95);
+    border-radius: 10px;
+    z-index: 35;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.scroll-slider-track {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border-radius: 8px;
+    background: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
+    min-height: 100px;
+}
+
+.scroll-slider-thumb {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    min-height: 20px;
+    height: 30px;
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    border-radius: 6px;
+    cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    touch-action: none;
+}
+
+.scroll-slider-thumb:hover {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.scroll-slider-thumb:active,
+.scroll-slider-thumb.dragging {
+    cursor: grabbing;
+    background: linear-gradient(135deg, #6d28d9, #5b21b6);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+    transform: scaleX(1.1);
+}
+
+.scroll-slider-thumb::before {
+    content: '⋮⋮';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255,255,255,0.9);
+    font-size: 6px;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    pointer-events: none;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .scroll-slider-container {
+        width: 24px;
+        right: 1px;
+    }
+    
+    .scroll-slider-thumb {
+        min-height: 30px;
+        height: 40px;
+    }
+    
+    .scroll-slider-thumb::before {
+        font-size: 8px;
+    }
+}
+
+    </style>
+    </head>
+    <body class="min-h-screen bg-gray-100">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col items-center mb-8">
+                <!-- <img
+                    src="https://static.vecteezy.com/system/resources/previews/013/799/155/original/female-chef-cartoon-mascot-illustration-free-vector.jpg" -->
+                    <img
+                    src="./akka fc.png"
+                    alt="Akka's Menu Logo"
+                    class="logo">
+                <h1
+                    class="title">
+                    MENU
+                </h1>
+            </div>
+
+            <div
+                class="mx-2 my-3 bg-gradient-to-r from-purple-500 to-purple-800 rounded-lg shadow">
+                <div class="p-4 text-center">
+                    <h2
+                        class="text-base font-bold text-white flex items-center justify-center gap-1">
+                        <span>🍱</span>
+                        <span>Tiffins Monthly Subscription</span>
+                        <span>🍽️</span>
+                    </h2>
+                    <p class="mt-1 text-white/90 text-sm">
+                        Enjoy hassle-free, nutritious meals delivered to your
+                        home.
+                    </p>
+                    <p class="mt-1 text-white/90 text-sm font-semibold">
+                        📢 Ask the reception for more details!
+                    </p>
+                    <div
+                        class="mt-2 inline-block bg-white/20 px-3 py-1 rounded-full text-white text-xs">
+                        Coming Soon!
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-4 mb-4 relative overflow-hidden max-w-sm mx-auto">
+                <div class="sparkle bg-blue-200"></div>
+                <div class="sparkle bg-blue-300"></div>
+                <div class="sparkle bg-blue-400"></div>
+                <div class="sparkle bg-blue-300"></div>
+
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-lg bottle-shake">🥤</span>
+                    <h2 class="text-sm font-semibold text-blue-800">Special Coke
+                        Offers!</h2>
+                </div>
+
+                <div class="space-y-2 relative">
+                    
+                    <div
+                        class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
+                        <span
+                            class="w-20 font-medium text-blue-700">₹999+</span>
+                        <span class="text-gray-700">FREE 750ml Soft Drink <span
+                                class="bottle-shake inline-block">🥤</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:hidden fixed bottom-4 right-4 z-40">
+                <button id="mobileCartToggle"
+                    class="bg-blue-500 text-white p-4 rounded-full shadow-lg relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="mobileBadge"
+                        class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs">0</span>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-center mb-6">
+                <div class="relative w-full max-w-md md:max-w-lg lg:max-w-xl">
+                    <input type="text" id="searchInput"
+                        placeholder="Search menu categories..."
+                        class="w-full px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-4 text-base md:text-lg border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md">
+                    
+                    <!-- Clear button (X) positioned before search icon -->
+                    <button type="button" id="clearSearchBtn" 
+                        class="absolute top-3 md:top-4 lg:top-4 right-12 md:right-16 lg:right-20 text-gray-400 hover:text-red-500 transition-colors duration-200 hidden"
+                        title="Clear search">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Search icon -->
+                    <span class="absolute top-3 md:top-4 lg:top-4 right-4 md:right-6 lg:right-8 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6 lg:h-7 lg:w-7"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M8 4a6 6 0 100 12A6 6 0 008 4zm8.707 11.293a1 1 0 01-1.414 1.414l-3.621-3.621a8 8 0 111.414-1.414l3.621 3.621z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex justify-center items-center flex-wrap gap-2 md:gap-3 lg:gap-4 mb-6 px-2">
+                <button id="showAll"
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition active-filter">All
+                    Items</button>
+                <button id="showVeg"
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition flex items-center space-x-2">
+                    <span
+                        class="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 border border-green-700 bg-white flex items-center justify-center">
+                        <span
+                            class="w-1.5 h-1.5 md:w-2 md:h-2 lg:w-2.5 lg:h-2.5 bg-green-600 rounded-full"></span>
+                    </span>
+                    <span>Veg</span>
+                </button>
+                <button id="showNonVeg"
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition flex items-center space-x-2">
+                    <span
+                        class="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 border border-red-700 bg-white flex items-center justify-center">
+                        <span
+                            class="w-1.5 h-1.5 md:w-2 md:h-2 lg:w-2.5 lg:h-2.5 bg-red-600 rounded-full"></span>
+                    </span>
+                    <span>Non-Veg</span>
+                </button>
+                <button id="showEgg"
+                    class="filter-button px-4 py-2 md:px-6 md:py-3 lg:px-8 lg:py-3 rounded-full text-sm md:text-base lg:text-lg font-medium transition flex items-center space-x-2">
+                    <span
+                        class="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 border border-yellow-600 bg-white flex items-center justify-center">
+                        <span
+                            class="w-1.5 h-1.5 md:w-2 md:h-2 lg:w-2.5 lg:h-2.5 bg-yellow-500 rounded-full"></span>
+                    </span>
+                    <span>Egg</span>
+                </button>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-6 relative">
+
+                <div class="flex-grow">
+
+                    <div id="menuCategories"
+                        class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
+                    </div>
+
+                    <div id="menuItems" class="mt-8 hidden">
+                        <button id="backButton"
+                            class="mb-6 px-4 py-2 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Back to Categories
+                        </button>
+                        <div id="itemsList"
+                            class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cartContainer"
+                    class="fixed inset-0 z-50 hidden lg:block lg:w-96 lg:static bg-white">
+                    <div
+                        class="h-screen lg:sticky lg:top-0 shadow-lg lg:rounded-lg overflow-hidden relative bg-white flex flex-col">
+                        
+                        <!-- Purple Header Design -->
+                        <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="bg-white bg-opacity-20 rounded-full p-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5-2.5M7 13l2.5 2.5m4.5-2.5v6m0 0l-2.5-2.5m2.5 2.5l2.5-2.5" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-xl font-bold">Your Cart</h2>
+                                        <p class="text-purple-100 text-sm opacity-90">Review your order</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span id="cartItemCount"
+                                        class="bg-white text-purple-600 text-sm font-bold rounded-full px-3 py-1 shadow-lg min-w-[28px] text-center">0</span>
+                                    <button id="mobileCartClose"
+                                        class="lg:hidden text-white hover:text-purple-200 z-50 bg-white bg-opacity-20 rounded-full p-4 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-8 w-8" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="3"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cart Content - Scrollable Area -->
+                        <div class="flex-1 overflow-y-auto p-4">
+                            <!-- Compact Offers -->
+                            <div id="cokeOfferNotification"
+                                class="mb-3 p-2 bg-blue-50 border-l-4 border-blue-500 rounded">
+                                <div class="text-blue-800 font-medium text-sm mb-1 flex items-center gap-1">
+                                    🎁 Available Offers
+                                </div>
+                                <div class="text-xs space-y-1">
+                                    <p>🥤 ₹999+: Free 750ml Soft Drink</p>
+                                </div>
+                            </div>
+
+                            <!-- Cart Items -->
+                            <ul id="cartItems" class="space-y-2 mb-3">
+                            </ul>
+
+                            <!-- Addons -->
+                            <div id="cartAddons" class="cart-addons mb-3">
+                            </div>
+                        </div>
+
+                        <!-- Cart Summary and Buttons - Sticky Bottom -->
+                        <div class="border-t border-gray-200 bg-white p-4">
+                            <div id="cartSummary">
+                                <div class="flex justify-between text-sm font-medium mb-1">
+                                    <span>Total Items:</span>
+                                    <span id="totalItemCount">0</span>
+                                </div>
+                                <div class="flex justify-between font-bold text-lg mb-3">
+                                    <span>Total Amount:</span>
+                                    <span id="totalAmount" class="text-green-600">₹0</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button id="checkoutButton"
+                                        class="px-4 py-3 bg-purple-600 text-white rounded-full hover:bg-purple-700 flex items-center justify-center text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-4 w-4 mr-1" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Checkout
+                                    </button>
+                                    <button id="clearCartButton"
+                                        class="px-4 py-3 bg-gray-600 text-white rounded-full hover:bg-gray-700 flex items-center justify-center text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-4 w-4 mr-1" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+                <div class="rating-container">
+                    <div class="logo-grid">
+                        <a href="https://zomato.onelink.me/xqzv/luq0zr6h"
+                            class="logo-item" target="_blank"
+                            rel="noopener noreferrer">
+                            <img
+                                src="https://cdn.iconscout.com/icon/free/png-512/free-zomato-logo-icon-download-in-svg-png-gif-file-formats--food-company-brand-delivery-brans-logos-icons-1637644.png?f=webp&w=256"
+                                alt="Zomato" class="rating-logo">
+                        </a>
+
+                        <a
+                            href="https://www.swiggy.com/menu/1031731?source=sharing"
+                            class="logo-item" target="_blank"
+                            rel="noopener noreferrer">
+                            <img
+                                src="https://cdn.iconscout.com/icon/free/png-512/free-swiggy-logo-icon-download-in-svg-png-gif-file-formats--food-delivery-package-pack-logos-icons-1369418.png?f=webp&w=256"
+                                alt="Swiggy" class="rating-logo">
+                        </a>
+
+                        <a
+                            href="https://magicpin.in/walletRecharge?merchantId=52083382"
+                            class="logo-item" target="_blank"
+                            rel="noopener noreferrer">
+                            <img
+                                src="https://images.yourstory.com/cs/images/companies/6723190122636619372819335513378071094231040o-1590990173281.png?fm=png&auto=format"
+                                alt="MagicPin" class="rating-logo">
+                        </a>
+
+                        <a href="https://g.co/kgs/JNGPftN" class="logo-item"
+                            target="_blank" rel="noopener noreferrer">
+                            <img
+                                src="https://cdn.iconscout.com/icon/free/png-512/free-google-logo-icon-download-in-svg-png-gif-file-formats--brands-pack-logos-icons-189824.png?f=webp&w=256"
+                                alt="Google" class="rating-logo">
+                        </a>
+                    </div>
+                    <p class="footer-text">We'd love to hear from you! <span
+                            class="heart-icon">❤️</span></p>
+                </div>
+
+                <div id="orderModal"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                    <div
+                        class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
+                        <h2
+                            class="text-xl font-bold text-center text-gray-800 mb-4">🛒
+                            Order Summary</h2>
+                        <p class="text-sm text-gray-600 text-center mb-6">
+                            👀 Look behind the QR stand for your table number 😉
+                        </p>
+
+                        <div class="mb-4">
+                            <label for="tableNumber"
+                                class="block text-sm font-medium text-gray-700">Enter
+                                Your Table Number:</label>
+                            <input type="text" id="tableNumber"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="specialInstructions"
+                                class="block text-sm font-medium text-gray-700">Special Instructions (Optional):</label>
+                            <textarea id="specialInstructions" 
+                                placeholder="Any special requests, allergies, or cooking preferences..."
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm resize-none"
+                                rows="3"></textarea>
+                            <p class="text-xs text-gray-500 mt-1"> Example: "Less spicy", "No onions", "Extra cheese", etc.</p>
+                        </div>
+
+                        <ul id="orderDetails"
+                            class="space-y-2 mb-4 text-lg font-bold text-gray-700"></ul>
+
+                        <p class="font-semibold text-lg text-center">
+                            💰 Total Amount: <span id="modalTotalAmount"
+                                class="text-green-600 font-bold"></span>
+                        </p>
+
+                        <div class="flex justify-between mt-4">
+                            <button id="closeModalButton"
+                                class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition duration-300">
+                                Close
+                            </button>
+                            <button id="whatsappButton"
+                                class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300">
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="bg-gray-100 p-4 text-center pb-16 lg:pb-4">
+                    <p class="text-sm flex justify-center items-center pulse">
+                        Developed by
+                        <a href="https://www.linkedin.com/in/harsh-pandita-dev/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-blue-600 hover:underline inline-flex items-center ml-2">
+                            Harsh Pandita
+                            <img
+                                src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png"
+                                alt="LinkedIn Badge" height="20" width="20"
+                                class="ml-2" />
+                        </a>
+                        <a href="https://www.instagram.com/harsh_.pandita/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-blue-600 hover:underline inline-flex items-center ml-2">
+                            <img
+                                src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Instagram-256.png"
+                                alt="Instagram Badge" height="20" width="20"
+                                class="ml-2" />
+                        </a>
+                    </p>
+                </footer>
+
+                <style>
+
+        #orderModal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #orderModal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        @media (max-width: 640px) {
+            #orderModal .modal-content {
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+        }
+
+    </style>
+
+                <script>
+        const menuData = [
+
+        {
+            "category": "Chicken & Fish Specials",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_xux7J8JULrVaTZHN3kfaaP9fOeuDazqag&s",
+            "items": [
+            { "name": "Chilli Prawns", "price": 299, "image": "https://www.licious.in/blog/wp-content/uploads/2020/12/Chilli-Prawns.jpg", "type": "Non-Veg" },
+            { "name": "Chicken Lollipop(4pcs) ", "price": 120, "image": "https://littlebitrecipes.com/wp-content/uploads/2024/01/chicken-lollipop-sq.jpg", "type": "Non-Veg" },
+            { "name": "Chilli Chicken Lollipop(3pcs)", "price": 120, "image": "https://www.cafegoldenfeast.com/wp-content/uploads/2025/01/Chicken-Lollipop.jpg", "type": "Non-Veg" },
+            { "name": "Garlic Prawn", "price": 289, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPgrAvijFLOViDXvZ9uzxE08PILc0Vbb3VdQ&s", "type": "Non-Veg" },
+            { "name": "Ginger Prawns", "price": 289, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaeaRGhfqJMohN1S-uxc_I4MWfYDIkqh3pxw&s", "type": "Non-Veg" },
+            { "name": "Garlic Chicken", "price": 220, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd8yKNe2c7wVMQ4Ivr96PotQCUbbtizmut0A&s", "type": "Non-Veg" },
+            { "name": "Ginger Chicken", "price": 220, "image": "https://www.lordbyronskitchen.com/wp-content/uploads/2023/03/2-1.jpg", "type": "Non-Veg" },
+            { "name": "Chicken 65", "price": 150, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxLUylpXSB7u85LFAYqTeMTc1SBAuH-YKJ_Q&s", "type": "Non-Veg" },
+            { "name": "Chicken Majestic", "price": 250, "image": "https://spiceeats.com/wp-content/uploads/2020/07/Chicken-Majestic.jpg", "type": "Non-Veg" },
+            { "name": "Tai Pai Chicken", "price": 200, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvzD1osUrybK7pYoV2NS5SGgdc0vlJxUE3sg&s", "type": "Non-Veg" },
+            { "name": "Mughlai Chicken", "price": 250, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRk2nIv687rtQwPad7RKUQy4swmgrKfo2Zxvw&s", "type": "Non-Veg" },
+            { "name": "Malai Chicken", "price": 200, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7y69Dwwmrl7fxFB2iFVyefru8MdEXifGV1g&s", "type": "Non-Veg" },
+            { "name": "Rohu Fish Fry", "price": 80, "image": "https://www.yummytummyaarthi.com/wp-content/uploads/2022/02/fish-fry-1.jpeg", "type": "Non-Veg" },
+            { "name": "Katla Fish Fry", "price": 100, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYGshJQ7B6ILPhGmhjJrPd9rT0m3NVu5uuqw&s", "type": "Non-Veg" }
+              ]},
+
+        {
+        "category": "Must Try Combos",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqfejkG-k6jahDIerNX4qPGSbnWTacheTbCQ&s",
+        "items": [
+        { "name": "Maggi Delight with Chilled Coke", "price": 99, "image": "https://b.zmtcdn.com/data/dish_photos/cc1/7efaab1d547f7614094a7dcb60aa7cc1.jpg", "type": "Veg" },
+        { "name": "Royal Paneer Biryani & Refreshing Coke", "price": 199, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqSKp4YAmMIUS59m_ZPNTwXoIQ1rt7YYGtGA&s", "type": "Veg" },
+        { "name": "Spicy Chicken Biryani with Ice-Cold Coke", "price": 199, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI9AoSeCc-epa7RO4Wee9Uipm7eobjhpMRWw&s", "type": "Non-Veg" },
+        { "name": "Flavorful Veg Biryani & Cool Coke", "price": 169, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ4d6LLY7IXQXyEk2iIumf2hzLLJMRwKzrQQ&s", "type": "Veg" },
+        { "name": "Egg Biryani Bliss with Coke", "price": 149, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmSWz_Qf6GNCa17WmuM5nIEwE73pl8Mzkqw&s", "type": "Egg" },
+        { "name": "Parota With Veg Curry", "price": 79, "image": "https://images.squarespace-cdn.com/content/v1/6633a679bde95f1b843338a3/1719865680423-EMDEBH9YV0FQZP3857FH/three_parotta_with_sides_of_veg_curry_and_raita_on_a_bananaleaf.jpeg?format=1500w", "type": "Veg" },
+        { "name": "Chapati With Veg Curry", "price": 79, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz3GY6qpBQG199W98x5xmziAKla5d7_3pwpw&s", "type": "Veg" },
+        { "name": "Parota With Non-Veg Curry", "price": 119, "image": "https://i.ytimg.com/vi/IE4W7UmI5PQ/maxresdefault.jpg", "type": "Non-Veg" },
+        { "name": "Chapati With Non-Veg Curry", "price": 119, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4-Jd2MX62XsOmYiDkwAbzYqRiHLSnlI7Eww&s", "type": "Non-Veg" },
+        { "name": "Chicken Curry & Aloo Fry With Rice", "price": 130, "image": "https://www.sailusfood.com/wp-content/uploads/2015/07/potato-fry.jpg", "type": "Non-Veg" },
+        { "name": "Fish Curry & Aloo Fry With Rice", "price": 120, "image": "https://www.sailusfood.com/wp-content/uploads/2015/07/potato-fry.jpg", "type": "Non-Veg" },
+        { "name": "Egg Curry & Aloo Fry With Rice", "price": 110, "image": "https://www.sailusfood.com/wp-content/uploads/2015/07/potato-fry.jpg", "type": "Non-Veg" },
+        { "name": "Mutton Curry & Aloo Fry With Rice", "price": 230, "image": "https://www.sailusfood.com/wp-content/uploads/2015/07/potato-fry.jpg", "type": "Non-Veg" },
+
+        ]
+        },
+
+        {
+            "category": "Biryani Specials",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Wc-hevy-yxW0pVomqf2_T6_w4EOLiSl22w&s",
+            "items": [
+            { "name": "Chicken Biryani", "price": 149, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoIycguxFgTpIN3L00tYQhJ2WkypXj5w_QkQ&s", "type": "Non-Veg" },
+            { "name": "Fish Biryani", "price": 149, "image": "https://ik.imagekit.io/iwcam3r8ka/prod/blog-header/202504/112cf7c4-957c-47b1-893e-5207e5a90891.jpg", "type": "Non-Veg" },
+            { "name": "Paneer Biryani", "price": 169, "image": "https://ministryofcurry.com/wp-content/uploads/2023/10/Laxmi-Paneer-Biryani_-5.jpg", "type": "Veg" },
+            { "name": "Veg Biryani", "price": 119, "image": "https://www.madhuseverydayindian.com/wp-content/uploads/2022/11/easy-vegetable-biryani.jpg", "type": "Veg" },
+            { "name": "Egg Biryani", "price": 139, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgcVbkj0kqkqRqaWxhZHiHsFP14MO5_LR9Og&s", "type": "Egg" },
+            { "name": "Chicken 65 Biryani", "price": 279, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7BPvFXQOahxB-TB13vq-En4xGxq_j_GPbpg&s", "type": "Non-Veg" },
+            { "name": "Chicken Manchurian Biryani", "price": 249, "image": "https://b2958125.smushcdn.com/2958125/wp-content/uploads/chicken-manchurian-recipe-dry-restaurant-style-1.jpg?lossy=1&strip=1&webp=1", "type": "Non-Veg" },
+            { "name": "Prawns 65 Biryani", "price": 349, "image": "https://vaya.in/recipes/wp-content/uploads/2018/06/Cabbage-and-Prawn-65-Biryani.jpg", "type": "Non-Veg" },
+            { "name": "Chicken Fry Piece Biryani", "price": 170, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSA7jDEXQ863xNMbFoZuo2kBdM3EY568hfnPQ&s", "type": "Non-Veg" },
+            { "name": "Mutton Biryani", "price": 269, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKEpzJcFJziv7sip3pvZFltuy6M6jRhlBp0w&s", "type": "Non-Veg" },
+            ]
+          },
+
+
+          {
+            "category": "Tea & Coffee",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1NGPR7OyQYD9cXE2-V0PMEpHeQrlh3QZv4w&s",
+            "items": [
+            { "name": "Plain Tea", "price": 25, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgHOyq_fRKRwCp61e_Y5YPKc794OfhuS2Jgg&s", "type": "Veg" },
+            { "name": "Ginger Tea", "price": 30, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIhLnV8pFAIQit2BsFWgJNz29imPN4uuUxoA&s", "type": "Veg" },
+            { "name": "Lemon Tea", "price": 30, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBEWJj5p90lYFUJDnRU9MF1xUrtCHpz5H_wg&s", "type": "Veg" },
+            { "name": " Boost", "price": 25, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7xhuwgq6ZWOdiD5qpt6O3oVHs2S9pmZIQgQ&s", "type": "Veg" },
+            { "name": "Coffee", "price": 30, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0yURWWoZjeN8cGH0CnuAdMM-kH7TpzYfMig&s", "type": "Veg" },
+            { "name": "Horlicks", "price": 25, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvcsA1X36SHkxbMheeQTql_CLM7BIZ5ej44A&s", "type": "Veg" }
+            ]
+          },
+          {
+            "category": "Egg Specials",
+            "image": "https://e7.pngegg.com/pngimages/353/298/png-clipart-fried-egg-breakfast-omelette-recipe-breakfast-food-recipe-thumbnail.png",
+            "items": [
+              
+            { "name": "Boiled Egg", "price": 15, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDEGpYCA7mKNzDhCJm2O7oLUad33M769-SRw&s", "type": "Egg" },
+            { "name": "Egg Curry", "price": 80, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6UivmKHpc6uKp-xe9ONz8M2qreTgsyIWy-g&s", "type": "Egg" },
+            { "name": "Egg Bhurji", "price": 60, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxMffXh0Te3nn2PpVYSrupzNp21BElt2_cgw&s", "type": "Egg" },
+            { "name": "Omelette", "price": 50, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE3bXWtgsNofQPULUj4trso_u3jOjDo2LK0g&s", "type": "Non-Veg" },
+            { "name": "Poached Egg", "price": 40, "image": "https://madaboutfood.co/wp-content/uploads/2019/10/Poached-1-790x1024.jpg", "type": "Egg" },
+            { "name": "Fried Boiled Egg", "price": 80, "image": "https://i.ytimg.com/vi/-5FOx5IJSWo/maxresdefault.jpg", "type": "Egg" },
+            { "name": "Egg Bhurji Gravy", "price": 100, "image": "https://aayanshkitchen.com/wp-content/uploads/2023/02/Untitled-design-1-1024x576.png", "type": "Egg" }
+            ]
+          },
+
+        {
+
+                category: "Roti & Paratha",
+                image: "https://parafit.in/wp-content/uploads/2019/03/Tawa-Roti-600x500.jpg",
+                items: [
+                
+                
+                { name: "Chapathi", price: 18, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9VbdMoqOHcHqZq5AI9CBkPdBQlU2tv0BFqA&s", type: "Veg" },
+                { name: "Phulka", price: 15, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9VbdMoqOHcHqZq5AI9CBkPdBQlU2tv0BFqA&s", type: "Veg" },
+                { name: "Paneer Onion Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Tawa Butter Roti", price: 20, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUUA3VoIA0M-2Kmzu2bze7avm9pQqW9QxQvg&s", type: "Veg" },
+                { name: "Aloo Onion Methi Parata", price: 60, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Aloo Onion Pudina Parata", price: 60, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Tawa Ghee Roti", price: 20, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUUA3VoIA0M-2Kmzu2bze7avm9pQqW9QxQvg&s", type: "Veg" },
+                { name: "Plain Parata", price: 20, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Aloo Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Plain Ajwain Parata", price: 30, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXEtQ3CVFsIYUoicq70Cu7GoRdHndHzmsTqA&s", type: "Veg" },
+                { name: "Aloo Onion Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Lacha Parata", price: 20, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXEtQ3CVFsIYUoicq70Cu7GoRdHndHzmsTqA&s", type: "Veg" },
+                { name: "Aloo Methi Parata", price: 55, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Lacha Ajwain Parata", price: 30, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXEtQ3CVFsIYUoicq70Cu7GoRdHndHzmsTqA&s", type: "Veg" },
+                { name: "Aloo Gobi Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Cheese Parata", price: 80, image:"https://www.yellowthyme.com/wp-content/uploads/2024/08/Cheese-paratha-2.jpg", type: "Veg" },
+                { name: "Gobi Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Aloo Cheese Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Gobi Onion Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Gobi Cheese Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Gobi Onion Methi Parata", price: 60, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Onion Cheese Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Methi Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Paneer Cheese Parata", price: 90, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Methi Onion Parata", price: 60, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Mix Cheese Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Pudina Onion Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Mix Veg Parata", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Onion Parata", price: 50 , image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg"},
+                { name: "Paneer Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s", type: "Veg" },
+                { name: "Mushroom Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzGD3MsDDVGL1ka4Gn5iTR8dS4cqQp5T5I_A&s", type: "Veg" },
+                { name: "Chicken Parata", price: 80, image:"https://c.ndtvimg.com/2021-08/e1f8dpq_paratha_625x300_04_August_21.jpg", type: "Non-Veg" },
+                { name: "Egg Parata (2 Eggs)", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe95xiHuHiPw5758xXzg-DieOtiZjI-oUUaQ&s", type: "Egg" },
+                { name: "Sweet Parata (Sugar)", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDF4E6J8AJpAeyCddcJJgBYALJ3yPNwUuwgw&s", type: "Veg" },
+                { name: "Sweet Parata (Jaggery)", price: 50, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDF4E6J8AJpAeyCddcJJgBYALJ3yPNwUuwgw&s", type: "Veg" }
+              
+
+                ],
+            },
+            {
+                category: "Rice Item",
+                image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/07/basmati-rice-recipe.jpg",
+                items: [
+                
+                { name: "White Rice", price: 40, image:"https://www.lemonblossoms.com/wp-content/uploads/2019/11/How-To-Cook-White-Rice-6.jpg", type: "Veg" },
+                { name: "Jeera Rice", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLUMi8inD2J8HRTxS2V-XF22KT9ZMMNyA8rw&s", type: "Veg" },
+                { name: "Chole Chawal", price: 100, image:"https://sattvakitchen.com/wp-content/uploads/2024/05/CHOLE-CHAWAL-iStock-1917310235.jpg", type: "Veg" },
+                { name: "Daal Chawal", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKe-KlOZnnRvMxqgPzeDYrg9FE-nu0t25rnw&s", type: "Veg" },
+                { name: "Rajma Chawal", price: 120, image:"https://biryanibonanza.com/wp-content/uploads/2024/06/Rajma-Chawal-cover-image-2.jpg", type: "Veg" },
+                { name: "Kadhi Chawal", price: 120, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY_cY7LKIe5bQ8B0woqpNUr-8DFjha_4vzpQ&s", type: "Veg" },
+                { name: "Daal Makhni Chawal", price: 130, image:"https://orders.popskitchen.in/storage/2024/09/image-51.png", type: "Veg" }
+              
+                ],
+            },
+            {
+                category: "Curd",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzCZCNl6tCPVGf1J3a2X-DtmkLM8eJcvClwQ&s",
+                items: [
+                
+                
+                { name: "Plain Curd", price: 20, image: "https://enjoyinfourseason.com/wp-content/uploads/2022/05/Fourseason-PLAIN-CURD.jpg", type: "Veg" },
+                { name: "Curd with Sugar", price: 25, image: "https://enjoyinfourseason.com/wp-content/uploads/2022/05/Fourseason-PLAIN-CURD.jpg", type: "Veg" },
+                { name: "Plain Raita", price: 30, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB04ZlID0rp4JE__zDwHXXxNlURq7VNS8glg&s", type: "Veg" },
+                { name: "Onion Raita", price: 30, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn2IkhPwDArwqKjw0sRI7TV23gvZGl6oEzOw&s", type: "Veg" },
+                { name: "Boondi Raita", price: 30, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZWEsMAqSegmFxuKgmoHrQV0eMc1h2hLCN3A&s", type: "Veg" },
+                { name: "Aloo Raita", price: 30 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdydeMwCmFPYIqDHD1Q3MmQuvRteBmcXJsGA&s", type: "Veg"},
+                { name: "Mix Raita", price: 35, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT19vb7sNIlrFGTVmmvDwSIdTxZFTaYtvcAUw&s", type: "Veg" }
+              
+                ],
+            },
+            {
+                category: "Special Thali",
+                image: "https://5.imimg.com/data5/HU/PG/OE/SELLER-9770898/special-veg-thali.jpg",
+                items: [
+               
+                { name: "Daal+Paneer+Rice+ 3 Roti", price: 200, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s", type: "Veg" },
+                { name: "Veg Thali", "price": 130, "image": "https://5.imimg.com/data5/HW/II/SH/SELLER-9770898/veg-thali.jpg", "type": "Veg" },
+                { name: "Daal Makhni+Paneer+Rice+ 3 Roti", price: 250, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s", type: "Veg" },
+                { name: "Daal Makhni+Sabji+Rice+ 3 Roti", price: 180, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s", type: "Veg" },
+                { name: "Daal Makhni+Sabji+Rice+ 2 Plain Parata", price: 160, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuyzXoGtr3I9Kw-omJvle4FFKEh_MMP4CHw&s", type: "Veg" },
+                { name: "Daal Makhni+Paneer+Rice+ 2 Plain Parata", price: 200, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuyzXoGtr3I9Kw-omJvle4FFKEh_MMP4CHw&s", type: "Veg" }
+                ],
+            },
+            {
+                category: "North Indian Breakfast",
+                image: "https://t4.ftcdn.net/jpg/04/65/28/87/360_F_465288715_F3uc0aZMhzSbNbftEzHSb6RfUVQfCHeU.jpg",
+                items: [
+                
+                
+                
+                { name: "Upma", price: 80, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR62An25qATwuE83QS6U4uid1_fK5kigq9gMQ&s", type: "Veg" },
+                { name: "Poori(4pcs)", price: 70, image: "https://cdn.dotpe.in/longtail/store-items/5674465/tDCk5KGN.jpeg", type: "Veg" },
+                { name: "Sabudana Kichidi", price: 80 , image: "https://t4.ftcdn.net/jpg/03/12/48/45/360_F_312484504_KylQWO8I48yeNqS4X2AOT94QFLSEeBfp.jpg", type: "Veg"},
+                { name: "Poha", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6A-lILJOr4XPhJhI7vqPj21B8icW6t3A28A&s", type: "Veg"},
+                { name: "Semiya Upma", price: 100, image: "https://img.freepik.com/premium-photo/semiya-upma-vermicelli-uppuma-uppittu-is-popular-breakfast-menu-from-south-india-served-bowl-selective-focus_466689-52559.jpg", type: "Veg" },
+                
+                ],
+            },
+
+            {
+                category: "Veg Curry and Specials",
+                image: "https://www.sharmispassions.com/wp-content/uploads/2021/07/MixedVegetableGravy2-500x375.jpg",
+                items: [
+               
+                
+                    { name: "Aloo Fry", price: 50, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT338edHd-XmwF7gRBNfpKmoY5edSknrLLyg&s", type: "Veg" },
+                    { name: "Daal", price: 50, image: "https://untoldrecipesbynosheen.com/wp-content/uploads/2020/08/hyderabadi-daal-featured.jpg", type: "Veg" },
+                    { name: "Chole", price: 60, image: "https://www.solara.in/cdn/shop/articles/Chole_curry.jpg?v=1711521756&width=2048", type: "Veg" },
+                    { name: "Rajma", price: 60 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwWj3eAe47H13SEXLRQF9S2GqT3BWg15mdng&s", type: "Veg"},
+                    { name: "Sprouts", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5G32IWF0y73SFjWaJvcHMp7PGUOcPZ5YQkw&s ", type: "Veg"},
+                    { name: "Gobi Aloo", price: 50 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzygb_1RehHfkADFw4ahpqc61l_e-EY8D2cA&s ", type: "Veg"},
+                    { name: "Baigan ka Bharta", price: 70 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX0ehzm4y-pahztPOVgqUxIXJMoXe6ertRCA&s ", type: "Veg" },
+                    { name: "Daal Tadka", price: 99 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW10WLAcgFH5wty_xHbYRJBIQ7sXyvV_zasA&s ", type: "Veg"},
+                    { name: "Methi Chaman", price: 220, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEWOddWn8BE-CN-hLikYC8mr5FtBLxREUIAQ&s", type: "Veg" },
+                    { name: "Corn Palak", price: 150 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI9w7RBDFlz5cN4MTDNBd95fu0wwfZKCYGAQ&s", type: "Veg"},
+                    { name: "Corn Masala", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI9w7RBDFlz5cN4MTDNBd95fu0wwfZKCYGAQ&s", type: "Veg" },
+                    { name: "Paneer Tikka Masala", price: 200, image: "https://img.freepik.com/premium-photo/indian-paneer-tikka-black-bowl-dark-background_875825-169496.jpg?w=360", type: "Veg" },
+                    { name: "Paneer Masala", price: 150, image: "https://t4.ftcdn.net/jpg/03/31/65/45/360_F_331654539_FaCJJWVUB3SmrIPIkmeEOnk7TYgl7xQC.jpg", type: "Veg" },
+                    { name: "Paneer Bhurji", price: 139, image: "https://img.freepik.com/premium-photo/paneer-bhurji-mildly-spiced-cottage-cheese-scramble-served-with-roti-laccha-paratha-selective-focus_466689-55360.jpg", type: "Veg" },
+                    { name: "Palak Paneer", price: 140, image: "https://img.freepik.com/premium-photo/palak-paneer-indian-traditional-food-with-cheese-spinach-black-background-view-from_233226-742.jpg", type: "Veg" },
+                    { name: "Kaju Masala", price: 169, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbdE_wBsap-LGYHe2KctmCRUHTxw8uA23tGA&s", type: "Veg" },
+                    { name: "Mushroom Masala", price: 149, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwhag0dqilStR-OQ1qpLlKxs7sbNpUufkELw&s", type: "Veg" },
+                    { name: "Green Peas Masala", price: 139, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_RygIsL4cAS-oqdeoEkqu190leTtg1o2tDQ&s", type: "Veg" },
+                    { name: "Butter Paneer Masala", price: 189, image: "https://img.freepik.com/premium-photo/delicious-paneer-butter-masala-photography_928503-851.jpg", type: "Veg" },
+                    { name: "Daal Makhni", price: 80, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLEPtOoreFKq5ZVi0jjJwhw-Da-w_G43KkGg&s", type: "Veg" }
+
+
+                ],
+            },
+
+            {
+                category: "Non Veg Curry",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR26EQZRZi8mlYkvClOismpXhzX0XgA_GRlnQ&s",
+                items: [
+               
+                { name: "Chicken Roast", price: 129 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN9jQmnAaLO89qJJF7K82GqPuPon-ViUjynQ&s", type: "Non-Veg" },
+                { name: "Chicken Curry", price: 130  , image: "https://t4.ftcdn.net/jpg/04/35/23/95/360_F_435239569_iTa3kLtV6PtlOBchUV4w7J1Tm0oSCx1l.jpg", type: "Non-Veg"},
+                { name: "Liver Roast", price: 100, image: "https://img.freepik.com/free-photo/fried-chicken-liver-with-onions-herbs_2829-19702.jpg", type: "Non-Veg" },
+                { name: "Prawn Curry", price: 169 , image: "https://img.freepik.com/free-photo/high-angle-delicious-shrimp-meal_23-2148771278.jpg", type: "Non-Veg"},
+                { name: "Prawn Fry", price: 249 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZLgNnbC3d5IqobKBlQtjeiVgGVaBqe12PxQ&s", type: "Non-Veg"},
+                { name: "Rohu Fish Curry", price: 100 , image: "https://img.freepik.com/premium-photo/fish-curry-seer-fish-curry-traditional-indian-fish-curry-kerala-special-dish-arranged-white-bowl-garnished-with-curry-leaves-white-background_527904-2012.jpg", type: "Non-Veg"},
+                { name: "Katla Fish Curry", price: 130 , image: "https://img.freepik.com/premium-photo/fish-curry-seer-fish-curry-traditional-indian-fish-curry-kerala-special-dish-arranged-white-bowl-garnished-with-curry-leaves-white-background_527904-2012.jpg", type: "Non-Veg"},
+                { name: "Leg Piece", price: 60 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRtu5l7EeCZLeSihOA5N9zAvQBpG9tGJKNaQ&s", type: "Non-Veg"},
+               
+                ],
+            },
+
+            
+            {
+                category: "Snacks & Desserts",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR651XQV65abHGAG_JEyPGjVi4CLvZMvaKTEw&s",
+                items: [
+               
+                { name: "Gajar Ka Halwa", price: 80, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ5o5-lFMKldOBgp7I11rdjS4CrY_cnHcF2Q&s", type: "Veg" },
+                { name: "Gulab Jamun", price: 50 , image: "https://t4.ftcdn.net/jpg/06/21/54/41/360_F_621544128_inBjLYomzXLGFiNVri9ebirH1MMJ7ige.jpg", type: "Veg"},
+                { name: "Rice Kheer", price: 50, image: "https://t4.ftcdn.net/jpg/11/44/17/01/360_F_1144170196_sa3iVNeHNqiPw5LvH9Q45RYekn6L7mMP.jpg", type: "Veg" }
+               
+                ],
+            },
+
+
+
+            {
+                category: "Soups",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp8Kv-G872qLWTI662Cl_B9r9FtaA4DguMiA&s",
+                items: [
+                { name: "Veg Manchow Soup", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj3J_spNaIiiztSOe-pJeaU3P6_bkSTqWp7Q&s", type: "Veg" },
+                { name: "Chicken Manchow Soup", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG7KUn-QkEJHWdSjOROmsGHrnAae_Z63nvcA&s", type: "Non-Veg" },
+                { name: "Veg Hot Sour Soup", price: 99, image: "https://t4.ftcdn.net/jpg/01/37/02/01/360_F_137020166_wY5X15FhMlIq1AqWxvOzQVkC4WFKLrV7.jpg", type: "Veg" },
+                { name: "Veg Corn Soup", price: 99, image: "https://img.freepik.com/premium-photo/still-life-corn-soup-wallpaper_980736-1653.jpg", type: "Veg" },
+                { name: "Tomato Soup", price: 99, image: "https://wallpapers.com/images/hd/classic-tomato-soup-with-croutons-qh13zy8hz8ql6q5a.jpg", type: "Veg" },
+                { name: "Veg Mushroom Soup", price: 109, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOBpmf043Ga6y5l_7SK_T_AJl6mZPhpYV98A&s", type: "Veg" },
+                { name: "Veg Coriander Soup", price: 99, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjlVSBB0eE-iYSmY5rSwNJ1nwtpSUq8-2WEQ&s", type: "Veg" }
+                ],
+            },
+
+            {
+                category: "Starters",
+                image: "https://www.freshtohome.com/blog/wp-content/uploads/2024/08/ChickenStarter1.png",
+                items: [
+                { name: "Veg Crispy", price: 129, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcbCNsJu3C_xbAINmYVYsZLOkgxeipLrrMsQ&s", type: "Veg" },
+                { name: "Veg Crispy/Schezwan", price: 149 , image: "https://thumbs.dreamstime.com/b/veg-crispy-batter-fried-vegetables-tossed-chinese-sauce-tastes-tangy-s-popular-starters-appetizer-india-served-225788924.jpg ", type: "Veg"},
+                { name: "Honey Chilli Potato", price: 120 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyCQWoR6oovSC9ReF3g1MmHOQiMd1wmiRyPA&s", type: "Veg"},
+                { name: "Chilli Potato", price: 100 , image: "https://gully2gully.in/wp-content/uploads/2024/12/chilli-potato-recipe3.jpg", type: "Veg"},
+                { name: "Paneer Chilli", price: 179, image: "https://t3.ftcdn.net/jpg/04/75/97/94/360_F_475979476_UFhDFws74q434yLdFh5V49eZTjn0RWLX.jpg", type: "Veg" },
+                { name: "Paneer Crispy", price: 179 , image: "https://t3.ftcdn.net/jpg/04/75/97/94/360_F_475979476_UFhDFws74q434yLdFh5V49eZTjn0RWLX.jpg", type: "Veg"},
+                { name: "Chicken Crispy", price: 189, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMgWZw6GUQtbts1K2aulUZQKDlCntPTPBnVQ&s", type: "Non-Veg" },
+                { name: "Mushroom Chilli", price: 189, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTL22XBDdPBilROYg7k9129esrdxweC-VJgzg&s", type: "Veg" },
+                { name: "Chicken Chilli", price: 179 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiyvUF4sW5yVBW9LNk3SzG2DlIrtguoz6VkA&s", type: "Non-Veg"},
+                { name: "Veg Manchurian", price: 100 , image: "https://t3.ftcdn.net/jpg/04/47/95/48/360_F_447954890_nYoJ3Lm6OElMe0LogDry2KfHF4tXsfMw.jpg", type: "Veg"},
+                { name: "Chicken Manchurian", price: 149, image: "https://t4.ftcdn.net/jpg/05/92/83/67/360_F_592836722_tqaJf9yp2JKCTvRGIqLHdCoSE87iKex8.jpg", type: "Non-Veg" },
+                { name: "Gobi Chilli", price: 139, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwIjBJoleAoRokI_LJkrEJW8TQAHwa0JVFTw&s", type: "Veg" }
+                ]
+            },
+
+            {
+                category: "Fried Rice",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSvJ-4KVdyGWaeCdR6w1vhY653Xyk9g2Y0lQ&s",
+                items: [
+                
+                { name: "Veg Fried Rice", price: 80, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS99ViyF0XxlPX0Oq9Ol8QrlaoABeo8Z53rcQ&s", type: "Veg" },
+                { name: "Veg Manchurian Fried Rice", price: 100, image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg", type: "Veg" },
+                { name: "Veg Schezwan Fried Rice", price: 110, image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg", type: "Veg" },
+                { name: "Mushroom Fried Rice", price: 139 , image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg", type: "Veg"},
+                { name: "Egg Fried Rice", price: 90, image: "https://t3.ftcdn.net/jpg/00/80/06/42/360_F_80064236_Rxakveyae98OD4HbG2tOFDQdUXkf5DkM.jpg", type: "Egg" },
+                { name: "Egg Manchurian Fried Rice", price: 109 , image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Egg"},
+                { name: "Egg Schezwan Fried Rice", price: 109, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Egg" },
+                { name: "Egg Mushroom Fried Rice", price: 139, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg", type: "Egg" },
+                { name: "Chicken Fried Rice", price: 100, image: "https://watermark.lovepik.com/photo/20211119/large/lovepik-chicken-fried-rice-picture_500214688.jpg", type: "Non-Veg" },
+                { name: "Chicken Manchurian Fried Rice", price: 129, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" },
+                { name: "Chicken Schezwan Fried Rice", price: 129, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" },
+                { name: "Chicken Mushroom Fried Rice", price: 149, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" },
+                { name: "Paneer Fried Rice", price: 169 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSx2rgv5Bjn3go40BiRqtuO9XPjpRKdek4VQw&s", type: "Veg"},
+                { name: "Jeera Rice", price: 80, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ9IFqa4H502NvoLtJeqcQq0SXpMkmS69f7A&s", type: "Veg" },
+                { name: "Lemon Rice", price: 80 , image: "https://t3.ftcdn.net/jpg/04/29/25/72/360_F_429257288_Vjw9XLVCg7AacMNgfvmM2uCBb5xZxZ0J.jpg", type: "Veg"},
+                { name: "Tomato Rice", price: 80, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQabh3n81uwjjJGFda9SBqsCASN6oktXkCAkQ&s", type: "Veg" },
+                { name: "Curd Rice", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo94Gqj_qd9SeRt6mENaJ3pFNgMP3_oS8Niw&s", type: "Veg"},
+                { name: "Veg Triple Rice", price: 149, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS99ViyF0XxlPX0Oq9Ol8QrlaoABeo8Z53rcQ&s", type: "Veg" },
+                { name: "Veg Hong Kong Rice", price: 160, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS99ViyF0XxlPX0Oq9Ol8QrlaoABeo8Z53rcQ&s", type: "Veg" },
+                { name: "Veg Singapore Rice", price: 179, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS99ViyF0XxlPX0Oq9Ol8QrlaoABeo8Z53rcQ&s", type: "Veg" },
+                { name: "Veg 1000 Rice", price: 209, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS99ViyF0XxlPX0Oq9Ol8QrlaoABeo8Z53rcQ&s", type: "Veg" },
+                { name: "Chicken Triple Rice", price: 179, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" },
+                { name: "Chicken Hong Kong Fried Rice", price: 179, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" },
+                { name: "Chicken 1000 Fried Rice", price: 239, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg", type: "Non-Veg" }
+              
+                ]
+            },
+
+            {
+                category: "Noodles",
+                image: "https://t3.ftcdn.net/jpg/06/10/03/82/360_F_610038219_jVhQanmTK0WUw2NO0lPhQBUqdQiLzTOs.jpg",
+                items: [
+                { name: "Veg Noodles", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcDFe6srAAgfr7nDqwCw5tLcmeyNVSYO5DZw&s", type: "Veg"},
+                { name: "Veg Manchurian Noodles", price: 100 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdKk1NXwYFJk6vVifiKZOmTAIPbKGJG3t7Kw&s", type: "Veg"},
+                { name: "Veg Schezwan Noodles", price: 100, image: "https://t4.ftcdn.net/jpg/05/62/35/69/360_F_562356997_xiBUbvdWrebPBzdhfKinYvQAaPAJnp6z.jpg", type: "Veg" },
+                { name: "Mushroom Noodles", price: 129 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUeYwKJ-y7ly366zEBx06vM7SUEn-a6pLpng&s", type: "Veg"},
+                { name: "Paneer Noodles", price: 139 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-vVkOxUjDhM0aewZ_ox2iSMkPO_3XMZqC-w&s", type: "Veg"},
+                { name: "Egg Noodles", price: 90 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ3gVe2EePEvPOchP9pcvqSJIkreRT7hjiSQ&s", type: "Egg"},
+                { name: "Egg Manchurian Noodles", price: 109 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrNjPgRIABC0jF6XoS0O0WSvjw-odcgxuKlA&s", type: "Egg"},
+                { name: "Egg Schezwan Noodles", price: 109, image: "https://img.freepik.com/premium-photo/egg-schezwan-hakka-noodles_974629-173396.jpg", type: "Egg" },
+                { name: "Egg Mushroom Noodles", price: 129, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6uHhmo-y9wZtiQF4QDXoHaujtOBIP3ErBhA&s", type: "Non-Veg" },
+                { name: "Chicken Noodles", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTj14IrKHRm3-4--sY8NCaB3TTqybtHVISMw&s", type: "Non-Veg" },
+                { name: "Chicken Manchurian Noodles", price: 120, image: "https://t4.ftcdn.net/jpg/11/71/00/45/360_F_1171004518_4NkJbBGkHBf6pEhEF4cGEVOA8ZSoFMKg.jpg", type: "Non-Veg" },
+                { name: "Chicken Schezwan Noodles", price: 120, image: "https://t4.ftcdn.net/jpg/11/71/00/45/360_F_1171004518_4NkJbBGkHBf6pEhEF4cGEVOA8ZSoFMKg.jpg", type: "Non-Veg" },
+                { name: "Chicken Mushroom Noodles", price: 149, image: "https://t4.ftcdn.net/jpg/11/71/00/45/360_F_1171004518_4NkJbBGkHBf6pEhEF4cGEVOA8ZSoFMKg.jpg", type: "Non-Veg" },
+                { name: "Veg Triple Noodles", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcDFe6srAAgfr7nDqwCw5tLcmeyNVSYO5DZw&s", type: "Veg" },
+                { name: "Veg Singapore Noodles", price: 169, image: "https://t4.ftcdn.net/jpg/05/62/35/69/360_F_562356997_xiBUbvdWrebPBzdhfKinYvQAaPAJnp6z.jpg", type: "Veg" },
+                { name: "Veg Hong Kong Noodles", price: 169, image: "https://t4.ftcdn.net/jpg/05/62/35/69/360_F_562356997_xiBUbvdWrebPBzdhfKinYvQAaPAJnp6z.jpg", type: "Veg" },
+                { name: "Egg Hong Kong Noodles", price: 149, image: "https://img.freepik.com/premium-photo/egg-schezwan-hakka-noodles_974629-173396.jpg", type: "Non-Veg" },
+                { name: "Egg Singapore Noodles", price: 159, image: "https://img.freepik.com/premium-photo/egg-schezwan-hakka-noodles_974629-173396.jpg", type: "Non-Veg" }
+                ]
+            },
+
+            {
+                "category": "Maggi",
+                "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPcbBm8siX4RxPIwSQmlLceyo7DyNS8VxLrg&s",
+                "items": [
+                    { "name": "Veg Maggi", "price": 60, "image": "https://www.secondrecipe.com/wp-content/uploads/2020/04/vegetable-maggi-noodles.jpg", "type": "Veg" },
+                    { "name": "Egg Maggi", "price": 80, "image": "https://nfcihospitality.com/wp-content/uploads/2024/09/Maggi-with-eggs-and-caramelized-onions-1.jpg", "type": "Egg" },
+                    { "name": "Chicken Maggi", "price": 100, "image": "https://www.whiskaffair.com/wp-content/uploads/2022/09/Chicken-Maggi-2-3.jpg", "type": "Non-Veg" }
+                ]
+            },
+    {
+        "category": "Veg Roll",
+        "image": "https://lifeandtrendz.com/wp-content/uploads/2022/06/Paneer-Kathi-Roll-980x980.jpg",
+        "items": [
+            { "name": "Veg Roll", "price": 50, "image": "https://lifeandtrendz.com/wp-content/uploads/2022/06/Paneer-Kathi-Roll-980x980.jpg", "type": "Veg" },
+            { "name": "Veg Cheese Roll", "price": 70, "image": "https://aartimadan.com/wp-content/uploads/2021/03/achari-veg-cheese-roll-recipe.jpeg", "type": "Veg" },
+            { "name": "Cheese Paneer Roll", "price": 90, "image": "https://spicecravings.com/wp-content/uploads/2020/12/Paneer-kathi-Roll-Featured-1.jpg", "type": "Veg" },
+            { "name": "Mushroom Roll", "price": 70, "image": "https://media-cdn.tripadvisor.com/media/photo-s/11/1f/83/8d/sali-boti-roll.jpg", "type": "Veg" },
+            { "name": "Mushroom Cheese Roll", "price": 90, "image": "https://media-cdn.tripadvisor.com/media/photo-s/11/1f/83/8d/sali-boti-roll.jpg", "type": "Veg" },
+            { "name": "Paneer Roll", "price": 70, "image": "https://spicecravings.com/wp-content/uploads/2020/12/Paneer-kathi-Roll-Featured-1.jpg", "type": "Veg" },
+            { "name": "Double Paneer Roll", "price": 100, "image": "https://t3.ftcdn.net/jpg/03/27/57/12/360_F_327571212_XPTRNCyxII5rj69z4UZ7wS6LEmMXCuCa.jpg", "type": "Veg" }
+        ]
+    },
+    {
+        "category": "Non-Veg Roll",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfWpPsrLEpE753-31tJc-D23PJk0FrWzpBDg&s",
+        "items": [
+            { "name": "Egg Roll", "price": 60, "image": "https://gully2gully.in/wp-content/uploads/2021/12/egg-roll.jpg", "type": "Egg" },
+            { "name": "Double Egg Roll", "price": 70, "image": "https://gully2gully.in/wp-content/uploads/2021/12/egg-roll.jpg", "type": "Egg" },
+            { "name": "Egg Cheese Roll", "price": 80, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTskoU_EswerC_fFs5cE4fVnWjg7yPqRF_kXg&s", "type": "Egg" },
+            { "name": "Double Egg Cheese Roll", "price": 90, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTskoU_EswerC_fFs5cE4fVnWjg7yPqRF_kXg&s", "type": "Egg" },
+            { "name": "Chicken Roll", "price": 80, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfWpPsrLEpE753-31tJc-D23PJk0FrWzpBDg&s", "type": "Non-Veg" },
+            { "name": "Double Egg Chicken Roll", "price": 90, "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfWpPsrLEpE753-31tJc-D23PJk0FrWzpBDg&s", "type": "Non-Veg" }
+        ]
+    },
+    {
+        "category": "Veg Momos",
+        "image": "https://images.jdmagicbox.com/quickquotes/images_main/cheesy-spicy-veg-momos-10pcs-2227012532-kcdqxk2d.jpg",
+        "items": [
+            { "name": "Veg Momos", "price": 50, "image": "https://images.jdmagicbox.com/quickquotes/images_main/cheesy-spicy-veg-momos-10pcs-2227012532-kcdqxk2d.jpg", "type": "Veg" },
+            { "name": "Veg Fry Momos", "price": 60, "image": "https://img.freepik.com/premium-photo/veg-fried-momo-with-sauce-served-rustic-wooden-background-selective-focus_726363-1106.jpg", "type": "Veg" },
+            { "name": "Veg Kurkure Momos", "price": 80, "image": "https://5.imimg.com/data5/ANDROID/Default/2024/8/446858245/EE/SH/IH/119594808/product-jpeg-500x500.jpg", "type": "Veg" },
+            { "name": "Paneer Steam Momos", "price": 80, "image": "https://images.jdmagicbox.com/quickquotes/images_main/cheesy-spicy-veg-momos-10pcs-2227012532-kcdqxk2d.jpg", "type": "Veg" },
+            { "name": "Paneer Fry Momos", "price": 90, "image": "https://img.freepik.com/premium-photo/veg-fried-momo-with-sauce-served-rustic-wooden-background-selective-focus_726363-1106.jpg", "type": "Veg" },
+            { "name": "Paneer Kurkure Momos", "price": 120, "image": "https://5.imimg.com/data5/ANDROID/Default/2024/8/446858245/EE/SH/IH/119594808/product-jpeg-500x500.jpg", "type": "Veg" }
+        ]
+    },
+    {
+        "category": "Non-Veg Momos",
+        "image": "https://images.jdmagicbox.com/quickquotes/images_main/cheesy-spicy-veg-momos-10pcs-2227012532-kcdqxk2d.jpg",
+        "items": [
+            { "name": "Chicken Steam Momos", "price": 80, "image": "https://images.jdmagicbox.com/quickquotes/images_main/cheesy-spicy-veg-momos-10pcs-2227012532-kcdqxk2d.jpg", "type": "Non-Veg" },
+            { "name": "Chicken Fry Momos", "price": 90, "image": "https://img.freepik.com/premium-photo/veg-fried-momo-with-sauce-served-rustic-wooden-background-selective-focus_726363-1106.jpg", "type": "Non-Veg" },
+            { "name": "Chicken Kurkure Momos", "price": 120, "image": "https://5.imimg.com/data5/ANDROID/Default/2024/8/446858245/EE/SH/IH/119594808/product-jpeg-500x500.jpg", "type": "Non-Veg" }
+        ]
+    }
+
+            ];
+    
+
+        const addonsData = [
+        {
+            name: "Water Bottle",
+            icon: '<span class="bottle-shake inline-block">💧</span>',
+            options: [
+                { size: "Small", price: 10 },
+                { size: "Large", price: 20 }
+            ]
+        },
+        {
+            name: "Cold Drinks",
+            icon: '<span class="bottle-shake inline-block">🥤</span>',
+            options: [
+                { size: "Small", price: 10 },
+                { size: "Medium", price: 20 },
+                { size: "Large", price: 40 }
+            ]
+        }
+];
+
+
+
+
+        const cart = [];
+
+        // Global event handlers
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('quantity-decrease')) {
+                const quantityInput = event.target.nextElementSibling;
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 0) {
+                    quantityInput.value = currentValue - 1;
+                }
+            }
+
+            if (event.target.classList.contains('quantity-increase')) {
+                const quantityInput = event.target.previousElementSibling;
+                let currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            }
+
+            if (event.target.classList.contains('add-to-cart')) {
+                const itemCard = event.target.closest('.bg-white');
+                const itemName = itemCard.querySelector('h3').textContent;
+                const itemPrice = parseFloat(itemCard.querySelector('.text-green-600').textContent.replace('₹', ''));
+                const quantityInput = itemCard.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+
+                if (quantity > 0) {
+                    addToCart({ name: itemName, price: itemPrice, quantity });
+                    quantityInput.value = 0;
+                }
+            }
+
+            if (event.target.id === 'mobileCartToggle' || event.target.closest('#mobileCartToggle')) {
+                const cartContainer = document.getElementById('cartContainer');
+                cartContainer.classList.remove('hidden');
+                history.pushState({ page: 'cart' }, '', '#cart');
+            }
+
+            if (event.target.id === 'mobileCartClose' || event.target.closest('#mobileCartClose')) {
+                const cartContainer = document.getElementById('cartContainer');
+                cartContainer.classList.add('hidden');
+                history.back();
+            }
+
+            if (event.target.id === 'backButton' || event.target.closest('#backButton')) {
+                document.getElementById('menuItems').classList.add('hidden');
+                document.getElementById('menuCategories').classList.remove('hidden');
+            }
+
+
+            if (event.target.id === 'clearCartButton') {
+                cart.length = 0;
+                updateCart();
+            }
+            if (event.target.classList.contains('addon-add-to-cart')) {
+                const addonName = event.target.getAttribute('data-name');
+                const addonSize = event.target.getAttribute('data-size');
+                const addonPrice = parseFloat(event.target.getAttribute('data-price'));
+        
+                addToCart({ name: `${addonName} (${addonSize})`, price: addonPrice, quantity: 1 });
+                updateCart();
+            }
+        });
+
+        // Menu filtering functions
+        function filterMenuData(filterType) {
+    let filteredData = menuData; // Always use all data - simple approach
+    
+    if (filterType === 'All') {
+        return filteredData;
+    }
+
+    const filteredCategories = filteredData.filter(category => {
+        return category.items.some(item => {
+            if (filterType === 'Veg') {
+                return item.type === 'Veg' || !item.type;
+            } else if (filterType === 'Non-Veg') {
+                return item.type === 'Non-Veg';
+            } else if (filterType === 'Egg') {
+                return item.type === 'Egg';
+            }
+            return false;
+        });
+    }).map(category => {
+         const filteredItems = category.items.filter(item => {
+             if (filterType === 'Veg') {
+                 return item.type === 'Veg' || !item.type;
+             } else if (filterType === 'Non-Veg') {
+                 return item.type === 'Non-Veg';
+             } else if (filterType === 'Egg') {
+                 return item.type === 'Egg';
+             }
+             return true;
+         });
+
+         return {
+             ...category,
+             items: filteredItems
+         };
+    });
+
+    return filteredCategories;
+}
+
+        // Category rendering
+        function renderCategories(data) {
+    const container = document.getElementById('menuCategories');
+    container.innerHTML = `
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
+        </div>
+    `;
+
+    const gridContainer = container.querySelector('.grid');
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    data.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.className = `
+            bg-white rounded-lg overflow-hidden
+            transform transition-all duration-300
+            hover:scale-102 active:scale-98
+            cursor-pointer
+            flex flex-col
+            border
+        `;
+
+        categoryCard.innerHTML = `
+            <div class="aspect-square w-full overflow-hidden">
+                <img
+                    src="${category.image}"
+                    alt="${category.category}"
+                    class="w-full h-full object-cover"
+                    onerror="this.src='placeholder-image.jpg'"
+                >
+            </div>
+            <div class="p-1.5 flex-1 flex flex-col justify-center min-h-[2.5rem]">
+                <h2 class="text-xs font-bold text-gray-800 text-center leading-tight">
+                    ${category.category}
+                </h2>
+                <p class="text-[10px] font-bold text-gray-600 mt-0.5 text-center">
+                    ${category.items?.length || 0} items
+                </p>
+            </div>
+        `;
+
+        categoryCard.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        categoryCard.addEventListener('touchmove', (e) => {
+            touchEndY = e.touches[0].clientY;
+        });
+
+        categoryCard.addEventListener('touchend', () => {
+            if (Math.abs(touchStartY - touchEndY) < 10) {
+                renderItems(category);
+            }
+        });
+
+        categoryCard.addEventListener('click', () => renderItems(category));
+        gridContainer.appendChild(categoryCard);
+    });
+
+    if (!document.getElementById('scrollStyle')) {
+        const style = document.createElement('style');
+        style.id = 'scrollStyle';
+        style.textContent = `
+            #menuCategories {
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+
+function renderAddons(addons) {
+    const container = document.getElementById('cartAddons');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="addons-container">
+            <div class="addons-header">
+                <h2 class="addons-title">Addons</h2>
+                <button class="close-button" onclick="closeAddons()">&#10006;</button>
+            </div>
+            ${addons.map(addon => {
+                return `
+                    <div class="addon-card">
+                        <div class="addon-name">
+                            <span class="bottle-shake inline-block">🥤</span> ${addon.name}
+                        </div>
+                        ${addon.options.map(option => `
+                            <div class="addon-option">
+                                <span class="addon-size">${option.size}</span>
+                                <span class="addon-price">₹${option.price}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+        function getCokeSize(totalAmount) {
+            if (totalAmount >= 999) {
+                return '750ml Soft Drink';
+            } else {
+                return null;
+            }
+        }
+
+        // Item rendering
+        function renderItems(category) {
+            history.pushState({ page: 'items' }, '', '#items');
+            document.getElementById('menuCategories').classList.add('hidden');
+            document.getElementById('menuItems').classList.remove('hidden');
+        
+            if (!document.getElementById('imagePopup')) {
+                const popup = document.createElement('div');
+                popup.id = 'imagePopup';
+                popup.className = 'fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50';
+                popup.addEventListener('click', () => popup.classList.add('hidden'));
+                document.body.appendChild(popup);
+            }
+        
+            const itemsContainer = document.getElementById('itemsList');
+            itemsContainer.innerHTML = '';
+        
+            // Add simple banner for momos categories when ordering is disabled
+            const isMomosCategory = category.category.toLowerCase().includes('momos');
+            if (isMomosCategory && !isMomosAvailable()) {
+                const notificationBanner = document.createElement('div');
+                notificationBanner.id = 'momosNotificationBanner';
+                notificationBanner.className = 'bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6';
+                notificationBanner.innerHTML = `
+                    <div class="text-center">
+                        <span class="text-2xl mb-2 block">🥟</span>
+                        <p class="text-yellow-800 font-medium">Available after 5:00 PM</p>
+                    </div>
+                `;
+                itemsContainer.appendChild(notificationBanner);
+            }
+        
+            category.items.forEach(item => {
+                const itemCard = document.createElement('div');
+                const isMomosItem_result = isMomosItem(item.name);
+                const isMomosUnavailable = isMomosItem_result && !isMomosAvailable();
+                
+                itemCard.className = `
+                    bg-white shadow-lg rounded-lg p-4
+                    transform transition duration-300 hover:scale-105
+                    flex flex-row items-start
+                    border-l-4 border-purple-600
+                    hover:border-purple-700
+                    ${isMomosUnavailable ? 'opacity-60 cursor-not-allowed' : ''}
+                `;
+        
+                const isVegetarian = item.type === "Veg";
+                const isEgg = item.type === "Egg";
+                const indicatorClass = isVegetarian ? 'veg-indicator' : (isEgg ? 'egg-indicator' : 'non-veg-indicator');
+        
+                itemCard.innerHTML = `
+                    <div class="flex-1 text-left">
+                        <div class="flex items-center mb-1">
+                            <div class="item-type-indicator ${indicatorClass}">
+                                <span class="dot"></span>
+                            </div>
+                            <h3 class="text-lg font-semibold text-primary">${item.name}</h3>
+                        </div>
+                        <p class="text-green-600 font-bold text-base mb-2">₹${item.price}</p>
+                    </div>
+                    
+                    <div class="ml-4 flex flex-col items-end flex-shrink-0">
+                        <div class="relative w-24 h-24 mb-2">
+                            <img
+                                src="${item.image}"
+                                alt="${item.name}"
+                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                                onerror="this.src='placeholder-image.jpg'"
+                            >
+                            <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 rounded-b-lg">
+                                <p class="text-[8px] text-white italic text-center py-0.5 px-1">
+                                    Image for illustration
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <button class="add-to-cart px-4 py-1.5 ${isMomosUnavailable ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700'} text-white rounded-full
+                            focus:outline-none focus:ring-2 focus:ring-purple-600
+                            focus:ring-opacity-50 transform ${isMomosUnavailable ? '' : 'hover:scale-105'} transition-all
+                            font-medium shadow-md ${isMomosUnavailable ? '' : 'hover:shadow-lg'} text-sm" ${isMomosUnavailable ? 'disabled' : ''}>
+                            ${isMomosUnavailable ? 'Available after 5 PM' : 'Add to Cart'}
+                        </button>
+                        
+                        <div class="quantity-controls-cart flex items-center space-x-2 bg-white rounded-full shadow-md border px-2 py-1" style="display: none;">
+                            <button class="quantity-decrease-cart px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 font-medium transition-colors text-sm w-8 h-8 flex items-center justify-center">
+                                －
+                            </button>
+                            <span class="quantity-display text-base font-medium px-2 min-w-[20px] text-center">1</span>
+                            <button class="quantity-increase-cart px-2 py-1 ${isMomosUnavailable ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700'} text-white rounded-full font-medium transition-colors text-sm w-8 h-8 flex items-center justify-center" ${isMomosUnavailable ? 'disabled' : ''}>
+                                ＋
+                            </button>
+                        </div>
+                    </div>
+                `;
+        
+                const img = itemCard.querySelector('img');
+                let longPressTimer;
+                let isLongPress = false;
+        
+                img.addEventListener('touchstart', (e) => {
+                    longPressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        showImagePopup(item.image, item.name);
+                    }, 500);
+                });
+        
+                img.addEventListener('touchend', (e) => {
+                    clearTimeout(longPressTimer);
+                    setTimeout(() => {
+                        isLongPress = false;
+                    }, 100);
+                });
+        
+                img.addEventListener('touchmove', (e) => {
+                    clearTimeout(longPressTimer);
+                });
+        
+                img.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showImagePopup(item.image, item.name);
+                });
+
+                const addToCartBtn = itemCard.querySelector('.add-to-cart');
+                const quantityControlsCart = itemCard.querySelector('.quantity-controls-cart');
+                const quantityDisplay = itemCard.querySelector('.quantity-display');
+                const decreaseBtn = itemCard.querySelector('.quantity-decrease-cart');
+                const increaseBtn = itemCard.querySelector('.quantity-increase-cart');
+
+                addToCartBtn.addEventListener('click', () => {
+                    addToCart({
+                        name: item.name,
+                        price: item.price,
+                        quantity: 1,
+                        image: item.image
+                    });
+                });
+
+                decreaseBtn.addEventListener('click', () => {
+                    const cartItem = cart.find(cartItem => cartItem.name === item.name);
+                    const currentCartQuantity = cartItem ? cartItem.quantity : 0;
+                    
+                    if (currentCartQuantity > 0) {
+                        const newQuantity = currentCartQuantity - 1;
+                        
+                        if (newQuantity === 0) {
+                            removeFromCart(item.name);
+                        } else {
+                            updateCartQuantity(item.name, newQuantity);
+                        }
+                    }
+                });
+
+                increaseBtn.addEventListener('click', () => {
+                    // Check if the item is a momos item and if momos are available
+                    if (isMomosItem(item.name) && !isMomosAvailable()) {
+                        showMomosAvailabilityMessage();
+                        return; // Don't increase quantity
+                    }
+                    
+                    const cartItem = cart.find(cartItem => cartItem.name === item.name);
+                    const currentCartQuantity = cartItem ? cartItem.quantity : 0;
+                    
+                    const newQuantity = currentCartQuantity + 1;
+                    
+                    if (currentCartQuantity === 0) {
+                        addToCart({
+                            name: item.name,
+                            price: item.price,
+                            quantity: 1,
+                            image: item.image
+                        });
+                    } else {
+                        updateCartQuantity(item.name, newQuantity);
+                    }
+                });
+
+                const existingCartItem = cart.find(cartItem => cartItem.name === item.name);
+                if (existingCartItem && existingCartItem.quantity > 0) {
+                    currentQuantity = existingCartItem.quantity;
+                    quantityDisplay.textContent = currentQuantity;
+                    addToCartBtn.style.display = 'none';
+                    quantityControlsCart.style.display = 'flex';
+                }
+        
+                itemsContainer.appendChild(itemCard);
+            });
+        }
+        
+        function showImagePopup(imageSrc, altText) {
+            const popup = document.getElementById('imagePopup');
+            popup.innerHTML = `
+                <img 
+                    src="${imageSrc}" 
+                    alt="${altText}"
+                    class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg"
+                    onerror="this.src='placeholder-image.jpg'"
+                >
+            `;
+            popup.classList.remove('hidden');
+        }
+
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            history.pushState({ page: 'categories' }, '', '#categories');
+            document.getElementById('menuItems').classList.add('hidden');
+            document.getElementById('menuCategories').classList.remove('hidden');
+        });
+
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.page === 'items') {
+                document.getElementById('menuItems').classList.remove('hidden');
+                document.getElementById('menuCategories').classList.add('hidden');
+            } else {
+                document.getElementById('menuItems').classList.add('hidden');
+                document.getElementById('menuCategories').classList.remove('hidden');
+            }
+        });
+
+window.addEventListener('popstate', function(event) {
+    const cartContainer = document.getElementById('cartContainer');
+    if (event.state && event.state.page === 'cart') {
+        cartContainer.classList.remove('hidden');
+    } else {
+        cartContainer.classList.add('hidden');
+    }
+});
+
+if (window.location.hash !== '#cart') {
+    history.replaceState({ page: 'main' }, '', window.location.pathname);
+}
+
+        history.replaceState({ page: 'categories' }, '', '#categories');
+
+        // Helper function to check if momos are available for ordering (5 PM - 12 AM IST)
+        function isMomosAvailable() {
+            const now = new Date();
+            // Convert current time to IST (UTC+5:30)
+            const istOffset = 5.5 * 60 * 60 * 1000; // 5 hours 30 minutes in milliseconds
+            const istTime = new Date(now.getTime() + istOffset);
+            const currentHour = istTime.getUTCHours();
+            return currentHour >= 17 && currentHour < 24; // 5 PM - 12 AM = 17:00 - 23:59
+        }
+
+        // Helper function to check if momos should be visible (always visible now)
+        function isMomosVisible() {
+            return true; // Always show momos - simple approach
+        }
+
+        // Helper function to check if an item is a momos item
+        function isMomosItem(itemName) {
+            const momosKeywords = ['momos', 'momo'];
+            return momosKeywords.some(keyword => 
+                itemName.toLowerCase().includes(keyword.toLowerCase())
+            );
+        }
+
+        // Helper function to show momos availability message
+        function showMomosAvailabilityMessage() {
+            const now = new Date();
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const istTime = new Date(now.getTime() + istOffset);
+            const currentHour = istTime.getUTCHours();
+            const currentMinute = istTime.getUTCMinutes();
+            const currentTimeStr = String(currentHour).padStart(2, '0') + ':' + String(currentMinute).padStart(2, '0');
+            
+            let message = '';
+            
+            if (currentHour >= 9 && currentHour < 17) {
+                // Between 9 AM - 5 PM: Show ordering will be available at 5 PM
+                let hoursUntil5PM = 17 - currentHour;
+                let minutesUntil5PM = 0 - currentMinute;
+                
+                if (minutesUntil5PM < 0) {
+                    hoursUntil5PM -= 1;
+                    minutesUntil5PM += 60;
+                }
+                
+                let timeUntilMessage = '';
+                if (hoursUntil5PM > 0) {
+                    timeUntilMessage = `Ordering available in ${hoursUntil5PM} hour${hoursUntil5PM > 1 ? 's' : ''}`;
+                    if (minutesUntil5PM > 0) {
+                        timeUntilMessage += ` and ${minutesUntil5PM} minute${minutesUntil5PM > 1 ? 's' : ''}`;
+                    }
+                } else {
+                    timeUntilMessage = `Ordering available in ${minutesUntil5PM} minute${minutesUntil5PM > 1 ? 's' : ''}`;
+                }
+                
+                message = `🥟 Momos ordering is available from 5:00 PM - 12:00 AM IST.\n\nCurrent IST Time: ${currentTimeStr}\n${timeUntilMessage}\n\nYou can browse momos now, but ordering starts at 5:00 PM!`;
+            } else if (currentHour >= 0 && currentHour < 9) {
+                // Between 12 AM - 9 AM: Show next availability at 9 AM for viewing, 5 PM for ordering
+                let hoursUntil9AM = 9 - currentHour;
+                let minutesUntil9AM = 0 - currentMinute;
+                
+                if (minutesUntil9AM < 0) {
+                    hoursUntil9AM -= 1;
+                    minutesUntil9AM += 60;
+                }
+                
+                let timeUntilMessage = '';
+                if (hoursUntil9AM > 0) {
+                    timeUntilMessage = `Available to view in ${hoursUntil9AM} hour${hoursUntil9AM > 1 ? 's' : ''}`;
+                    if (minutesUntil9AM > 0) {
+                        timeUntilMessage += ` and ${minutesUntil9AM} minute${minutesUntil9AM > 1 ? 's' : ''}`;
+                    }
+                } else {
+                    timeUntilMessage = `Available to view in ${minutesUntil9AM} minute${minutesUntil9AM > 1 ? 's' : ''}`;
+                }
+                
+                message = `🥟 Momos are available:\n• 9:00 AM - 5:00 PM: View only\n• 5:00 PM - 12:00 AM: Full ordering\n\nCurrent IST Time: ${currentTimeStr}\n${timeUntilMessage}`;
+            }
+            
+            alert(message);
+        }
+
+        // Countdown timer for momos availability
+        function startMomosCountdown() {
+            const countdownElement = document.getElementById('momosCountdown');
+            if (!countdownElement) return;
+            
+            function updateCountdown() {
+                const now = new Date();
+                const istOffset = 5.5 * 60 * 60 * 1000;
+                const istTime = new Date(now.getTime() + istOffset);
+                const currentHour = istTime.getUTCHours();
+                
+                let targetTime = new Date(istTime);
+                let countdownLabel = '';
+                
+                if (currentHour >= 0 && currentHour < 9) {
+                    // Before 9 AM: countdown to 9 AM for viewing
+                    targetTime.setUTCHours(9, 0, 0, 0);
+                    countdownLabel = 'Viewing starts in: ';
+                } else if (currentHour >= 9 && currentHour < 17) {
+                    // 9 AM - 5 PM: countdown to 5 PM for ordering
+                    targetTime.setUTCHours(17, 0, 0, 0);
+                    countdownLabel = 'Ordering starts in: ';
+                } else if (currentHour >= 17 && currentHour < 24) {
+                    // 5 PM - 12 AM: countdown to 12 AM (end of ordering)
+                    targetTime.setUTCDate(targetTime.getUTCDate() + 1);
+                    targetTime.setUTCHours(0, 0, 0, 0);
+                    countdownLabel = 'Ordering ends in: ';
+                }
+                
+                const timeDiff = targetTime.getTime() - istTime.getTime();
+                
+                if (timeDiff <= 0) {
+                    // Time reached, refresh the page or update availability
+                    countdownElement.textContent = '00:00:00';
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                    return;
+                }
+                
+                const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+                
+                const timeDisplay = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                countdownElement.textContent = timeDisplay;
+                
+                // Add different styling based on the countdown type
+                if (currentHour >= 9 && currentHour < 17) {
+                    // Viewing period - use purple
+                    countdownElement.classList.remove('animate-pulse', 'text-pink-600', 'text-green-600');
+                    countdownElement.classList.add('text-purple-600');
+                    if (hours === 0) {
+                        countdownElement.classList.add('animate-pulse');
+                    }
+                } else if (currentHour >= 17 && currentHour < 24) {
+                    // Ordering period - use green
+                    countdownElement.classList.remove('animate-pulse', 'text-pink-600', 'text-purple-600');
+                    countdownElement.classList.add('text-green-600');
+                } else {
+                    // Outside availability - use pink with pulse
+                    countdownElement.classList.remove('text-purple-600', 'text-green-600');
+                    countdownElement.classList.add('text-pink-600', 'animate-pulse');
+                }
+            }
+            
+            // Update immediately and then every second
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        // Cart functions
+        function addToCart(item) {
+            // Check if the item is a momos item and if momos are available
+            if (isMomosItem(item.name) && !isMomosAvailable()) {
+                showMomosAvailabilityMessage();
+                return; // Don't add to cart
+            }
+            
+            const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += item.quantity;
+            } else {
+                cart.push(item);
+            }
+
+            updateCart();
+        }
+
+        function removeFromCart(itemName) {
+            const itemIndex = cart.findIndex(cartItem => cartItem.name === itemName);
+            if (itemIndex > -1) {
+                cart.splice(itemIndex, 1);
+                updateCart();
+            }
+        }
+
+        function updateCartQuantity(itemName, newQuantity) {
+            // Check if trying to increase momos quantity when not available
+            if (isMomosItem(itemName) && !isMomosAvailable()) {
+                showMomosAvailabilityMessage();
+                return; // Don't update cart
+            }
+            
+            const existingItemIndex = cart.findIndex(cartItem => cartItem.name === itemName);
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity = newQuantity;
+                updateCart();
+            }
+        }
+
+        function updateItemPageDisplay() {
+            const itemCards = document.querySelectorAll('#itemsList .bg-white');
+            itemCards.forEach(itemCard => {
+                const itemNameElement = itemCard.querySelector('h3');
+                if (!itemNameElement) return;
+                
+                const itemName = itemNameElement.textContent;
+                const addToCartBtn = itemCard.querySelector('.add-to-cart');
+                const quantityControlsCart = itemCard.querySelector('.quantity-controls-cart');
+                const quantityDisplay = itemCard.querySelector('.quantity-display');
+                
+                if (addToCartBtn && quantityControlsCart && quantityDisplay) {
+                    const cartItem = cart.find(item => item.name === itemName);
+                    
+                    if (cartItem && cartItem.quantity > 0) {
+                        quantityDisplay.textContent = cartItem.quantity;
+                        addToCartBtn.style.display = 'none';
+                        quantityControlsCart.style.display = 'flex';
+                        itemCard.currentQuantity = cartItem.quantity;
+                    } else {
+                        addToCartBtn.style.display = 'block';
+                        quantityControlsCart.style.display = 'none';
+                        itemCard.currentQuantity = 0;
+                    }
+                }
+            });
+        }
+
+        // Search functions
+        function getAllMenuItems() {
+    const allItems = [];
+    menuData.forEach(category => {
+        category.items.forEach(item => {
+            allItems.push({
+                ...item,
+                categoryName: category.category
+            });
+        });
+    });
+    return allItems;
+}
+
+
+function setupItemSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const allItems = getAllMenuItems();
+    
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.id = 'searchSuggestions';
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden relative';
+    
+    suggestionsContainer.style.scrollBehavior = 'smooth';
+    suggestionsContainer.style.webkitOverflowScrolling = 'touch';
+    suggestionsContainer.style.overscrollBehavior = 'contain';
+    suggestionsContainer.style.touchAction = 'pan-y';
+    
+    let isKeyboardOpen = false;
+    let initialViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    
+    // Detect keyboard open/close
+    const handleViewportChange = () => {
+        const currentHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        const heightDifference = initialViewportHeight - currentHeight;
+        
+        const wasKeyboardOpen = isKeyboardOpen;
+        isKeyboardOpen = heightDifference > 150;
+        
+        if (isKeyboardOpen !== wasKeyboardOpen) {
+            if (isKeyboardOpen) {
+                suggestionsContainer.style.webkitOverflowScrolling = 'touch';
+                suggestionsContainer.style.overflowY = 'scroll';
+                suggestionsContainer.style.touchAction = 'pan-y';
+                suggestionsContainer.classList.add('keyboard-open');
+            } else {
+                suggestionsContainer.style.webkitOverflowScrolling = 'touch';
+                suggestionsContainer.style.overflowY = 'auto';
+                suggestionsContainer.classList.remove('keyboard-open');
+                
+                initialViewportHeight = currentHeight;
+            }
+            
+            setTimeout(() => {
+                const event = new Event('resize');
+                window.dispatchEvent(event);
+            }, 100);
+        }
+    };
+    
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleViewportChange);
+    } else {
+        window.addEventListener('resize', handleViewportChange);
+    }
+    
+    searchInput.addEventListener('focus', () => {
+        setTimeout(handleViewportChange, 300);
+    });
+    
+    searchInput.addEventListener('blur', () => {
+        setTimeout(handleViewportChange, 300);
+    });
+
+    searchInput.parentNode.appendChild(suggestionsContainer);
+    
+    searchInput.placeholder = "Search menu items...";
+
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    
+    const toggleClearButton = () => {
+        if (searchInput.value.trim().length > 0) {
+            clearSearchBtn.classList.remove('hidden');
+        } else {
+            clearSearchBtn.classList.add('hidden');
+        }
+    };
+    
+    // Clear button click handler
+    clearSearchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        searchInput.value = '';
+        
+        hideSuggestions();
+        clearSearchBtn.classList.add('hidden');
+        
+        searchInput.focus();
+    });
+    
+    searchInput.addEventListener('focus', toggleClearButton);
+    searchInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            if (document.activeElement !== clearSearchBtn) {
+                toggleClearButton();
+            }
+        }, 100);
+    });
+
+    const hideSuggestions = () => {
+        suggestionsContainer.classList.add('hidden');
+        suggestionsContainer.style.visibility = 'hidden';
+    };
+    
+    const showSuggestions = () => {
+        suggestionsContainer.classList.remove('hidden');
+        suggestionsContainer.style.visibility = 'visible';
+    };
+
+    suggestionsContainer.style.visibility = 'hidden';
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase().trim();
+        
+        toggleClearButton();
+        
+        if (query.length < 3) {
+            suggestionsContainer.innerHTML = '';
+            hideSuggestions();
+            return;
+        }
+        
+        const matchingItems = allItems.filter(item => item.name.toLowerCase().includes(query));
+        displaySuggestions(matchingItems, query);
+        
+        if (matchingItems.length > 0) {
+            showSuggestions();
+        } else {
+            hideSuggestions();
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
+            hideSuggestions();
+        }
+    });
+
+    searchInput.addEventListener('focus', function () {
+        if (this.value.trim().length >= 3) {
+            showSuggestions();
+        }
+    });
+}
+
+function displaySuggestions(items, query) {
+    const suggestionsContainer = document.getElementById('searchSuggestions');
+    const searchInput = document.getElementById('searchInput');
+
+    suggestionsContainer.innerHTML = '';
+
+    if (items.length === 0) {
+        const noResults = document.createElement('div');
+        noResults.className = 'px-4 py-2 text-gray-500 italic';
+        noResults.textContent = 'No matching items found';
+        suggestionsContainer.appendChild(noResults);
+    } else {
+        const itemsWrapper = document.createElement('div');
+        itemsWrapper.className = 'pb-1';
+
+        items.forEach(item => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center select-none';
+            
+            suggestionItem.style.userSelect = 'none';
+            suggestionItem.style.webkitUserSelect = 'none';
+            suggestionItem.style.touchAction = 'manipulation';
+
+            const thumbnail = document.createElement('img');
+            thumbnail.src = item.image;
+            thumbnail.alt = item.name;
+            thumbnail.className = 'w-10 h-10 object-cover rounded-md mr-3';
+            thumbnail.onerror = function () {
+                this.src = 'placeholder-image.jpg';
+            };
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex-1';
+
+            const itemName = document.createElement('div');
+            itemName.className = 'font-medium text-gray-800';
+
+            const nameLower = item.name.toLowerCase();
+            const queryStart = nameLower.indexOf(query.toLowerCase());
+            if (queryStart !== -1) {
+                const before = item.name.substring(0, queryStart);
+                const match = item.name.substring(queryStart, queryStart + query.length);
+                const after = item.name.substring(queryStart + query.length);
+                itemName.innerHTML = `${before}<span class="bg-yellow-200">${match}</span>${after}`;
+            } else {
+                itemName.textContent = item.name;
+            }
+
+            const itemDetails = document.createElement('div');
+            itemDetails.className = 'text-xs text-gray-500';
+            itemDetails.textContent = `${item.categoryName} • ₹${item.price}`;
+
+            contentDiv.appendChild(itemName);
+            contentDiv.appendChild(itemDetails);
+
+            suggestionItem.appendChild(thumbnail);
+            suggestionItem.appendChild(contentDiv);
+
+            const selectItem = () => {
+                searchInput.value = item.name;
+                suggestionsContainer.classList.add('hidden');
+                suggestionsContainer.style.visibility = 'hidden';
+                const clearButton = suggestionsContainer.querySelector('button');
+                if (clearButton) {
+                    clearButton.style.display = 'none';
+                }
+
+                const category = menuData.find(cat => cat.category === item.categoryName);
+                if (category) {
+                    renderItems(category);
+                    setTimeout(() => {
+                        const itemElements = document.querySelectorAll('#itemsList > div');
+                        itemElements.forEach(el => {
+                            if (el.querySelector('h3').textContent === item.name) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                el.classList.add('ring-2', 'ring-blue-500');
+                                setTimeout(() => {
+                                    el.classList.remove('ring-2', 'ring-blue-500');
+                                }, 3000);
+                            }
+                        });
+                    }, 300);
+                }
+            };
+
+            let touchStartY = 0;
+            let touchStartTime = 0;
+            let isScrolling = false;
+
+            suggestionItem.addEventListener('touchstart', function (e) {
+                touchStartY = e.touches[0].clientY;
+                touchStartTime = Date.now();
+                isScrolling = false;
+            });
+
+            suggestionItem.addEventListener('touchmove', function (e) {
+                const touchMoveY = e.touches[0].clientY;
+                const deltaY = Math.abs(touchMoveY - touchStartY);
+                
+                if (deltaY > 10) {
+                    isScrolling = true;
+                }
+            });
+
+            suggestionItem.addEventListener('touchend', function (e) {
+                e.preventDefault();
+                
+                const touchDuration = Date.now() - touchStartTime;
+                
+                if (!isScrolling && touchDuration < 300) {
+                    selectItem();
+                }
+            });
+
+            suggestionItem.addEventListener('click', function(e) {
+                if (!('ontouchstart' in window)) {
+                    selectItem();
+                }
+            });
+
+            itemsWrapper.appendChild(suggestionItem);
+        });
+
+        suggestionsContainer.appendChild(itemsWrapper);
+        
+        // Add draggable slider for easier navigation
+        if (items.length > 3) {
+            // Create slider container
+            const sliderContainer = document.createElement('div');
+            sliderContainer.className = 'scroll-slider-container';
+            
+            const sliderTrack = document.createElement('div');
+            sliderTrack.className = 'scroll-slider-track';
+            
+            const sliderThumb = document.createElement('div');
+            sliderThumb.className = 'scroll-slider-thumb';
+            
+            sliderTrack.appendChild(sliderThumb);
+            sliderContainer.appendChild(sliderTrack);
+            
+            // Add slider to container first
+            suggestionsContainer.appendChild(sliderContainer);
+            
+            // Slider state
+            let isDragging = false;
+            let dragOffset = 0;
+            
+            const updateSliderSize = () => {
+                const containerHeight = suggestionsContainer.clientHeight;
+                const scrollHeight = suggestionsContainer.scrollHeight;
+                
+                let trackHeight = sliderTrack.clientHeight;
+                if (trackHeight <= 0) {
+                    const containerRect = sliderContainer.getBoundingClientRect();
+                    trackHeight = Math.max(100, containerRect.height - 8);
+                    sliderTrack.style.height = trackHeight + 'px';
+                }
+                
+                if (scrollHeight <= containerHeight || trackHeight <= 0) {
+                    sliderContainer.style.display = 'none';
+                    return false;
+                }
+                
+                sliderContainer.style.display = 'block';
+                
+                const visibleRatio = containerHeight / scrollHeight;
+                const minThumbHeight = 15;
+                const maxThumbHeight = Math.min(trackHeight * 0.6, trackHeight - 10);
+                const calculatedHeight = visibleRatio * trackHeight;
+                const thumbHeight = Math.max(minThumbHeight, Math.min(maxThumbHeight, calculatedHeight));
+                
+                sliderThumb.style.height = Math.round(thumbHeight) + 'px';
+                
+                return thumbHeight;
+            };
+            
+            const updateSliderPosition = () => {
+                const thumbHeight = updateSliderSize();
+                if (!thumbHeight) return;
+                
+                const containerHeight = suggestionsContainer.clientHeight;
+                const scrollHeight = suggestionsContainer.scrollHeight;
+                const scrollTop = suggestionsContainer.scrollTop;
+                const trackHeight = sliderTrack.clientHeight;
+                
+                const maxScrollTop = scrollHeight - containerHeight;
+                const availableTrackSpace = Math.max(0, trackHeight - thumbHeight);
+                
+                if (maxScrollTop <= 0 || availableTrackSpace <= 0) {
+                    sliderThumb.style.top = '0px';
+                    return;
+                }
+                
+                const scrollPercentage = Math.min(1, Math.max(0, scrollTop / maxScrollTop));
+                const thumbPosition = scrollPercentage * availableTrackSpace;
+                
+                const clampedPosition = Math.max(0, Math.min(availableTrackSpace, thumbPosition));
+                
+                sliderThumb.style.top = Math.round(clampedPosition) + 'px';
+            };
+            
+            const handleDragStart = (clientY) => {
+                if (isDragging) return;
+                
+                isDragging = true;
+                const thumbRect = sliderThumb.getBoundingClientRect();
+                dragOffset = clientY - thumbRect.top;
+                
+                sliderThumb.classList.add('dragging');
+                document.body.style.userSelect = 'none';
+                document.body.style.webkitUserSelect = 'none';
+                
+                // Prevent default behaviors
+                return false;
+            };
+            
+            const handleDragMove = (clientY) => {
+                if (!isDragging) return;
+                
+                const suggestionsElement = document.getElementById('searchSuggestions');
+                if (suggestionsElement && suggestionsElement.classList.contains('keyboard-open')) {
+                    return false;
+                }
+                
+                const trackRect = sliderTrack.getBoundingClientRect();
+                const thumbHeight = sliderThumb.clientHeight;
+                const trackHeight = sliderTrack.clientHeight;
+                const availableTrackSpace = Math.max(0, trackHeight - thumbHeight);
+                
+                if (availableTrackSpace <= 0) {
+                    return false;
+                }
+                
+                const relativeY = clientY - trackRect.top - dragOffset;
+                const clampedThumbTop = Math.max(0, Math.min(availableTrackSpace, relativeY));
+                
+                sliderThumb.style.top = Math.round(clampedThumbTop) + 'px';
+                
+                const scrollPercentage = clampedThumbTop / availableTrackSpace;
+                
+                const containerHeight = suggestionsContainer.clientHeight;
+                const scrollHeight = suggestionsContainer.scrollHeight;
+                const maxScrollTop = Math.max(0, scrollHeight - containerHeight);
+                
+                let targetScrollTop;
+                if (clampedThumbTop >= availableTrackSpace - 2) {
+                    targetScrollTop = maxScrollTop;
+                    sliderThumb.style.top = availableTrackSpace + 'px';
+                } else {
+                    targetScrollTop = Math.round(scrollPercentage * maxScrollTop);
+                }
+                
+                suggestionsContainer.scrollTop = targetScrollTop;
+                
+                return false;
+            };
+            
+            const handleDragEnd = () => {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                sliderThumb.classList.remove('dragging');
+                document.body.style.userSelect = '';
+                document.body.style.webkitUserSelect = '';
+            };
+            
+            // Mouse events
+            sliderThumb.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleDragStart(e.clientY);
+            });
+            
+            // Global mouse events
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragMove(e.clientY);
+                }
+            });
+            
+            document.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragEnd();
+                }
+            });
+            
+            // Touch events
+            sliderThumb.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDragStart(e.touches[0].clientY);
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    e.preventDefault();
+                    handleDragMove(e.touches[0].clientY);
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchend', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragEnd();
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchcancel', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    handleDragEnd();
+                }
+            }, { passive: false });
+            
+            // Track click for quick navigation
+            sliderTrack.addEventListener('mousedown', (e) => {
+                if (e.target === sliderTrack) {
+                    e.preventDefault();
+                    const trackRect = sliderTrack.getBoundingClientRect();
+                    const clickY = e.clientY - trackRect.top;
+                    const thumbHeight = sliderThumb.clientHeight;
+                    const trackHeight = sliderTrack.clientHeight;
+                    
+                    const targetThumbTop = Math.max(0, Math.min(trackHeight - thumbHeight, clickY - thumbHeight / 2));
+                    const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+                    const scrollRatio = maxThumbTop > 0 ? targetThumbTop / maxThumbTop : 0;
+                    
+                    const containerHeight = suggestionsContainer.clientHeight;
+                    const scrollHeight = suggestionsContainer.scrollHeight;
+                    const maxScrollTop = Math.max(0, scrollHeight - containerHeight);
+                    
+                    // Ensure we can reach the very end
+                    let newScrollTop;
+                    if (scrollRatio >= 0.99) {
+                        newScrollTop = maxScrollTop;
+                    } else {
+                        newScrollTop = Math.round(scrollRatio * maxScrollTop);
+                    }
+                    
+                    suggestionsContainer.scrollTop = newScrollTop;
+                }
+            });
+            
+            // Update slider when scrolling (but not during drag)
+            suggestionsContainer.addEventListener('scroll', () => {
+                if (!isDragging) {
+                    requestAnimationFrame(() => {
+                        updateSliderPosition();
+                    });
+                }
+            });
+            
+            // Also listen for content changes
+            const observer = new MutationObserver(() => {
+                if (!isDragging) {
+                    setTimeout(() => {
+                        updateSliderSize();
+                        updateSliderPosition();
+                    }, 10);
+                }
+            });
+            
+            observer.observe(suggestionsContainer, {
+                childList: true,
+                subtree: true
+            });
+            
+            // Initial setup with proper timing
+            const initSlider = () => {
+                sliderContainer.style.display = 'block';
+                sliderTrack.style.display = 'block';
+                
+                const forceReflow = sliderContainer.offsetHeight;
+                const forceReflow2 = sliderTrack.offsetHeight;
+                
+                updateSliderSize();
+                updateSliderPosition();
+                
+                setTimeout(() => {
+                    const maxScroll = suggestionsContainer.scrollHeight - suggestionsContainer.clientHeight;
+                    suggestionsContainer.scrollTop = maxScroll;
+                    updateSliderPosition();
+                    
+                    setTimeout(() => {
+                        suggestionsContainer.scrollTop = 0;
+                        updateSliderPosition();
+                    }, 500);
+                }, 200);
+            };
+            
+            // Multiple initialization attempts to ensure proper setup
+            setTimeout(initSlider, 10);
+            setTimeout(initSlider, 50);
+            setTimeout(initSlider, 150);
+            setTimeout(initSlider, 300);
+        }
+    }
+
+    suggestionsContainer.classList.remove('hidden');
+    suggestionsContainer.style.visibility = 'visible';
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupItemSearch();
+    
+   
+});
+
+        // Update cart display and sync
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartItemCount = document.getElementById('cartItemCount');
+            const mobileBadge = document.getElementById('mobileBadge');
+            const totalItemCount = document.getElementById('totalItemCount');
+            const totalAmount = document.getElementById('totalAmount');
+            const cartAddonsContainer = document.getElementById('cartAddons');
+        
+            cartItemsContainer.innerHTML = '';
+            cartAddonsContainer.innerHTML = '';
+        
+            let totalItems = 0;
+            let total = 0;
+        
+            // Show addons as horizontal swipeable section like Swiggy
+            if (cart.length > 0) { // Only show when cart has items
+                let addonsHtml = '<div class="mb-4"><h3 class="text-sm font-semibold mb-2 text-gray-800 flex items-center gap-1">💡 Add More Items</h3>';
+                addonsHtml += '<div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide" style="scrollbar-width: none; -ms-overflow-style: none;">';
+                
+                addonsData.forEach(addon => {
+                    addon.options.forEach(option => {
+                        addonsHtml += `
+                            <div class="flex-shrink-0 bg-white border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow w-24 text-center">
+                                <div class="text-lg mb-1">${addon.name.includes('Water') ? '💧' : '🥤'}</div>
+                                <h4 class="text-xs font-semibold text-gray-800 mb-1">${addon.name}</h4>
+                                <p class="text-xs text-gray-600 mb-2">${option.size}</p>
+                                <button class="addon-add-to-cart bg-purple-600 text-white px-2 py-1 rounded text-xs hover:bg-purple-700 transition-colors w-full"
+                                    data-name="${addon.name}" 
+                                    data-size="${option.size}" 
+                                    data-price="${option.price}">
+                                    ₹${option.price}
+                                </button>
+                            </div>
+                        `;
+                    });
+                });
+                
+                addonsHtml += '</div></div>';
+                cartAddonsContainer.innerHTML = addonsHtml;
+            }
+        
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement('li');
+                cartItem.className = 'flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0';
+                cartItem.innerHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex-1">
+                            <div class="font-medium text-gray-800 text-base">${item.name}</div>
+                            <div class="text-green-600 font-bold text-lg">₹${(item.price * item.quantity).toFixed(2)}</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button class="quantity-btn minus text-gray-500 w-7 h-7 flex items-center justify-center border rounded-full hover:bg-gray-100" data-index="${index}">−</button>
+                            <span class="mx-1 text-gray-800 font-bold min-w-[24px] text-center text-lg">${item.quantity}</span>
+                            <button class="quantity-btn plus text-white bg-blue-500 w-7 h-7 flex items-center justify-center rounded-full hover:bg-blue-600" data-index="${index}">+</button>
+                            <button class="remove-item text-red-500 hover:text-red-700 ml-2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50 text-lg font-bold" data-index="${index}">×</button>
+                        </div>
+                    </div>
+                `;
+        
+                cartItemsContainer.appendChild(cartItem);
+        
+                totalItems += item.quantity;
+                total += item.price * item.quantity;
+        
+                const removeButton = cartItem.querySelector('.remove-item');
+                removeButton.addEventListener('click', function() {
+                    cart.splice(index, 1);
+                    updateCart();
+                });
+        
+                const minusButton = cartItem.querySelector('.quantity-btn.minus');
+                minusButton.addEventListener('click', function() {
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                        updateCart();
+                    } else {
+                        cart.splice(index, 1);
+                        updateCart();
+                    }
+                });
+        
+                const plusButton = cartItem.querySelector('.quantity-btn.plus');
+                plusButton.addEventListener('click', function() {
+                    item.quantity++;
+                    updateCart();
+                });
+            });
+        
+            cartItemCount.textContent = cart.length;
+            mobileBadge.textContent = cart.length;
+            totalItemCount.textContent = totalItems;
+            totalAmount.textContent = `₹${total}`;
+
+    const cokeOfferNotification = document.getElementById('cokeOfferNotification');
+    const offerMessages = cokeOfferNotification.querySelectorAll('p');
+    let earnedCokeMessage = '';
+
+    offerMessages.forEach((message) => {
+        message.classList.remove('font-bold', 'text-green-600');
+    });
+
+    offerMessages.forEach((message, index) => {
+        const messageText = message.textContent;
+        
+        if (messageText.includes('₹999+') && messageText.includes('750ml')) {
+            if (total >= 999) {
+                message.classList.add('font-bold', 'text-green-600');
+                earnedCokeMessage = 'Congratulations! You get a free 750ml Soft Drink with your order!';
+            }
+        }
+    });
+
+
+const cartAddonsContainers = document.getElementById('cartAddons');
+const earnedCokeNotification = document.getElementById('earnedCokeNotification');
+
+if (earnedCokeMessage) {
+    if (!earnedCokeNotification) {
+        const earnedCokeInfo = document.createElement('p');
+        earnedCokeInfo.id = 'earnedCokeNotification';
+        earnedCokeInfo.textContent = earnedCokeMessage;
+        earnedCokeInfo.className = 'text-green-600 font-bold mt-2';
+        
+        cartAddonsContainer.parentNode.insertBefore(earnedCokeInfo, cartAddonsContainers);
+    } else {
+        earnedCokeNotification.textContent = earnedCokeMessage;
+    }
+} else if (earnedCokeNotification) {
+    earnedCokeNotification.remove();
+}
+
+    updateItemPageDisplay();
+        }
+        
+        // Search input handler
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            const filteredData = menuData.filter(category => {
+                const categoryMatches = category.category.toLowerCase().includes(searchTerm);
+                const itemsMatch = category.items.some(item =>
+                    item.name.toLowerCase().includes(searchTerm)
+                );
+
+                return categoryMatches || itemsMatch;
+            });
+
+            renderCategories(filteredData);
+        });
+
+        // Function to refresh momos availability UI
+        function refreshMomosAvailability() {
+            // Get current active filter
+            const activeFilterButton = document.querySelector('.filter-button.active-filter');
+            let currentFilter = 'All';
+            if (activeFilterButton) {
+                if (activeFilterButton.id === 'showVeg') {
+                    currentFilter = 'Veg';
+                } else if (activeFilterButton.id === 'showNonVeg') {
+                    currentFilter = 'Non-Veg';
+                } else if (activeFilterButton.id === 'showEgg') {
+                    currentFilter = 'Egg';
+                }
+            }
+            
+            // Re-render categories with current filter
+            const filteredData = filterMenuData(currentFilter);
+            renderCategories(filteredData);
+            
+            // Refresh the current page if it's showing items
+            const itemsList = document.getElementById('itemsList');
+            if (itemsList && !itemsList.classList.contains('hidden')) {
+                // Re-render the current category to update momos availability
+                const urlParams = new URLSearchParams(window.location.search);
+                const categoryParam = urlParams.get('category');
+                if (categoryParam) {
+                    const decodedCategory = decodeURIComponent(categoryParam);
+                    const category = menuData.find(cat => cat.category === decodedCategory);
+                    if (category) {
+                        renderItems(category);
+                    }
+                }
+            }
+        }
+
+        // Check momos availability every minute
+        setInterval(refreshMomosAvailability, 60000); // 60 seconds
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+    setupItemSearch();
+
+    const filterButtons = document.querySelectorAll('.filter-button');
+    const searchInput = document.getElementById('searchInput');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active-filter'));
+            button.classList.add('active-filter');
+
+            let filterType = 'All';
+            if (button.id === 'showVeg') {
+                filterType = 'Veg';
+            } else if (button.id === 'showNonVeg') {
+                filterType = 'Non-Veg';
+            } else if (button.id === 'showEgg') {
+                filterType = 'Egg';
+            }
+
+            const filteredData = filterMenuData(filterType);
+            renderCategories(filteredData);
+
+            document.getElementById('menuItems').classList.add('hidden');
+            document.getElementById('menuCategories').classList.remove('hidden');
+
+            searchInput.value = '';
+
+            const suggestionsContainer = document.getElementById('searchSuggestions');
+            if (suggestionsContainer) {
+                suggestionsContainer.classList.add('hidden');
+                suggestionsContainer.style.visibility = 'hidden';
+            }
+
+        });
+    });
+});
+
+function filterMenuData(filterType) {
+    
+    if (filterType === 'All') {
+        return menuData;
+    }
+
+    const categoriesWithFilteredItems = menuData.map(category => {
+       
+        const filteredItems = category.items.filter(item => {
+            if (filterType === 'Veg') {
+                return item.type === 'Veg' || !item.type;
+            } else if (filterType === 'Non-Veg') {
+                return item.type === 'Non-Veg';
+            } else if (filterType === 'Egg') {
+                return item.type === 'Egg';
+            }
+            return false;
+        });
+
+        return {
+            ...category,        
+            items: filteredItems 
+        };
+    });
+
+    const finalFilteredCategories = categoriesWithFilteredItems.filter(category => {
+        
+        return category.items.length > 0;
+    });
+
+    return finalFilteredCategories;
+}
+
+
+             renderCategories(filterMenuData('All'));
+
+        // WhatsApp order handler
+        document.getElementById('whatsappButton').addEventListener('click', () => {
+    const tableNumberInput = document.getElementById('tableNumber');
+    const specialInstructionsInput = document.getElementById('specialInstructions');
+    const tableNumber = tableNumberInput.value.trim();
+    const specialInstructions = specialInstructionsInput.value.trim();
+
+    if (!tableNumber) {
+        alert('Please enter your table number before sending the order.');
+        return;
+    }
+
+    // Generate unique order ID and timestamp for security
+    const orderID = 'ORD' + Date.now().toString().slice(-8) + Math.random().toString(36).substr(2, 4).toUpperCase();
+    const orderTime = new Date().toLocaleString('en-IN', { 
+        timeZone: 'Asia/Kolkata',
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    let whatsappMessage = `*🛡️ ORDER ID: ${orderID}*\n`;
+    whatsappMessage += `*🕐 Time: ${orderTime}*\n`;
+    whatsappMessage += `*🍽️ Table No: ${tableNumber}*\n\n`;
+    let orderSummary = '📝 *Order Summary*\n\n';
+    let totalAmount = 0;
+
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        totalAmount += itemTotal;
+        orderSummary += `*${index + 1}. 🍽️ ${item.name} x ${item.quantity} - ₹${itemTotal.toFixed(2)}*\n`;
+    });
+    const cokeGiveaway = getCokeSize(totalAmount);
+
+    whatsappMessage += orderSummary;
+    whatsappMessage += `\n*───────────────────────*\n`;
+    whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
+     if (cokeGiveaway) {
+        whatsappMessage += `*🎁 Free Gift: ${cokeGiveaway}*\n`;
+    }
+    
+    if (specialInstructions) {
+        whatsappMessage += `\n*📝 Special Instructions:*\n${specialInstructions}\n\n`;
+    }
+    
+
+    whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
+
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    const whatsappUrl = `https://wa.me/919515543873?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+});
+
+        // Checkout modal handler
+        document.getElementById('checkoutButton').addEventListener('click', () => {
+
+    if (!cart || cart.length === 0 || getTotalAmount() === 0) {
+        alert('Please add items to your cart before checking out.');
+        return; 
+    }
+
+    const orderDetailsContainer = document.getElementById('orderDetails');
+    const modalTotalAmount = document.getElementById('modalTotalAmount');
+    const modal = document.getElementById('orderModal');
+    const tableNumberInput = document.getElementById('tableNumber');
+
+    orderDetailsContainer.innerHTML = '';
+    const tableHelperText = document.createElement('p');
+            tableHelperText.className = 'text-sm text-gray-600 mt-1';
+            tableNumberInput.parentNode.appendChild(tableHelperText);
+
+            tableNumberInput.setAttribute('min', '1');
+            tableNumberInput.setAttribute('max', '20');
+            tableNumberInput.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                if (value < 1 || value > 20) {
+                    this.setCustomValidity('Please enter a table number between 1 and 20');
+                    alert('Please enter a valid table number between 1 and 20');
+                    this.value = '';
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+    let totalAmount = 0;
+
+    cart.forEach((item, index) => {
+        const orderItem = document.createElement('li');
+        orderItem.className = 'flex justify-between mb-2 font-bold text-lg';
+        const itemTotal = item.price * item.quantity;
+        totalAmount += itemTotal;
+
+        orderItem.innerHTML = `
+            <span>${index + 1}. 🍽️ ${item.name} x ${item.quantity}</span>
+            <span>₹${itemTotal.toFixed(2)}</span>
+        `;
+        orderDetailsContainer.appendChild(orderItem);
+    });
+    const cokeGiveaway = getCokeSize(totalAmount);
+    if (cokeGiveaway) {
+        const cokeGiveawayElement = document.createElement('li');
+        cokeGiveawayElement.className = 'flex justify-between mb-2 font-bold text-lg';
+        cokeGiveawayElement.innerHTML = `
+            <span>🎁 Free Gift:</span>
+            <span>${cokeGiveaway}</span>
+        `;
+        orderDetailsContainer.appendChild(cokeGiveawayElement);
+    }
+
+    modalTotalAmount.textContent = `₹${totalAmount.toFixed(2)}`;
+    modal.classList.add('active');
+});
+
+function getTotalAmount() {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+}
+
+
+            document.getElementById('closeModalButton').addEventListener('click', () => {
+                const modal = document.getElementById('orderModal');
+                modal.classList.remove('active');
+            });
+
+
+    </script>
+            </body>
+        </html>
