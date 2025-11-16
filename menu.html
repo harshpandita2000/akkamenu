@@ -657,31 +657,6 @@
                 </div>
             </div>
 
-            <div
-                class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-md p-4 mb-4 relative overflow-hidden max-w-sm mx-auto">
-                <div class="sparkle bg-blue-200"></div>
-                <div class="sparkle bg-blue-300"></div>
-                <div class="sparkle bg-blue-400"></div>
-                <div class="sparkle bg-blue-300"></div>
-
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="text-lg bottle-shake">🥤</span>
-                    <h2 class="text-sm font-semibold text-blue-800">Special Coke
-                        Offers!</h2>
-                </div>
-
-                <div class="space-y-2 relative">
-                    
-                    <div
-                        class="flex items-center bg-white/50 backdrop-blur-sm rounded-md p-2 border border-blue-200 hover:bg-white/70 transition-colors duration-200 text-xs">
-                        <span
-                            class="w-20 font-medium text-blue-700">₹999+</span>
-                        <span class="text-gray-700">FREE 750ml Soft Drink <span
-                                class="bottle-shake inline-block">🥤</span></span>
-                    </div>
-                </div>
-            </div>
-
             <div class="lg:hidden fixed bottom-4 right-4 z-40">
                 <button id="mobileCartToggle"
                     class="bg-blue-500 text-white p-4 rounded-full shadow-lg relative">
@@ -820,17 +795,6 @@
 
                         <!-- Cart Content - Scrollable Area -->
                         <div class="flex-1 overflow-y-auto p-4">
-                            <!-- Compact Offers -->
-                            <div id="cokeOfferNotification"
-                                class="mb-3 p-2 bg-blue-50 border-l-4 border-blue-500 rounded">
-                                <div class="text-blue-800 font-medium text-sm mb-1 flex items-center gap-1">
-                                    🎁 Available Offers
-                                </div>
-                                <div class="text-xs space-y-1">
-                                    <p>🥤 ₹999+: Free 750ml Soft Drink</p>
-                                </div>
-                            </div>
-
                             <!-- Cart Items -->
                             <ul id="cartItems" class="space-y-2 mb-3">
                             </ul>
@@ -1665,14 +1629,6 @@ function renderAddons(addons) {
         </div>
     `;
 }
-
-        function getCokeSize(totalAmount) {
-            if (totalAmount >= 999) {
-                return '750ml Soft Drink';
-            } else {
-                return null;
-            }
-        }
 
         // Item rendering
         function renderItems(category) {
@@ -2791,43 +2747,8 @@ document.addEventListener('DOMContentLoaded', function() {
             totalItemCount.textContent = totalItems;
             totalAmount.textContent = `₹${total}`;
 
-    const cokeOfferNotification = document.getElementById('cokeOfferNotification');
-    const offerMessages = cokeOfferNotification.querySelectorAll('p');
-    let earnedCokeMessage = '';
-
-    offerMessages.forEach((message) => {
-        message.classList.remove('font-bold', 'text-green-600');
-    });
-
-    offerMessages.forEach((message, index) => {
-        const messageText = message.textContent;
-        
-        if (messageText.includes('₹999+') && messageText.includes('750ml')) {
-            if (total >= 999) {
-                message.classList.add('font-bold', 'text-green-600');
-                earnedCokeMessage = 'Congratulations! You get a free 750ml Soft Drink with your order!';
-            }
-        }
-    });
-
 
 const cartAddonsContainers = document.getElementById('cartAddons');
-const earnedCokeNotification = document.getElementById('earnedCokeNotification');
-
-if (earnedCokeMessage) {
-    if (!earnedCokeNotification) {
-        const earnedCokeInfo = document.createElement('p');
-        earnedCokeInfo.id = 'earnedCokeNotification';
-        earnedCokeInfo.textContent = earnedCokeMessage;
-        earnedCokeInfo.className = 'text-green-600 font-bold mt-2';
-        
-        cartAddonsContainer.parentNode.insertBefore(earnedCokeInfo, cartAddonsContainers);
-    } else {
-        earnedCokeNotification.textContent = earnedCokeMessage;
-    }
-} else if (earnedCokeNotification) {
-    earnedCokeNotification.remove();
-}
 
     updateItemPageDisplay();
         }
@@ -2995,14 +2916,10 @@ function filterMenuData(filterType) {
         totalAmount += itemTotal;
         orderSummary += `*${index + 1}. 🍽️ ${item.name} x ${item.quantity} - ₹${itemTotal.toFixed(2)}*\n`;
     });
-    const cokeGiveaway = getCokeSize(totalAmount);
 
     whatsappMessage += orderSummary;
     whatsappMessage += `\n*───────────────────────*\n`;
     whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
-     if (cokeGiveaway) {
-        whatsappMessage += `*🎁 Free Gift: ${cokeGiveaway}*\n`;
-    }
     
     if (specialInstructions) {
         whatsappMessage += `\n*📝 Special Instructions:*\n${specialInstructions}\n\n`;
@@ -3060,16 +2977,6 @@ function filterMenuData(filterType) {
         `;
         orderDetailsContainer.appendChild(orderItem);
     });
-    const cokeGiveaway = getCokeSize(totalAmount);
-    if (cokeGiveaway) {
-        const cokeGiveawayElement = document.createElement('li');
-        cokeGiveawayElement.className = 'flex justify-between mb-2 font-bold text-lg';
-        cokeGiveawayElement.innerHTML = `
-            <span>🎁 Free Gift:</span>
-            <span>${cokeGiveaway}</span>
-        `;
-        orderDetailsContainer.appendChild(cokeGiveawayElement);
-    }
 
     modalTotalAmount.textContent = `₹${totalAmount.toFixed(2)}`;
     modal.classList.add('active');
